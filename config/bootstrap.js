@@ -25,7 +25,7 @@ module.exports.bootstrap = function(cb) {
       noInfo: true,
       historyApiFallback: true,
       proxy: {
-        "*": "http://localhost:1338"
+        "*": "http://localhost:1336"
       }
     }).listen(9091, 'localhost', function (err, result) {
       if (err) {
