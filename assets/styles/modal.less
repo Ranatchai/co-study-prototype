@@ -1,0 +1,25 @@
+  .ReactModal__Overlay {
+  z-index: 1000;
+  background: rgba(0,0,0,0.2);
+  .transition(200ms);  
+}
+.ReactModal__Overlay.ReactModal__Overlay--after-open {
+  background: rgba(0,0,0,0.8);
+}
+.ReactModal__Content {
+  position: relative;
+  width: 700px;
+  margin: auto;
+  .transform(scale(0.2));
+  .transition(200ms);
+  &:focus {
+    outline: none;
+  }
+}
+.react-modal-container {
+  position: relative;
+  margin-top: 60px;
+}
+.ReactModal__Content.ReactModal__Content--after-open {
+  .transform(scale(1));
+}

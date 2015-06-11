@@ -1,0 +1,26 @@
+<% if (errors) {%>
+  <% errors.forEach(function (error) { %>
+    <%= __(error) %>
+  <% }) %>
+<% } %>
+<div class="background-fullscreen dim" style="background-image: url(http://touchedition.s3.amazonaws.com/asset/55264c2549c1fbe33d17951d.jpg)"></div>
+<div class="register container">
+<div class="inner-wrapper">
+  <h1 class="ui header aligned center">Curator</h1>
+	<form role="form" action="/auth/local/register" method="post" class="ui form">
+	  <div class="field">
+	  	<label>Username</label>
+	  	<input type="text" name="username" placeholder="Username">
+	  </div>
+	  <div class="field">
+	  	<label>Email</label>
+	  	<input type="text" name="email" placeholder="Email">
+	  </div>
+	  <div class="field">
+	  	<label>Password</label>
+	  	<input type="password" name="password" placeholder="Password">
+	  </div>
+	  <button class="ui button submit" type="submit">Sign up</button>
+	</form>
+</div>
+</div>
