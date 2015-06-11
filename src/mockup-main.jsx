@@ -64,28 +64,29 @@ var Article = React.createClass({
 });
 var Item = React.createClass({
 	onOpenArticle: function() {
-		TweenMax.staggerFromTo(["header", "description"].map((f)=>this.refs[f].getDOMNode()), 0.4, {
-			y: 0,
-			opacity: 1
-		},{
-			y: -100,
-			opacity: 0
-		}, 0.1, ()=>{
-			var rect = this.getDOMNode().getBoundingClientRect();
-			window._rect = rect;
-			var dom = createFixDOMFromRect(rect);
-			dom.style.background = 'white';
-			TweenMax.to(dom, 0.5, {
-				width: window.innerWidth,
-				height: window.innerHeight,
-				x: -rect.left,
-				y: -rect.top + 50,
-				onComplete: ()=> {
-					dom.parentNode.removeChild(dom);
+		setTimeout(()=>{
+			TweenMax.fromTo(["header", "description"].map((f)=>this.refs[f].getDOMNode()), 0.2, {
+				opacity: 1
+			}, {
+				opacity: 0,
+				onComplete: ()=>{
+					var rect = this.getDOMNode().getBoundingClientRect();
+					window._rect = rect;
+					var dom = createFixDOMFromRect(rect);
+					dom.style.background = 'white';
+					TweenMax.to(dom, 0.5, {
+						width: window.innerWidth,
+						height: window.innerHeight,
+						x: -rect.left,
+						y: -rect.top + 50,
+						onComplete: ()=> {
+							dom.parentNode.removeChild(dom);
+						}
+					});
 				}
 			});
-		});
-		TweenMax.fromTo(this.refs.image.getDOMNode(), 0.2, {opacity: 1}, {opacity: 0});
+			TweenMax.fromTo(this.refs.image.getDOMNode(), 0.2, {opacity: 1}, {opacity: 0});
+		}, 300);
 	},
 	onCloseArticle: function() {
 
@@ -117,7 +118,7 @@ var Heading = React.createClass({
 			display: 'none'
 		});
 		TweenMax.to(this.getDOMNode(), 0.5, {
-			height: 50
+			y: -250
 		});
 		TweenMax.to(this.refs.avatar.getDOMNode(), 0.5, {
 			x: -5,
@@ -149,7 +150,7 @@ var Heading = React.createClass({
 			opacity: 1
 		});
 		TweenMax.to(this.getDOMNode(), 0.5, {
-			height: 300
+			y: 0
 		});
 		TweenMax.to(this.refs.avatar.getDOMNode(), 0.5, {
 			x: 0,
@@ -173,7 +174,8 @@ var Heading = React.createClass({
 	},
 	render: function() {
 		return (
-			<div className="channel__heading" style={{backgroundImage: "url(https://s-dev.s3.amazonaws.com/2a93d8c0-0e90-11e5-8808-d9460802cea5.jpeg)"}}>				
+			<div className="channel__heading">
+				<div className="channel__heading__background" style={{backgroundImage: "url(https://s-dev.s3.amazonaws.com/2a93d8c0-0e90-11e5-8808-d9460802cea5.jpeg)"}}/>
 				<div ref="avatar" className="channel__heading__avatar" style={{position: "absolute", left: 10, bottom: 10, backgroundImage: "url(https://s-dev.s3.amazonaws.com/35771a80-0e87-11e5-b9ef-11a31e92fdd5.jpeg)"}}>
 					<i ref="cameraIcon" className="icon icon-camera pointer" style={{fontSize: "1em", position: "absolute", bottom: 5, right:5}}/>
 				</div>
@@ -195,19 +197,38 @@ var Heading = React.createClass({
 			</div>
 		);
 	}
-})
+});
+var ItemList = React.createClass({
+	onOpenArticle: function() {
+		TweenMax.to(this.getDOMNode(), 0.5, {
+			y: -250
+		});
+	},
+	onCloseArticle: function() {
+		
+	},
+	handleClickItem: function(e) {
+		this.props.handleClickItem();
+		this.refs['item-' + $(e.currentTarget).data('index')].onOpenArticle();
+	},
+	render: function() {
+		return (
+			<div className="channel__item-list channel__max-width-container">
+				<Item data-index="0" ref="item-0" onClick={this.handleClickItem}/>
+				<Item data-index="1" ref="item-1" onClick={this.handleClickItem}/>
+			</div>
+		);
+	}
+});
+
 var MockContainer = React.createClass({
 	getInitialState: function() {
 		return {showArticle: false};
 	},
-	animate: function(item, fname) {		
-		var heading = this.refs.heading;
-		[heading, item].forEach(function(c) {
-			c && c[fname]();
-		});
-	},
 	handleClickClose: function() {		
-		this.animate(this.refs.article, "onCloseArticle");
+		var heading = this.refs.heading;
+		var article = this.refs.article;
+		[heading, article].forEach(c=>c.onCloseArticle());
 		setTimeout(()=> {
 			this.setState({
 				showArticle: false
@@ -215,9 +236,10 @@ var MockContainer = React.createClass({
 		}, 1001);
 	},
 	handleClickItem: function(e) {
-		var index = $(e.currentTarget).data('index');
-		var item = this.refs['item-' + index];
-		this.animate(item, "onOpenArticle");		
+		var heading = this.refs.heading;
+		var itemList = this.refs.itemList;
+		heading.onOpenArticle();
+		itemList.onOpenArticle();
 		setTimeout(()=> {
 			this.setState({
 				showArticle: true
@@ -228,12 +250,7 @@ var MockContainer = React.createClass({
 		return (
 			<div className="channel">
 				<Heading ref="heading"/>
-				{this.state.showArticle? <Article onClick={this.handleClickClose} ref="article"/>: <div className="channel__item-list">
-					<div className="channel__max-width-container">
-						<Item data-index="0" ref="item-0" onClick={this.handleClickItem}/>
-						<Item data-index="1" ref="item-1" onClick={this.handleClickItem}/>
-					</div>
-				</div>}
+				{this.state.showArticle? <Article onClick={this.handleClickClose} ref="article"/>: <ItemList handleClickItem={this.handleClickItem} ref="itemList"/>}
 			</div>
 		);
 	}
