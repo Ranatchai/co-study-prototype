@@ -28,7 +28,7 @@ module.exports = function (req, res, next) {
     passport.session()(req, res, function () {
       // Make the user available throughout the frontend
       res.locals.user = req.user? _.omit(req.user.toJSON(), ['passports', '__v']): false;
-      res.locals.title = 'Curator';
+      res.locals.title = 'The Prototype';
       next();
     });
   });

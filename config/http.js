@@ -55,7 +55,7 @@ module.exports.http = {
   *                                                                           *
   ****************************************************************************/
     poweredBy: function(req, res, next) {
-      res.setHeader('X-Powered-By', "Curator");      
+      res.setHeader('X-Powered-By', "The Prototype");
       next();
     },
     bodyParserJSON: bodyParser.json(),

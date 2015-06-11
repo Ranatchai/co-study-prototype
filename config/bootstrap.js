@@ -25,16 +25,16 @@ module.exports.bootstrap = function(cb) {
       noInfo: true,
       historyApiFallback: true,
       proxy: {
-        "*": "http://localhost:1337"
+        "*": "http://localhost:1338"
       }
-    }).listen(9090, 'localhost', function (err, result) {
+    }).listen(9091, 'localhost', function (err, result) {
       if (err) {
         console.log(err);
       }
       cb();
     });
     setTimeout(function() {
-      console.log('use port 9090');
+      console.log('use port 9091');
     }, 1000);
   }
 };
