@@ -17,10 +17,10 @@ module.exports = {
 
   // Set entry point to ./src/main and include necessary files for hot load
   entry:  [
-    "webpack-dev-server/client?http://localhost:9090",
+    "webpack-dev-server/client?http://localhost:9091",
     "webpack/hot/only-dev-server",
     // "./src/main",
-    "./src/mockup-main",
+    "./src/mockup-main2",
     // "./src/timeline/app"
   ],
 
@@ -29,7 +29,7 @@ module.exports = {
   output: {
     path: __dirname + "/.tmp/public/app/",
     filename: "app.js",
-    publicPath: "http://localhost:9090/app/"
+    publicPath: "http://localhost:9091/app/"
   },
 
   // Necessary plugins for hot load

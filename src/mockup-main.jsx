@@ -112,7 +112,8 @@ var Item = React.createClass({
 						height: window.innerHeight,
 						x: -rect.left,
 						y: -rect.top + 50,
-						z: 1500,
+						lazy: true,
+						z: 500,
 						rotationX: '-179.9deg',
 						onComplete: ()=> {
 							setTimeout(()=>dom.parentNode.removeChild(dom), 16);
@@ -224,7 +225,7 @@ var Heading = React.createClass({
 				</div>
 				<div style={{position:"absolute", left: 160, bottom: 10}}>
 					<h1 style={{marginBottom: 8, fontSize: 32}} ref="header">
-						KodomoClub
+						KodomoClub 
 					</h1>
 					<span ref="tagline">
 						Baby Goods
@@ -245,8 +246,11 @@ var ItemList = React.createClass({
 	},
 	onOpenArticle: function() {
 		TweenMax.to(this.getDOMNode(), 0.5, {
-			y: -250
-		});
+			y: -250,
+			onComplete: ()=>{
+				this.refs.list.getDOMNode().style.transform = 'translateZ(-500px)';				
+			}
+		});		
 	},
 	onCloseArticle: function() {
 		
@@ -257,9 +261,11 @@ var ItemList = React.createClass({
 	},
 	render: function() {
 		return (
-			<div className="channel__item-list channel__max-width-container">
-				<Item data-index="0" ref="item-0" onClick={this.handleClickItem}/>
-				<Item data-index="1" ref="item-1" onClick={this.handleClickItem}/>
+			<div className="channel__max-width-container" style={{perspective: '500px'}}>
+				<div className="channel__item-list " ref="list">
+					<Item data-index="0" ref="item-0" onClick={this.handleClickItem}/>
+					<Item data-index="1" ref="item-1" onClick={this.handleClickItem}/>
+				</div>
 			</div>
 		);
 	}
@@ -285,6 +291,7 @@ var MockContainer = React.createClass({
 		heading.onOpenArticle();
 		itemList.onOpenArticle();
 		setTimeout(()=> {
+			console.log('showArticle');
 			this.setState({
 				showArticle: true
 			});

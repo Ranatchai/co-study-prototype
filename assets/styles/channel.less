@@ -2,7 +2,7 @@ body, html {
 	margin: 0;
 	padding: 0;
 	font-family: Lato;
-	background: rgb(245,245,245);
+	background: #f24333;
 }
 @fr: 1.33em;
 @baseLineHeight: 1.4em;
@@ -117,6 +117,10 @@ p {
 }
 .channel__item-list{
 	margin-top: 2*@baseLineHeight;
+	-webkit-transition: all 0.5s cubic-bezier(0,0,0.25,1);
+  transition: all 0.5s cubic-bezier(0,0,0.25,1);
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
 }
 .placeholder {
 	pointer-events: none;
@@ -185,4 +189,19 @@ p {
 	padding-right: 1 * @baseLineHeight;
 	float: right;
 	text-align: left;
+}
+.item {
+	padding: 10px 0; 
+	position: relative; 
+	height: 100px; 
+	border-top: 1px solid rgba(0,0,0,0.3);
+	overflow: hidden; 
+	cursor: pointer;
+	-webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  transition: all 0.3s;
+}
+.item.active {
+	background: rgba(0, 0, 0, 0.5);
+	color: white;
 }
