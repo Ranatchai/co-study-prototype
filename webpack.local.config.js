@@ -20,7 +20,7 @@ module.exports = {
     "webpack-dev-server/client?http://localhost:9091",
     "webpack/hot/only-dev-server",
     // "./src/main",
-    "./src/mockup-main2",
+    "./src/mockup-polygon-main",
     // "./src/timeline/app"
   ],
 
