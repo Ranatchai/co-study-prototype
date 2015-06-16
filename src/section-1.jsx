@@ -33,7 +33,7 @@ var ListItem = React.createClass({
 			lineHeight: '137px'
 		};
 		return (
-			<div className="item" style={{minHeight: 350, border: 0, height: 'auto', position: 'relative', padding: 0}}>
+			<div className="item" style={{minHeight: 350, border: 0, height: 'auto', position: 'relative', padding: 0, cursor: 'inherit'}}>
 				<div style={{position: 'absolute', height: '100%', backgroundPosition: 'center center', backgroundSize: 'cover', backgroundImage: 'url(' + this.props.src + ')', width: '60%', right: this.props.index%2===0?0:false, left: this.props.index%2===0?false: 0}}/>
 				<div style={{width: '34%', float: this.props.index%2===0?'right': 'left', padding: '10px', marginRight: this.props.index%2===0?'60%': 0, marginLeft: this.props.index%2===0?0:'60%'}}>
 					<div style={authorStyle}>BY {this.props.author}</div>
@@ -51,7 +51,7 @@ var List = React.createClass({
 	mixins: [ReactComponentWithPureRenderMixin],
 	render: function() {
 		return (
-			<div className="list-item" {...this.props}>
+			<div className="list-item" style={this.props.style}>
 				{this.props.data.map((item, index)=>{
 					return <ListItem {...item} index={index}/>
 				}, this)}
@@ -89,20 +89,23 @@ var Container = React.createClass({
 			fontSize: '60px',
 			color: '#222422',
 			lineHeight: '50px',
-			marginTop: 50
+			marginTop: 50,
+			marginLeft: 30
 		};
 		var bool = window.innerWidth < 1024;
 		return (
 			<div style={{background: 'white', minHeight: '100%', paddingBottom: 20}}>
-				{bool? (
-					<div key="hl-horz" className="hl-horz" style={{height: 300, backgroundImage: 'url(' + "/images/Rectangle%20108.png" + ')', backgroundSize: 'cover', backgroundPosition: '15% 15%'}}>
+				<div style={{maxWidth: 1280, margin: 'auto', position: 'relative'}}>
+					{bool? (
+						<div key="hl-horz" className="hl-horz" style={{height: 300, backgroundImage: 'url(' + "/images/Rectangle%20108.png" + ')', backgroundSize: 'cover', backgroundPosition: '15% 15%'}}>
+						</div>
+					): <div key="hl-vert" className="hl-vert" ref="hl" style={{width: 0.4 * (window.innerWidth > 1280? 1280: window.innerWidth), minHeight: 200, height: window.innerHeight, backgroundImage: 'url(' + "/images/Rectangle%20108.png" + ')', backgroundSize: 'cover', backgroundPosition: '15% 15%'}}/>}
+					<div style={{margin: bool? 'auto': '0 0 0 40%', float: bool? false: 'left', width: bool? false: '60%', minHeight: 200, position: 'relative', paddingLeft: 0, maxWidth: 768}}>
+						<div style={latest_style}>THE <br/><span style={{borderBottom: '5px solid black'}}>LATE</span>ST</div>
+						<List style={{marginTop: 40}} {...this.props}/>
 					</div>
-				): <div key="hl-vert" className="hl-vert" ref="hl" style={{width: '40%', minHeight: 200, height: window.innerHeight, backgroundImage: 'url(' + "/images/Rectangle%20108.png" + ')', backgroundSize: 'cover', backgroundPosition: '15% 15%'}}/>}
-				<div style={{margin: bool? 'auto': '0 0 0 40%', float: bool? false: 'left', width: bool? false: '60%', minHeight: 200, position: 'relative', paddingLeft: 0, maxWidth: 768}}>
-					<div style={latest_style}>THE <br/><span style={{textDecoration: 'underline'}}>LATE</span>ST</div>
-					<List style={{marginTop: 40}} {...this.props}/>
+					<div style={{clear: 'both'}}/>
 				</div>
-				<div style={{clear: 'both'}}/>
 			</div>
 		);
 	}

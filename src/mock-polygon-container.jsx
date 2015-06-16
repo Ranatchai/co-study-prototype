@@ -1,6 +1,6 @@
 var React = require('react');
 var _ = require('underscore');
-var MockContainer = React.createClass({
+var Slider = React.createClass({
 	render: function() {
 		var arr = _.first(this.props.data, 5);
 		var styles = [{
@@ -10,12 +10,6 @@ var MockContainer = React.createClass({
 		  marginLeft: 0
 		}, {
 			borderWidth: '1px 0 0 1px'
-		}, {
-
-		}, {
-
-		}, {
-
 		}];
 		return (
 			<div className="m-hero__slider">
@@ -40,4 +34,51 @@ var MockContainer = React.createClass({
 		);
 	}
 });
+var LOGO_SRC = 'http://touchedition.s3.amazonaws.com/asset/555edb0290a3d98a63e42aa0.png';
+var Menubar = React.createClass({
+	render: function() {
+		var logo_style = {
+		  maxWidth: 158,
+		  padding: 12,
+		  height: '50px',
+		  lineHeight: '50px',
+		  overflow: 'hidden',
+		  textIndent: '-9999px',
+		  display: 'block',
+		  float: 'left',
+		  position: 'relative',
+		  marginRight: 20,
+		};
+		var item_style = {
+		  float: 'left',
+		  height: '50px',
+		  lineHeight: '50px',
+		  fontSize: 13,
+		  fontFamily: 'Lato',
+		  fontWeight: 100,
+		  textTransform: 'uppercase',
+		  padding: '2px 15px',
+		  color: '#27abe1',		  
+		};
+		return (
+			<div style={{background: 'white'}}>
+				<div style={{maxWidth: 1100, margin: 'auto', border: '1px solid #DDD', borderWidth: '0 1px'}}>
+					<img style={logo_style} src={LOGO_SRC}/>
+					{this.props.categories.map((c)=><div className="menu-item" style={item_style}>{c}</div>)}
+					<div style={{clear: 'both'}}/>
+				</div>
+			</div>
+		);
+	}
+});
+var MockContainer = React.createClass({
+	render: function() {
+		return (
+			<div>
+				<Slider data={this.props.data}/>
+				<Menubar categories={this.props.categories}/>
+			</div>
+		);
+	}
+})
 module.exports = MockContainer;
