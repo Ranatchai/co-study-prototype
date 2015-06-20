@@ -1,6 +1,25 @@
 .hl-horz {
   height: 200px;
 }
+@width: 300px;
+.indicator {
+  position: absolute;
+  top: 200px; 
+  padding: 0 5px; 
+  line-height: 25px; 
+  background: white;
+  &.fixed {
+    position: fixed;
+    top: 10px;
+    right: 0!important;
+  }
+  a {
+    color: #89919c;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
 .hl-vert {
   position: absolute;
   top: 200px;

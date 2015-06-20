@@ -24,8 +24,6 @@ var LatestSection = require('./latest-section');
 // 	src: '/images/p1.png'
 // }];
 
-var PolygonContainer = require('./mock-polygon-container');
-var _ = require('underscore');
 var $ = require('jquery');
 var SumFeed = require('./sum-feed');
 $.get('http://gmlive.com/api/ssslide').then((data) => {		

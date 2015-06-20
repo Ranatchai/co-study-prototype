@@ -21,7 +21,7 @@ module.exports = {
     "webpack/hot/only-dev-server",
     // "./src/main",
     // "./src/mockup-main2",
-    "./src/content-main-feed-mock-main"
+    "./src/single-feed-main"
     // "./src/eateeni-mock-main"
     // "./src/mockup-polygon-main"
     // "./src/timeline/app"
