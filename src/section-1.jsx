@@ -113,22 +113,22 @@ var Container = React.createClass({
 		var tr = splitTitle.join(' ');
 		var coverData = this.props.data[0];
 		var coverContent = [
-			<div className="gradient-black-bottom" style={{position: 'absolute', bottom: 0, left: 0, right: 0, height: 200}}/>,
+			<div className="gradient-black-bottom" style={{position: 'absolute', bottom: 0, left: 0, right: 0, height: '60%'}}/>,
 			<div style={{position: 'absolute', bottom: 20, left: 30, right: 30}}>
 				<h1 style={_.extend({}, titleTextStyle, {color: 'white', fontSize: 36, lineHeight: '40px', marginBottom: 0})}>{coverData.title}</h1>,
 				<div style={_.extend({}, descriptionTextStyle, {color: '#eee'})}>{coverData.description}</div>
 			</div>
 		];
 		return (
-			<div style={{maxWidth: 1280, margin: 'auto', position: 'relative'}}>
+			<div style={{maxWidth: 1280,margin: 'auto', position: 'relative'}}>
 				{bool? (
 					<div key="hl-horz" className="hl-horz" style={{height: 300, backgroundImage: 'url(' + coverData.thumbnail.src + ')', backgroundSize: 'cover', backgroundPosition: coverData.coverConfig && coverData.coverConfig.backgroundPosition || 'center center', position: 'relative'}}>
 						{coverContent}
 					</div>
 				): <div key="hl-vert" className="hl-vert" ref="hl" style={{width: 0.4 * (window.innerWidth > 1280? 1280: window.innerWidth), minHeight: 200, height: window.innerHeight, backgroundImage: 'url(' + coverData.thumbnail.src + ')', backgroundSize: 'cover', backgroundPosition: coverData.coverConfig && coverData.coverConfig.backgroundPosition || 'center center'}}>{coverContent}</div>}
-				<div style={{margin: bool? 'auto': '0 0 0 40%', float: bool? false: 'left', width: bool? false: '60%', minHeight: 200, position: 'relative', paddingLeft: 0, maxWidth: 768}}>
+				<div style={{margin: bool? 'auto': '0 0 0 40%', float: bool? false: 'left', width: bool? false: '60%', position: 'relative', paddingLeft: 0, maxWidth: 768}}>
 					<div style={latest_style}>{t1} <br/><span style={{borderBottom: '0px solid black'}}>{t2}</span> {tr}</div>
-					<List style={{marginTop: 40}} data={_.rest(this.props.data)}/>
+					<List style={{marginTop: 40, minHeight: window.innerHeight}} data={_.rest(this.props.data)}/>
 				</div>
 				<div style={{clear: 'both'}}/>
 			</div>

@@ -38,8 +38,8 @@ var ItemCard = React.createClass({
 			position: 'absolute', 
 			bottom: 0, 
 			right: 0,
-			width: 185/2,
-			height: 118/2,
+			width: 80,
+			height: 60,
 			fontFamily: 'Helvetica',
 			fontSize: '32px',
 			color: '#FFFFFF',
@@ -50,7 +50,7 @@ var ItemCard = React.createClass({
 			<div style={cardStyle}>
 				<div style={{position: 'relative', width: '100%', height: 109, backgroundSize: 'cover', backgroundImage: 'url(' + this.props.background + ')'}}>
 				</div>
-				<div style={{marginLeft: 100}}>
+				<div style={{marginLeft: 90}}>
 					<h3 style={titleStyle}>{this.props.title}</h3>
 					<div style={taglineStyle}>{this.props.tagline}</div>
 				</div>
@@ -89,13 +89,15 @@ var BankList = React.createClass({
 		);
 	}
 });
+var maxWidth = 375;
+var maxHeight = 667;
 var EateeniMock = React.createClass({
 	render: function() {
-		var width = 750/2;
-		var height = 1334/2;
+		var width = window.innerWidth > maxWidth? maxWidth: window.innerWidth;
+		var height = window.innerHeight > maxHeight? maxHeight: window.innerHeight;
 		return (
 			<div style={{width: width, height: height, background: 'white', overflow: 'scroll', position: 'relative'}}>
-				<div style={{position: 'fixed', top: 0, left: 0, width: width, background: 'white'}}>
+				<div style={{position: 'fixed', top: 0, left: 0, width: width, background: 'white', zIndex: 20}}>
 					<img src="/images/topbar.jpg" style={{width: '100%', paddingLeft: 4, paddingTop: 4}}/>
 					<div style={{height: 30, width: '100%', margin: '10px 0', position: 'relative'}}>
 						<div style={{

@@ -34,6 +34,7 @@ var LatestSection = React.createClass({
 			<div style={{background: 'white', padding: 20, maxWidth: 1280, margin: 'auto', position: 'relative'}}>
 				<h3 style={titleStyle}>Latest</h3>
 				{this.props.data.map((item)=><Item {...item}/>)}
+				<div style={{clear: 'both'}}/>
 			</div>
 		);
 	}
