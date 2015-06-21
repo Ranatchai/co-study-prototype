@@ -165,7 +165,7 @@ var Cover1 = React.createClass({
 			fontSize: (0.8 * width/320) + 'em'
 		};
 		return (
-			<div style={style} onTouchStart={this.animate}>
+			<div style={style} onTouchStart={this.animate} {...this.props}>
 				<img ref="default_img" src={DEFAULT_BG} height="100%" style={{position: 'absolute', top: 0, bottom: 0, left: '50%', marginLeft: '-' + width}}/>
 				<img ref="img" src={this.props.thumbnail.src} height="100%" style={{position: 'absolute', top: 0, bottom: 0, left: '50%', marginLeft: '-' + width/2}}/>
 				<div className="gradient-black-top" style={{position: 'absolute', left: 0, top: 0, right: 0, height: '50%', opacity: 0.5}}/>
@@ -184,8 +184,36 @@ var Cover1 = React.createClass({
 	}
 });
 var Cover = React.createClass({
+	getInitialState: function() {
+		return {
+			c: true
+		};
+	},
+	handleTouchStart: function(e) {
+		var touch = e.touches[0];
+		var x = touch.pageX;
+		var y = touch.pageY;
+		this._startX = x;
+		this._startY = y;
+	},
+	handleTouchMove: function(e) {
+		var touch = e.touches[0];
+		var x = touch.pageX;
+		var y = touch.pageY;
+		this._lastX = x;
+		this._lastY = y;
+	},
+	handleTouchEnd: function(e) {		
+		if (Math.sqrt(Math.pow(this._lastX - this._startX, 2) + Math.pow(this._lastY - this._startY, 2)) > 50) {
+			this.setState({
+				c: !this.state.c
+			});
+		}
+	},
 	render: function() {
-		return <Cover1 {...this.props}/>;
+		console.log('c', this.state.c);
+		var Component = this.state.c? Cover1: Cover2;
+		return <Component {...this.props} onTouchStart={this.handleTouchStart} onTouchMove={this.handleTouchMove} onTouchEnd={this.handleTouchEnd}/>;
 	}
 });
 
