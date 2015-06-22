@@ -13,7 +13,8 @@ module.exports.bootstrap = function(cb) {
   Q.longStackSupport = true;
   // It's very important to trigger this callback method when you are finished
   // with the bootstrap!  (otherwise your server will never lift, since it's waiting on the bootstrap)  
-  if (!process.env.NODE_ENV==='production') {
+  console.log('process.env.NODE_ENV', process.env.NODE_ENV);
+  if (process.env.NODE_ENV !== 'production') {
     var webpack = require('webpack');
     var WebpackDevServer = require('webpack-dev-server');
     var config = require('../webpack.local.config');

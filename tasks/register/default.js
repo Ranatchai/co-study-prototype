@@ -1,3 +1,3 @@
 module.exports = function (grunt) {
-	grunt.registerTask('default', ['webpack:dev', 'compileAssets', 'linkAssets',  'watch']);
+	grunt.registerTask('default', ['compileAssets', 'webpack:dev', 'linkAssets',  'watch']);
 };

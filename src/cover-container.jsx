@@ -165,10 +165,10 @@ var Cover1 = React.createClass({
 			fontSize: (0.8 * width/320) + 'em'
 		};
 		return (
-			<div style={style} onTouchStart={this.animate} {...this.props}>
+			<div style={style} {...this.props}>
 				<img ref="default_img" src={DEFAULT_BG} height="100%" style={{position: 'absolute', top: 0, bottom: 0, left: '50%', marginLeft: '-' + width}}/>
 				<img ref="img" src={this.props.thumbnail.src} height="100%" style={{position: 'absolute', top: 0, bottom: 0, left: '50%', marginLeft: '-' + width/2}}/>
-				<div className="gradient-black-top" style={{position: 'absolute', left: 0, top: 0, right: 0, height: '50%', opacity: 0.5}}/>
+				<div onTouchStart={this.animate} className="gradient-black-top" style={{position: 'absolute', left: 0, top: 0, right: 0, height: '50%', opacity: 0.5}}/>
 				<div ref="text_container" style={{right: 0, left: '3%', top: (height * 0.6), lineHeight: '38px', position: 'absolute'}}>
 					<div style={{position: 'relative'}}>
 						<div ref="title_container" style={{position: 'absolute', left: 0, top: 0, height: '100%', width: '85%', background: 'black'}}/>
