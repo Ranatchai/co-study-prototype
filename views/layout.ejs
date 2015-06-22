@@ -27,17 +27,47 @@
             + Import stylesheets from other directories
             + Use a different or additional preprocessor, like SASS, SCSS or Stylus
     -->
-
-    <!--STYLES-->
     <link rel="stylesheet" href="/styles/@reset.css">
     <link rel="stylesheet" href="/styles/codrop-input-set1.css">
     <link rel="stylesheet" href="/styles/icon-moon.css">
     <link rel="stylesheet" href="/styles/importer.css">
-    <!--STYLES END-->
+    <script type="text/javascript">
+      var loadedStyles = [];
+      function addStyleAsync(urls, nextTick) {
+        if (!urls) return;
+        if (!Array.isArray(urls)) {
+          urls = [urls];
+        }
+
+        var cb = function() {
+          urls.forEach(function(url) {
+            var l = document.createElement('link'); l.rel = 'stylesheet';
+            l.href = url;
+            if (loadedStyles.indexOf(url) < 0) {
+              loadedStyles.push(url);
+            }
+            var h = document.getElementsByTagName('head')[0]; 
+            h.parentNode.insertBefore(l, h);
+          });        
+        };
+        if (!nextTick) {
+          cb();
+          return;
+        }
+        var raf = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
+            window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+        if (raf) {
+          raf(cb);
+        }
+        else {
+          window.addEventListener('load', cb);
+        }
+      };
+    </script>
   </head>
 
   <body>
-  
+    
     <%- body %>
 
 
@@ -89,9 +119,5 @@
           + Use a different preprocessor, like TypeScript
 
     -->
-    <!--SCRIPTS-->
-    <script src="/js/dependencies/jquery-1.11.1.js"></script>
-    <!--SCRIPTS END-->
-
   </body>
 </html>

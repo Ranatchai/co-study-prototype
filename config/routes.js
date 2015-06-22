@@ -35,26 +35,12 @@ module.exports.routes = {
     controller: 'AppController',
     action: 'index'
   },
-  '/page/*': {
+  'GET /app': {
     controller: 'AppController',
-    action: 'index'
+    action: 'appList'
   },
-  '/@*': {
+  'POST /app': {
     controller: 'AppController',
-    action: 'index'
-  },
-  'POST /api/:modelName': [{policy: 'passport'}, {policy: 'anyAuth'}],
-  'PUT /api/:modelName/:id': [{policy: 'passport'}, {policy: 'anyAuth'}],
-  'DELETE /api/:modelName/:id': [{policy: 'passport'}, {policy: 'anyAuth'}],  
-  'GET /register': {
-    controller: 'AppController',
-    action: 'index',
-    policy: 'notAuth'
-  },
-  'GET /login': {
-    controller: 'AppController',
-    action: 'index',
-    policy: 'notAuth'
-  },
-  'GET /logout': 'AuthController.logout'
+    action: 'generateAPP'
+  }
 };

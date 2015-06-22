@@ -1,9 +1,10 @@
 module.exports = {
 	"content-feed": {
+		title: 'Mix Content Feed',
 		path: "./src/mains/content-feed-mock"
 	},
 	"cover": {
-		title: "Article Cover Mobile with Animation",
+		title: "Article Cover",
 		path: "./src/mains/cover-mock"
 	},
 	"eateeni": {
@@ -21,6 +22,7 @@ module.exports = {
 		path: "./src/mains/mockup-2"
 	},
 	"single-feed": {
+		title: "Single Type Feed",
 		path: "./src/mains/single-feed"
-	}
+	}	
 };

@@ -1,0 +1,26 @@
+<div class="ui segment" style="max-width: 960px; margin: 10px auto;">
+	<h1 class="ui header">App list</h1>
+	<div class="ui selection list">
+	    <% for(var i=0; i<list.length; i++) { %>
+	        <form class="item <%=active===list[i].key?'active':''%>" method="post">
+	           <div class="content"><%= list[i].title || list[i].key  %></div>
+	           <input type="hidden" name="target" value="<%=list[i].key%>"/>
+	           <% if (active !== list[i].key) {%>
+	           <input type="submit" onclick="hideAllButton();" class="right floated compact ui button submit" value="Use this"/>
+	           <%}%>
+	        </form>
+	    <% } %>
+	</div>
+</div>
+<script>
+	function hideAllButton() {
+		console.log('hideAllButton');
+		var ele_list = document.getElementsByClassName('submit');
+		for (var i = 0; i < ele_list.length; i++) {
+			ele_list[i].style.opacity = 0;
+		}
+	};
+	addStyleAsync(['/styles/semantic.min.css']);
+</script>
+<script src="/js/dependencies/jquery-1.11.1.js"></script>
+<script src="/js/semantic.min.js"/>
