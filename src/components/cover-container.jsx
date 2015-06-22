@@ -8,15 +8,19 @@ var $ = require('jquery');
 var CoverMixin = {
 	mixins: [ReactComponentWithPureRenderMixin],
 	getInitialState: function() {
-		return this.getSizeState();
+		var size = this.getSizeState();
+		return {
+			width: size.width,
+			height: size.height,
+			load: false
+		};
 	},
 	getSizeState: function() {
 		var width = window.innerWidth > MAX_WIDTH? MAX_WIDTH: window.innerWidth;
 		var height = window.innerHeight > MAX_HEIGHT? MAX_HEIGHT: window.innerHeight;
 		return {
 			width: width,
-			height: height,
-			load: false
+			height: height
 		};
 	},
 	componentDidMount: function() {
