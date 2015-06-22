@@ -2,9 +2,10 @@
   height: 200px;
 }
 @width: 300px;
+@top: 209px;
 .indicator {
   position: absolute;
-  top: 200px; 
+  top: @top; 
   padding: 0 5px; 
   line-height: 25px; 
   background: white;
@@ -22,7 +23,7 @@
 }
 .hl-vert {
   position: absolute;
-  top: 200px;
+  top: @top;
   &.fixed {
     position: fixed;
     top: 0;

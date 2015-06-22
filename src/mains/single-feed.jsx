@@ -22,7 +22,7 @@ var SumFeed = React.createClass({
 	render: function() {
 		return (
 			<div style={{background: 'white', minHeight: '100%', paddingBottom: 20}}>
-				<SectionA data={_.first(this.props.data, 30)} title="GM LIVE"/>
+				<SectionA data={_.first(this.props.data, 100)} title="GM LIVE"/>
 			</div>
 		);
 	}
