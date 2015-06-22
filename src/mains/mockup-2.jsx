@@ -25,6 +25,6 @@ var blogData = [{
 	tags: ['Review']
 }];
 var logoSrc = 'http://www.thelovelyair.com/wp-content/uploads/2015/05/Logo-lovelyair-300x53.png';
-var MockContainer = require('./mock-container2');
+var MockContainer = require('../components/mock-container2');
 
 React.render(<MockContainer data={blogData} logo={logoSrc} categories={tags}/>, document.getElementById(DOM_APP_EL_ID));

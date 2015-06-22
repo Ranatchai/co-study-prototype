@@ -1,6 +1,6 @@
 var DOM_APP_EL_ID = "app";
 var React = require('react');
-var MockContainer = require('./mock-polygon-container');
+var MockContainer = require('../components/mock-polygon-container');
 var _ = require('underscore');
 var $ = require('jquery');
 $.get('http://gmlive.com/api/ssslide').then((data) => {	

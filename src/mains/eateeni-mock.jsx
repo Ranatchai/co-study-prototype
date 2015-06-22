@@ -4,7 +4,7 @@ var assign = require('react/lib/Object.assign');
 var Loader = require("halogen/MoonLoader");
 var React = require("react");
 
-var EateeniMock = require('./eateeni-mock');
+var EateeniMock = require('../components/eateeni-mock');
 var data = [{
 	title: 'On the table',
 	tagline: 'Centaral World Floor 6',

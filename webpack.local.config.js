@@ -10,6 +10,16 @@ var webpack = require('webpack');
  *
  * For more information, see: http://webpack.github.io/docs/configuration.html
  */
+var config = require('./app.config');
+var target = 'cover';
+for (var i = 0; i < process.argv.length; i++) {
+  var value = process.argv[i];
+  if (value.indexOf('--target:') >= 0) {
+    target = value.slice('--target:'.length);
+    break;
+  }
+}
+var main_path = config[target].path;
 module.exports = {
 
   // Efficiently evaluate modules with source maps
@@ -21,7 +31,7 @@ module.exports = {
     "webpack/hot/only-dev-server",
     // "./src/main",
     // "./src/mockup-main2",
-    "./src/cover-mock-main"
+    main_path
     // "./src/eateeni-mock-main"
     // "./src/mockup-polygon-main"
     // "./src/timeline/app"

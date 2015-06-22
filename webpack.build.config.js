@@ -3,7 +3,8 @@ var webpack = require('webpack');
 /**
  * This is the Webpack configuration file for production.
  */
-var target = 'cover-mock-main';
+var config = require('./app.config');
+var target = 'cover';
 for (var i = 0; i < process.argv.length; i++) {
   var value = process.argv[i];
   if (value.indexOf('--target:') >= 0) {
@@ -11,9 +12,10 @@ for (var i = 0; i < process.argv.length; i++) {
     break;
   }
 }
-console.log('target=', target);
+var main_path = config[target].path;
+console.log('target=', target, main_path);
 module.exports = {
-  entry: "./src/" + target,
+  entry: main_path,
 
   output: {
     path: __dirname + "/.tmp/public/app/",
