@@ -1,7 +1,21 @@
-<div id="app"><%-html%></div>
-<script>
-    user = <%- user && JSON.stringify(user) %>;
-    console.log('title <%-title%>');
-</script>
-<script src="/js/TweenMax.min.js"></script>
-<script src="/app/app.js"></script>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%-title%></title>
+    <!-- Viewport mobile tag for sensible mobile support -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/styles/@reset.css">
+    <link rel="stylesheet" href="/styles/codrop-input-set1.css">
+    <link rel="stylesheet" href="/styles/icon-moon.css">
+    <link rel="stylesheet" href="/styles/importer.css">
+  </head>
+
+  <body>
+    <div id="app"><%-html%></div>
+		<script>
+		    
+		</script>
+		<script src="/js/TweenMax.min.js"></script>
+		<script src="/app/app.js"></script>
+  </body>
+</html>
