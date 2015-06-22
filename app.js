@@ -43,7 +43,7 @@ app.get('/', function(req, res, next) {
     // errors: req.flash('error')
   });
 });
-app.get('/app', function(req, res, next) {   
+app.get('/switch', function(req, res, next) {   
   var list = Object.keys(AppConfig).map(function(key) {
     return _.extend({key: key}, AppConfig[key]);
   });
@@ -54,7 +54,7 @@ app.get('/app', function(req, res, next) {
     active: active
   });
 });
-app.post('/app', function(req, res, next) {
+app.post('/switch', function(req, res, next) {
   var target = req.body.target;
   if (!target || !AppConfig[target]) {
     return next();
