@@ -59,8 +59,9 @@ app.post('/switch', function(req, res, next) {
   if (!target || !AppConfig[target]) {
     return next();
   }
-  active = target;
-  var child = shell.exec('grunt webpack:dev --target:' + target, {silent: true, async: true}, function(err, out) {
+  active = target;  
+  var env = (process.env.NODE_ENV === 'production'?'build': 'dev');
+  var child = shell.exec('grunt webpack:' + env + ' copy:' + env + ' --target:' + target, {silent: true, async: true}, function(err, out) {
     if (err) {
       return next(err);
     }
