@@ -300,7 +300,7 @@ var Container = React.createClass({
 			var weekName = getWeekName(weekData[0].publishedDate);
 			if (weekName === thisWeekName) {
 				weekName = 'This Week';
-				return <LatestSection width={this.state.width} height={this.state.height} data={weekData}/>;
+				return <LatestSection width={this.state.width} height={this.state.height} data={_.first(data, 10)}/>;
 			}
 			return [<Section width={this.state.width} height={this.state.height} data={weekData} title={weekName} reverse={i%2===1}/>, <AdContainer src={ads[i++%3]}/>];
 		});

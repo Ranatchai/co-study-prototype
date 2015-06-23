@@ -275,6 +275,17 @@ p {
   height: 450px;
   background-position: center;
   overflow: hidden;
+  .posted_channels {
+    &:hover {
+      opacity: 0.9;
+    }
+    span a{
+      padding: 4px 10px;
+      &:hover {
+        color: white;
+      }
+    }
+  }
 }
 .m-hero__title a:hover {
   color: @color;
@@ -344,6 +355,22 @@ a {
 *, a:link, a:active, a:hover, a:focus {
 	outline: 0;
 	-webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+.posted_channels span {
+  color: #fff;
+  text-transform: uppercase;
+  font-size: 0.875em;
+  font-weight: 600;
+  /*letter-spacing: 0.05em;*/ }
+.posted_channels span a{
+  background: #32C4ED;
+  color: #fff;
+  margin-right: 4px;
+  font-size: 0.875em;
+  padding: 10px;
+  margin-bottom: 4px;
+  width: auto !important;
+  display: inline-block !important; 
 }
 .m-hero__title a {
 	display: inline-block;
@@ -425,18 +452,64 @@ a {
   padding: 2px 15px;
   color: #237CA0;
   cursor: pointer;
+  -webkit-transition: all 0.2s;
+  -moz-transition: all 0.2s;
+  transition: all 0.2s;
   &:hover, &.active {
     background: #eee;
   }
+}
+a {
+  color: black;
+}
+a:hover {
+  color: @color;
 }
 .submenu-item {
   cursor: pointer;
   float: left;
   overflow: hidden;
   height: 100%;
-  padding: 10px;  
+  padding: 10px;
   background: white;
+  padding-left: 0px;
+  font-family: ThaiSansNeue-Regular;
+  &:first-child {
+    padding-left: 10px;
+  }
+}
+.fade-enter {
+  opacity: 0.01;
+  transition: opacity .2s ease-in;
+}
+
+.fade-enter.fade-enter-active {
+  opacity: 1;
+}
+.fade-leave {
+  opacity: 1;  
+}
+.fade-leave.fade-leave-active {
+  opacity: 0.01;
+  transition: opacity .2s ease-in;
+}
+
+.latest-item {
+  .title {
+    fontFamily: ThaiSansNeue-Bold;
+    fontSize: 18px;
+    color: #494B4A;
+    overflow: hidden;
+  }
   &:hover {
-    color: @color;
+    .title {
+      color: @color;
+    }
+  }
+  .content {
+    font-family: ThaiSansNeue-UltraLight;
+    font-size: 16px;
+    color: #9B9B9B;
+    overflow: hidden;
   }
 }

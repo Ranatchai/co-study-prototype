@@ -1,6 +1,7 @@
 var React = require('react');
 var _ = require('underscore');
 var classnames = require('classnames');
+var ReactCSSTransitionGroup = require('react/lib/ReactCSSTransitionGroup');
 var Slider = React.createClass({
 	render: function() {
 		var arr = _.first(this.props.data, 5);
@@ -13,9 +14,9 @@ var Slider = React.createClass({
 							<a className="m-hero__full-link" href={url}/>
 							<div className={"m-hero__meta meta_" + (index+1)}>
 								<div className="m-hero__header">
-									<div className="m-hero__eyebrow">
-									{item.categories.map(c=><a href={"http://gmlive.com/category/" + c}>{c}</a>)}
-									</div>
+									<div className="posted_channels">
+                    {item.categories.map(c=><span><a href={"/category/" + c}>{c}</a></span>)}
+                  </div>
 								</div> 
 								<div className="m-hero__title">
 									<a href={url}>{item.title}</a>
@@ -48,10 +49,10 @@ var Menubar = React.createClass({
 	renderSubmenuItem: function(article, index) {
 		var width = (MAX_WIDTH - 10)/6 ;
 		return (
-			<div className="submenu-item" style={{width: width}}>
+			<a href="#" className="submenu-item" style={{width: width}}>
 				<div style={{backgroundPosition: 'center center', backgroundSize: 'cover', backgroundImage: 'url(' + article.thumbnail.src + ')', width: '100%', height: 100}}/>
-				<p style={{fontSize: 12, lineHeight: '16px', maxHeight: 48, marginTop: 5, overflow: 'hidden'}}>{article.title}</p>
-			</div>
+				<p style={{fontSize: 18, lineHeight: '16px', maxHeight: 48, marginTop: 5, overflow: 'hidden'}}>{article.title}</p>
+			</a>
 		);
 	},
 	render: function() {
@@ -77,19 +78,21 @@ var Menubar = React.createClass({
 					<img style={logo_style} src={LOGO_SRC}/>
 					<div className="menu-container">
 						{this.props.categories.map((c)=>{
-							return <div onMouseEnter={this.openMenuCategory.bind(this, c)} className={classnames("menu-item", this.state.showSubcategory === c && 'active')}>{c}<i className="icon icon-bottom"/></div>
+							return <a href={"http://gmlive.com/category/" + c} onMouseEnter={this.openMenuCategory.bind(this, c)} className={classnames("menu-item", this.state.showSubcategory === c && 'active')}>{c}<i className="icon icon-bottom"/></a>
 						})}
 					</div>
 					<div style={{clear: 'both'}}/>
 				</div>
+				<ReactCSSTransitionGroup transitionName="fade" transitionLeave={false}>
 				{this.state.showSubcategory? (
-					<div style={{padding: 5, boxShadow: '0px 10px 10px rgba(0,0,0,0.3)', position: 'absolute', background: '#eee', height: submenuHeight, width: '100%', maxWidth: MAX_WIDTH, left: window.innerWidth > MAX_WIDTH? (window.innerWidth - MAX_WIDTH)/2: 0, bottom: -submenuHeight, zIndex: 100, overflow: 'hidden'}}>
+					<div key="category-submenu" style={{padding: 5, boxShadow: '0px 10px 10px rgba(0,0,0,0.3)', position: 'absolute', background: '#eee', height: submenuHeight, width: '100%', maxWidth: MAX_WIDTH, left: window.innerWidth > MAX_WIDTH? (window.innerWidth - MAX_WIDTH)/2: 0, bottom: -submenuHeight, zIndex: 100, overflow: 'hidden'}}>
 						<div style={{width: '100%', background: 'white', height: '100%'}}>
 							{submenuData.map(this.renderSubmenuItem)}
 						</div>
 						<div style={{clear: 'both'}}/>
 					</div>
 				): false}
+				</ReactCSSTransitionGroup>
 			</div>
 		);
 	}
@@ -98,15 +101,21 @@ var MockContainer = React.createClass({
 	render: function() {
 		var data = this.props.data;
 		var categories  = [];
-		var featured = data.filter((d)=>{
+		var uniq_cats = [];
+		var featured_in_unique_categories = data.filter((d)=>{
 			categories = categories.concat(d.categories);
+			if (!d.featured) return false;
+			if (uniq_cats.indexOf(d.categories[0]) >= 0) {
+				return false;
+			}
+			uniq_cats.push(d.categories[0]);
 			return d.featured;
 		});
 		categories = _.uniq(categories);
 		return (
 			<div>
 				<Menubar categories={categories} data={data}/>
-				<Slider data={featured}/>
+				<Slider data={featured_in_unique_categories}/>
 			</div>
 		);
 	}
