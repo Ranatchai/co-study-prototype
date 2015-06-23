@@ -3,42 +3,10 @@
   <head>    
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="/styles/@reset.css">
+    <link rel="stylesheet" href="/styles/semantic.min.css">
     <link rel="stylesheet" href="/styles/codrop-input-set1.css">
     <link rel="stylesheet" href="/styles/icon-moon.css">
     <link rel="stylesheet" href="/styles/importer.css">
-    <script type="text/javascript">
-      var loadedStyles = [];
-      function addStyleAsync(urls, nextTick) {
-        if (!urls) return;
-        if (!Array.isArray(urls)) {
-          urls = [urls];
-        }
-
-        var cb = function() {
-          urls.forEach(function(url) {
-            var l = document.createElement('link'); l.rel = 'stylesheet';
-            l.href = url;
-            if (loadedStyles.indexOf(url) < 0) {
-              loadedStyles.push(url);
-            }
-            var h = document.getElementsByTagName('head')[0]; 
-            h.parentNode.insertBefore(l, h);
-          });        
-        };
-        if (!nextTick) {
-          cb();
-          return;
-        }
-        var raf = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
-            window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
-        if (raf) {
-          raf(cb);
-        }
-        else {
-          window.addEventListener('load', cb);
-        }
-      };
-    </script>
   </head>
   <body>   
 		<div class="ui segment" style="max-width: 960px; margin: 10px auto;">
@@ -48,9 +16,8 @@
 			        <form class="item <%=active===list[i].key?'active':''%>" method="post">
 			           <div class="content"><%= list[i].title || list[i].key  %></div>
 			           <input type="hidden" name="target" value="<%=list[i].key%>"/>
-			           <% if (active !== list[i].key) {%>
-			           <input type="submit" onclick="hideAllButton();" class="right floated compact ui button submit" value="Use this"/>
-			           <%}%>
+			           <input type="submit" onclick="hideAllButton();" class="right floated compact ui button submit" 
+                  value="<%=active===list[i].key?'Rebuild':'Build'%>"/>
 			        </form>
 			    <% } %>
 			</div>
@@ -63,7 +30,6 @@
 					ele_list[i].style.opacity = 0;
 				}
 			};
-			addStyleAsync(['/styles/semantic.min.css']);
 		</script>
 		<script src="/js/dependencies/jquery-1.11.1.js"></script>
 		<script src="/js/semantic.min.js"/>
