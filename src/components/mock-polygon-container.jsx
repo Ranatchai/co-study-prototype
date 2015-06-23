@@ -32,7 +32,7 @@ var MAX_WIDTH = 1100;
 var Menubar = React.createClass({
 	getInitialState: function() {
 		return {
-			showSubcategory: 'Gear'
+			showSubcategory: false
 		};
 	},
 	openMenuCategory: function(c) {
@@ -84,7 +84,9 @@ var Menubar = React.createClass({
 				</div>
 				{this.state.showSubcategory? (
 					<div style={{padding: 5, boxShadow: '0px 10px 10px rgba(0,0,0,0.3)', position: 'absolute', background: '#eee', height: submenuHeight, width: '100%', maxWidth: MAX_WIDTH, left: window.innerWidth > MAX_WIDTH? (window.innerWidth - MAX_WIDTH)/2: 0, bottom: -submenuHeight, zIndex: 100, overflow: 'hidden'}}>
-						{submenuData.map(this.renderSubmenuItem)}
+						<div style={{width: '100%', background: 'white', height: '100%'}}>
+							{submenuData.map(this.renderSubmenuItem)}
+						</div>
 						<div style={{clear: 'both'}}/>
 					</div>
 				): false}
