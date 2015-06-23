@@ -27,7 +27,9 @@
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 }
-
+.icon-bottom:before {
+  content: "\e601";
+}
 .icon-home:before {
 	content: "\e900";
 }

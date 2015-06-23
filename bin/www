@@ -95,7 +95,16 @@ if (process.env.NODE_ENV !== 'production') {
   var webpack = require('webpack');
   var WebpackDevServer = require('webpack-dev-server');
   var config = require('../webpack.local.config');
-  shell.exec('grunt', {async: true});
+  var cmd = 'grunt';
+  for (var i = 0; i < process.argv.length; i++) {
+    var value = process.argv[i];
+    console.log('value', value);
+    if (value.indexOf('--target') === 0) {
+      cmd += ' ' + value;
+    }
+  }
+  console.log('cmd', cmd);
+  shell.exec(cmd, {async: true});
 
   new WebpackDevServer(webpack(config), {
     publicPath: config.output.publicPath,

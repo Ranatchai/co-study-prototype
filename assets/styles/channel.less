@@ -360,7 +360,7 @@ a {
   zoom: 1;
   position: relative;
   height: 450px;
-  z-index: 50005;
+  z-index: 999;
   background: #000;
 }
 .m-hero__slider:after{
@@ -410,4 +410,33 @@ a {
 }
 .m-hero__eyebrow a:hover {
 	color: white;
+}
+.polygon-menu .menu-container {
+  float: right;
+}
+.polygon-menu .menu-item {
+  float: left;
+  height: 50px;
+  line-height: 50px;
+  font-size: 13px;
+  font-family: Lato;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 2px 15px;
+  color: #237CA0;
+  cursor: pointer;
+  &:hover, &.active {
+    background: #eee;
+  }
+}
+.submenu-item {
+  cursor: pointer;
+  float: left;
+  overflow: hidden;
+  height: 100%;
+  padding: 10px;  
+  background: white;
+  &:hover {
+    color: @color;
+  }
 }

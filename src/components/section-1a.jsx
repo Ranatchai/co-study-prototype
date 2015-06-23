@@ -286,13 +286,7 @@ var Container = React.createClass({
 	},
 	render: function() {
 		var groupWeek = {};
-		var data = this.props.data;
-		var categories = [];
-		var features = data.filter((d)=>{
-			categories = categories.concat(d.categories);
-			return d.featured;
-		});
-		categories = _.uniq(categories);
+		var data = this.props.data;		
 		data.forEach((item, key)=>{
 			var weekKey = getWeek(item.publishedDate);
 			if (!groupWeek[weekKey]) {
@@ -312,7 +306,7 @@ var Container = React.createClass({
 		});
 		return (
 			<div>
-				<PolygonContainer data={features} categories={categories}/>
+				<PolygonContainer data={data}/>
 				{sections}
 				<Indicator ref="indicator" width={(window.innerWidth - this.state.width)/2}/>
 			</div>
