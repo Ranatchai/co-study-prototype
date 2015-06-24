@@ -7,6 +7,10 @@ module.exports = {
 		title: "Article Cover",
 		path: "./src/mains/cover-mock"
 	},
+	"cover-2": {
+		title: "Article Cover 2",
+		path: "./src/mains/cover-mock-2"
+	},
 	"eateeni": {
 		title: "Eateeni Shop list",
 		path: "./src/mains/eateeni-mock"

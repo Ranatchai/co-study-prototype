@@ -440,13 +440,25 @@ a {
 .m-hero__eyebrow a:hover {
 	color: white;
 }
+.polygon-menu .logo {
+  max-width: 158px;
+  padding: 12px;
+  height: 40px;
+  line-height: 40px;
+  overflow: hidden;
+  text-indent: -9999px;
+  display: block;
+  float: left;
+  position: relative;
+  margin-right: 20px;
+}
 .polygon-menu .menu-container {
   float: right;
 }
 .polygon-menu .menu-item {
   float: left;
-  height: 50px;
-  line-height: 50px;
+  height: 40px;
+  line-height: 40px;
   font-size: 13px;
   font-family: Lato;
   font-weight: 600;
@@ -490,10 +502,10 @@ a:hover {
 }
 .fade-leave {
   opacity: 1;  
+  transition: opacity .2s ease-in;
 }
 .fade-leave.fade-leave-active {
   opacity: 0.01;
-  transition: opacity .2s ease-in;
 }
 
 .latest-item {
@@ -547,3 +559,66 @@ a:hover {
     margin-left: 5
   }
 }
+@-webkit-keyframes fade {
+  0%   { opacity: 0.2; }
+  50% { opacity: 1; }
+  100% { opacity: 0.2; }
+}
+@keyframes fade {
+  0%   { opacity: 0.2; }
+  50% { opacity: 1; }
+  100% { opacity: 0.2; }
+}
+@-moz-keyframes fade {
+  0%   { opacity: 0.2; }
+  50% { opacity: 1; }
+  100% { opacity: 0.2; } 
+}
+@-o-keyframes fade {
+  0%   { opacity: 0.2; }
+  50% { opacity: 1; }
+  100% { opacity: 0.2; }
+}
+
+.animate-fade-infinite {
+  -webkit-animation: fade 5s infinite;
+  -moz-animation:    fade 5s infinite;
+  -o-animation:      fade 5s infinite;
+  animation:         fade 5s infinite;
+}
+@-webkit-keyframes move-fade {
+  0%   { opacity: 1; -webkit-transform: translateX(0); }
+  75% { opacity: 1; -webkit-transform: translateX(-100px); }
+  100% { opacity: 0; }
+}
+@keyframes move-fade {
+  0%   { opacity: 1; transform: translateX(0); }
+  75% { opacity: 1; transform: translateX(-100px); }
+  100% { opacity: 0; transform: translateX(-100px); }
+}
+
+.animate-finger {
+  opacity: 0;
+  -webkit-animation: move-fade 2s;
+  -moz-animation:    move-fade 2s;
+  -o-animation:      move-fade 2s;
+  animation:         move-fade 2s;
+  animation-delay: 0.5s;
+  -webkit-animation-delay: 0.5s;
+  -webkit-animation-iteration-count: 3; /* Chrome, Safari, Opera */
+  animation-iteration-count: 3;
+}
+@keyframes animate-arrow {
+
+}
+.arrow-fade {
+  
+}
+.animate-arrow {
+  opacity: 1;
+  -webkit-animation: arrow-fade 2.5s;
+  -moz-animation:    arrow-fade 2.5s;
+  -o-animation:      arrow-fade 2.5s;
+  animation:         arrow-fade 2.5s;
+}
+

@@ -57,18 +57,6 @@ var Menubar = React.createClass({
 		);
 	},
 	render: function() {
-		var logo_style = {
-		  maxWidth: 158,
-		  padding: 12,
-		  height: '50px',
-		  lineHeight: '50px',
-		  overflow: 'hidden',
-		  textIndent: '-9999px',
-		  display: 'block',
-		  float: 'left',
-		  position: 'relative',
-		  marginRight: 20,
-		};
 		var submenuHeight = MAX_WIDTH/6;
 		var submenuData = this.state.showSubcategory && _.first(this.props.data.filter((article)=>{
 			return article.categories.indexOf(this.state.showSubcategory) >= 0;
@@ -76,7 +64,7 @@ var Menubar = React.createClass({
 		return (
 			<div style={{background: 'white', position: 'relative'}} className="polygon-menu" onMouseLeave={this.closeSubmenu}>
 				<div style={{maxWidth: MAX_WIDTH, margin: 'auto', border: '1px solid #DDD', borderWidth: '0 1px', position: 'relative', boxSizing: 'content-box'}}>
-					<img style={logo_style} src={LOGO_SRC}/>
+					<img className="logo" src={LOGO_SRC}/>
 					<div className="menu-container">
 						{this.props.categories.map((c)=>{
 							return <a href={"http://gmlive.com/category/" + c} onMouseEnter={this.openMenuCategory.bind(this, c)} className={classnames("menu-item", this.state.showSubcategory === c && 'active')}>{c}<i className="icon icon-bottom"/></a>

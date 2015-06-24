@@ -1,9 +1,11 @@
 var React = require('react');
 var ReactComponentWithPureRenderMixin = require('react/lib/ReactComponentWithPureRenderMixin');
+var ReactCSSTransitionGroup = require('react/lib/ReactCSSTransitionGroup');
 var MAX_WIDTH = 414;
 var MAX_HEIGHT = 736;
 var LOGO_SRC = '/images/cover-logo.png';
-var DEFAULT_BG = '/images/cover-default.jpg'
+// var DEFAULT_BG = '/images/cover-default.jpg'
+var DEFAULT_BG = 'http://gmlive.com/images/GM_Mobile_Cover_v2.jpg';
 var $ = require('jquery');
 var CoverMixin = {
 	mixins: [ReactComponentWithPureRenderMixin],
@@ -24,21 +26,54 @@ var CoverMixin = {
 		};
 	},
 	componentDidMount: function() {
+		this._start = Date.now();
 		window.addEventListener('resize', ()=>this.setState(this.getSizeState()));		
-		var img = new Image();
-		img.onload = ()=>{
-			var img2 = new Image();
-			img2.onload = ()=>{
+		this._loadingTL = this.createLoadingTimeline();
+		this._tl = this.createTimeline();
+		var img = new Image();		
+		img.onload = this.handleLoadFinish;
+		img.src = this.props.thumbnail.src;
+	},
+	createLoadingTimeline: function() {
+		var tl = new TimelineMax({repeat: 2, onComplete: ()=>{
+			this.refs['guide-text'].getDOMNode().style.opacity = 0;
+		}});
+		tl.fromTo(this.refs['guide-text'].getDOMNode(), 0.5, {
+			opacity: 0
+		}, {
+			opacity: 1
+		}).fromTo(this.refs.arrow.getDOMNode(), 0.5, {
+			opacity: 1
+		}, {
+			opacity: 0
+		}).fromTo(this.refs.finger.getDOMNode(), 0.8, {
+			x: 0
+		}, {
+			x: -100
+		}).fromTo(this.refs.finger.getDOMNode(), 0.4, {
+			opacity: 1
+		}, {
+			opacity: 0
+		});
+		return tl;
+	},
+	handleLoadFinish: function() {
+		var diff = (Date.now() - this._start)/1000;
+		var delay = diff > 3? 0: (3 - diff);
+		console.log('delay', delay, diff);
+		TweenMax.fromTo(this.refs['loading-cover'].getDOMNode(), 0.5, {
+			opacity: 1
+		}, {
+			opacity: 0,
+			onComplete: ()=>{
+				this._loadingTL.kill();
 				this.setState({
 					load: true
-				}, ()=>{
-					this._tl = this.createTimeline();
+				}, ()=>{					
 					this.animate();
 				});
-			};
-			img2.src = DEFAULT_BG;
-		};
-		img.src = this.props.thumbnail.src;		
+			}
+		}).delay(delay);
 	},
 	animate: function() {
 		if (!this._tl.isActive()) {
@@ -47,6 +82,22 @@ var CoverMixin = {
 		} else {
 			this._tl.progress(1);
 		}
+	},
+	renderLoadingCover: function() {
+		var ARROW_HEIGHT = 40;
+		var FINGER_HEIGHT = 90;
+		var TOP = window.innerHeight * 0.2;
+		return (
+			<div ref="loading-cover" style={{position: 'absolute', color: 'white', left: 0, right: 0, top: 0, bottom: 0, background: 'rgba(0,0,0,0.7)'}}>
+				<img ref="finger" src="/images/finger-pointer.png" style={{position: 'absolute', right: 20, top: TOP, width: FINGER_HEIGHT}}/>
+				<div ref="guide-text" style={{position: 'absolute', right: 20, top: TOP + FINGER_HEIGHT + 20, fontSize: 18}}>Swipe to next article</div>
+				<img ref="arrow" src="/images/arrow.png" style={{position: 'absolute', right: 130, top: TOP + (FINGER_HEIGHT - ARROW_HEIGHT)/2, height: ARROW_HEIGHT}}/>
+				<div className="content animate-fade-infinite" style={{position: 'absolute', padding: 20, left: 0, bottom: 0, fontSize: 20}}>
+					<span style={{fontWeight: 300}}>Loading</span>
+					<h1 style={{fontSize: 28, lineHeight: 1.4, marginTop: 10, fontFamily: 'ThaiSansNeue-Regular'}}>{this.props.title}</h1>
+				</div>
+			</div>
+		);
 	}
 };
 var Cover2 = React.createClass({
@@ -77,10 +128,7 @@ var Cover2 = React.createClass({
 		}, 0.3);
 		return tl;
 	},
-	render: function() {
-		if (!this.state.load) {
-			return null;
-		}
+	render: function() {		
 		var width = this.state.width;
 		var height = this.state.height;
 		var style = {
@@ -95,12 +143,14 @@ var Cover2 = React.createClass({
 		};
 		return (
 			<div style={style}>
-				<img onTouchStart={this.animate} ref="img" src={this.props.thumbnail.src} height="120%" style={{position: 'absolute', top: '-10%', bottom: '0%', left: '50%', marginLeft: '-' + width}}/>				
-				<div ref="text_container" style={{position: 'absolute', left: 0, bottom: 0, right: 0, color: 'white', background: 'black', padding: 10, paddingTop: 40}}>
-					<h1 ref="title" style={{fontSize: '2.5em', lineHeight: 1.2, fontFamily: 'Helvetica', fontWeight: 'normal', position: 'relative'}}>{this.props.title}</h1>
+				<img onTouchStart={this.animate} ref="img" src={this.props.thumbnail.src} height="120%" style={{position: 'absolute', top: '-10%', bottom: '0%', left: '50%', marginLeft: '-' + width}}/>								
+				<div ref="text_container" style={{position: 'absolute', left: 0, bottom: 0, right: 0, color: 'white', background: 'black', padding: 10, paddingTop: 20}}>
+					<h1 ref="title" style={{fontSize: '1.8em', lineHeight: 1.2, fontFamily: 'ThaiSansNeue-Regular', fontWeight: 'normal', position: 'relative'}}>{this.props.title}</h1>
 					<hr ref="hr" style={{width: '80%', border: '6px solid white', margin: '10px 0px'}}/>
-					<p ref="tagline" style={{fontSize: '1em', fontFamily: 'SukhumvitSet-Light', fontWeight: 'normal'}}>{this.props.tagline}</p>
+					<p ref="tagline" style={{fontSize: '1em', fontFamily: 'ThaiSansNeue-Light', fontWeight: 'normal'}}>{this.props.tagline}</p>
 				</div>
+				<img ref="logo" src={LOGO_SRC} style={{position: 'absolute', left: 10, top: 20, maxWidth: '64%'}}/>
+				{!this.state.load && this.renderLoadingCover()}
 			</div>
 		);
 	},
@@ -118,20 +168,11 @@ var Cover1 = React.createClass({
 			scale: 0
 		}, {
 			scale: 1
-		}).fromTo(this.refs.default_img.getDOMNode(), 3, {
-			x: 0
-		}, {
-			x: 50,
-			ease: Power1.easeInOut
-		}, 0).fromTo(this.refs.img.getDOMNode(), 2, {
-			opacity: 0
-		}, {
-			opacity: 1
-		}, 2).fromTo(this.refs.img.getDOMNode(), 5, {
+		}).fromTo(this.refs.img.getDOMNode(), 5, {
 			x: 0
 		}, {
 			x: -100,
-		}, 4);
+		}, 0);
 
 		tl.insert(TweenMax.fromTo(this.refs.title.getDOMNode(), 0.5, {
 			y: 200,
@@ -153,11 +194,24 @@ var Cover1 = React.createClass({
 		this._animating = false;
 	},
 	render: function() {
-		if (!this.state.load) {
-			return null;
-		}
 		var width = this.state.width;
 		var height = this.state.height;
+		var def_img_style = {
+			position: 'absolute',
+			top: 0,
+			bottom: 0,
+			left: '50%',
+			height: '100%',
+			marginLeft: '-' + width
+		};
+		var img_style = {
+			position: 'absolute', 
+			top: 0,
+			bottom: 0,
+			left: '50%',
+			height: '100%',
+			marginLeft: '-' + width/2
+		};
 		var style = {
 			width: width,
 			height: height, 
@@ -169,20 +223,20 @@ var Cover1 = React.createClass({
 			fontSize: (0.8 * width/320) + 'em'
 		};
 		return (
-			<div style={style} {...this.props}>
-				<img ref="default_img" src={DEFAULT_BG} height="100%" style={{position: 'absolute', top: 0, bottom: 0, left: '50%', marginLeft: '-' + width}}/>
-				<img ref="img" src={this.props.thumbnail.src} height="100%" style={{position: 'absolute', top: 0, bottom: 0, left: '50%', marginLeft: '-' + width/2}}/>
-				<div onTouchStart={this.animate} className="gradient-black-top" style={{position: 'absolute', left: 0, top: 0, right: 0, height: '50%', opacity: 0.5}}/>
+			<div style={style} {...this.props}>				
+				<img height="100%" ref="img" src={this.props.thumbnail.src} style={img_style}/>				
+				<div onTouchStart={this.animate} className="gradient-black-top" style={{position: 'absolute', left: 0, top: 0, right: 0, height: '50%', opacity: 0.5}}/>,
 				<div ref="text_container" style={{right: 0, left: '3%', top: (height * 0.6), lineHeight: '38px', position: 'absolute'}}>
 					<div style={{position: 'relative'}}>
-						<div ref="title_container" style={{position: 'absolute', left: 0, top: 0, height: '100%', width: '85%', background: 'black'}}/>
-						<h1 ref="title" style={{marginLeft: 5, fontSize: '1.5em', fontFamily: 'Helvetica', fontWeight: 'normal', position: 'relative', color: 'white'}}>{this.props.title}</h1>
+						<div ref="title_container" style={{position: 'absolute', left: 0, top: 0, height: '100%', width: '90%', background: 'black'}}/>
+						<h1 ref="title" style={{marginLeft: 5, fontSize: '1.5em', fontFamily: 'ThaiSansNeue-Regular', width: '90%', fontWeight: 'normal', position: 'relative', color: 'white'}}>{this.props.title}</h1>
 					</div>
 					<div ref="tagline_container" style={{width: '75%', lineHeight: '40px', marginLeft: '3%', paddingLeft: 8, paddingTop: 8, background: 'white', position: 'relative', top: -3, color: 'black'}}>
-						<p ref="tagline" style={{fontSize: '1em', fontFamily: 'SukhumvitSet-Light', fontWeight: 'normal'}}>{this.props.tagline}</p>
+						<p ref="tagline" style={{fontSize: '1em', fontFamily: 'ThaiSansNeue-Light', fontWeight: 'normal'}}>{this.props.tagline}</p>
 					</div>
 				</div>
 				<img ref="logo" src={LOGO_SRC} style={{position: 'absolute', left: 10, top: 20, maxWidth: '64%'}}/>
+				{!this.state.load && this.renderLoadingCover()}
 			</div>
 		);
 	}
@@ -192,6 +246,20 @@ var Cover = React.createClass({
 		return {
 			c: true
 		};
+	},
+	componentWillMount: function() {
+		window.addEventListener('keydown', this.handleKeydown);
+	},
+	componentWillUnmount: function() {
+		window.removeEventListener('keydown', this.handleKeydown);
+	},
+	handleKeydown: function(e) {
+		if (e.keyCode === 40 || e.keyCode === 38) {
+			e.preventDefault();
+			this.setState({
+				c: !this.state.c
+			});
+		}
 	},
 	handleTouchStart: function(e) {
 		var touch = e.touches[0];
