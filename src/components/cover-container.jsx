@@ -28,45 +28,45 @@ var CoverMixin = {
 	componentDidMount: function() {
 		this._start = Date.now();
 		window.addEventListener('resize', ()=>this.setState(this.getSizeState()));		
-		this._loadingTL = this.createLoadingTimeline();
+		// this._loadingTL = this.createLoadingTimeline();
 		this._tl = this.createTimeline();
 		var img = new Image();		
 		img.onload = this.handleLoadFinish;
 		img.src = this.props.thumbnail.src;
 	},
-	createLoadingTimeline: function() {
-		var tl = new TimelineMax({repeat: 2, onComplete: ()=>{
-			this.refs['guide-text'].getDOMNode().style.opacity = 0;
-		}});
-		tl.fromTo(this.refs['guide-text'].getDOMNode(), 0.5, {
-			opacity: 0
-		}, {
-			opacity: 1
-		}).fromTo(this.refs.arrow.getDOMNode(), 0.5, {
-			opacity: 1
-		}, {
-			opacity: 0
-		}).fromTo(this.refs.finger.getDOMNode(), 0.8, {
-			x: 0
-		}, {
-			x: -100
-		}).fromTo(this.refs.finger.getDOMNode(), 0.4, {
-			opacity: 1
-		}, {
-			opacity: 0
-		});
-		return tl;
-	},
+	// createLoadingTimeline: function() {
+	// 	var tl = new TimelineMax({repeat: 2, onComplete: ()=>{
+	// 		this.refs['guide-text'].getDOMNode().style.opacity = 0;
+	// 	}});
+	// 	tl.fromTo(this.refs['guide-text'].getDOMNode(), 0.5, {
+	// 		opacity: 0
+	// 	}, {
+	// 		opacity: 1
+	// 	}).fromTo(this.refs.arrow.getDOMNode(), 0.5, {
+	// 		opacity: 1
+	// 	}, {
+	// 		opacity: 0
+	// 	}).fromTo(this.refs.finger.getDOMNode(), 0.8, {
+	// 		x: 0
+	// 	}, {
+	// 		x: -100
+	// 	}).fromTo(this.refs.finger.getDOMNode(), 0.4, {
+	// 		opacity: 1
+	// 	}, {
+	// 		opacity: 0
+	// 	});
+	// 	return tl;
+	// },
 	handleLoadFinish: function() {
+		var MIN_TIME = 1;
 		var diff = (Date.now() - this._start)/1000;
-		var delay = diff > 3? 0: (3 - diff);
-		console.log('delay', delay, diff);
+		var delay = diff > MIN_TIME? 0.5: (MIN_TIME - diff);		
 		TweenMax.fromTo(this.refs['loading-cover'].getDOMNode(), 0.5, {
 			opacity: 1
 		}, {
 			opacity: 0,
 			onComplete: ()=>{
-				this._loadingTL.kill();
+				// this._loadingTL.kill();
 				this.setState({
 					load: true
 				}, ()=>{					
@@ -89,9 +89,6 @@ var CoverMixin = {
 		var TOP = window.innerHeight * 0.2;
 		return (
 			<div ref="loading-cover" style={{position: 'absolute', color: 'white', left: 0, right: 0, top: 0, bottom: 0, background: 'rgba(0,0,0,0.7)'}}>
-				<img ref="finger" src="/images/finger-pointer.png" style={{position: 'absolute', right: 20, top: TOP, width: FINGER_HEIGHT}}/>
-				<div ref="guide-text" style={{position: 'absolute', right: 20, top: TOP + FINGER_HEIGHT + 20, fontSize: 18}}>Swipe to next article</div>
-				<img ref="arrow" src="/images/arrow.png" style={{position: 'absolute', right: 130, top: TOP + (FINGER_HEIGHT - ARROW_HEIGHT)/2, height: ARROW_HEIGHT}}/>
 				<div className="content animate-fade-infinite" style={{position: 'absolute', padding: 20, left: 0, bottom: 0, fontSize: 20}}>
 					<span style={{fontWeight: 300}}>Loading</span>
 					<h1 style={{fontSize: 28, lineHeight: 1.4, marginTop: 10, fontFamily: 'ThaiSansNeue-Regular'}}>{this.props.title}</h1>
@@ -143,11 +140,12 @@ var Cover2 = React.createClass({
 		};
 		return (
 			<div style={style}>
-				<img onTouchStart={this.animate} ref="img" src={this.props.thumbnail.src} height="120%" style={{position: 'absolute', top: '-10%', bottom: '0%', left: '50%', marginLeft: '-' + width}}/>								
+				<img ref="img" src={this.props.thumbnail.src} height="120%" style={{position: 'absolute', top: '-10%', bottom: '0%', left: '50%', marginLeft: '-' + width}}/>								
+				<div className="gradient-black-top" style={{position: 'absolute', left: 0, top: 0, right: 0, height: '50%', opacity: 0.5}}/>
 				<div ref="text_container" style={{position: 'absolute', left: 0, bottom: 0, right: 0, color: 'white', background: 'black', padding: 10, paddingTop: 20}}>
 					<h1 ref="title" style={{fontSize: '1.8em', lineHeight: 1.2, fontFamily: 'ThaiSansNeue-Regular', fontWeight: 'normal', position: 'relative'}}>{this.props.title}</h1>
 					<hr ref="hr" style={{width: '80%', border: '6px solid white', margin: '10px 0px'}}/>
-					<p ref="tagline" style={{fontSize: '1em', fontFamily: 'ThaiSansNeue-Light', fontWeight: 'normal'}}>{this.props.tagline}</p>
+					<p ref="tagline" style={{fontSize: '1.25em', fontFamily: 'ThaiSansNeue-Light', fontWeight: 'normal'}}>{this.props.tagline}</p>
 				</div>
 				<img ref="logo" src={LOGO_SRC} style={{position: 'absolute', left: 10, top: 20, maxWidth: '64%'}}/>
 				{!this.state.load && this.renderLoadingCover()}
@@ -224,18 +222,21 @@ var Cover1 = React.createClass({
 		};
 		return (
 			<div style={style} {...this.props}>				
-				<img height="100%" ref="img" src={this.props.thumbnail.src} style={img_style}/>				
-				<div onTouchStart={this.animate} className="gradient-black-top" style={{position: 'absolute', left: 0, top: 0, right: 0, height: '50%', opacity: 0.5}}/>,
-				<div ref="text_container" style={{right: 0, left: '3%', top: (height * 0.6), lineHeight: '38px', position: 'absolute'}}>
+				<img height="100%" ref="img" src={this.props.thumbnail.src} style={img_style}/>
+				<div onTouchStart={this.animate} className="gradient-black-top" style={{position: 'absolute', left: 0, top: 0, right: 0, height: '50%', opacity: 0.5}}/>
+				<div ref="text_container" style={{right: 0, left: '3%', top: (height * 0.6), lineHeight: 1.25, position: 'absolute'}}>
 					<div style={{position: 'relative'}}>
 						<div ref="title_container" style={{position: 'absolute', left: 0, top: 0, height: '100%', width: '90%', background: 'black'}}/>
 						<h1 ref="title" style={{marginLeft: 5, fontSize: '1.5em', fontFamily: 'ThaiSansNeue-Regular', width: '90%', fontWeight: 'normal', position: 'relative', color: 'white'}}>{this.props.title}</h1>
 					</div>
-					<div ref="tagline_container" style={{width: '75%', lineHeight: '40px', marginLeft: '3%', paddingLeft: 8, paddingTop: 8, background: 'white', position: 'relative', top: -3, color: 'black'}}>
-						<p ref="tagline" style={{fontSize: '1em', fontFamily: 'ThaiSansNeue-Light', fontWeight: 'normal'}}>{this.props.tagline}</p>
+					<div ref="tagline_container" style={{width: '75%', lineHeight: 1.25, marginLeft: '3%', paddingLeft: 8, paddingTop: 8, background: 'white', position: 'relative', top: -3, color: 'black'}}>
+						<p ref="tagline" style={{fontSize: '1.25em', fontFamily: 'ThaiSansNeue-Light', fontWeight: 'normal'}}>{this.props.tagline}</p>
 					</div>
 				</div>
 				<img ref="logo" src={LOGO_SRC} style={{position: 'absolute', left: 10, top: 20, maxWidth: '64%'}}/>
+				<a className="enter-site-btn" ref="button">
+          <i className="fa fa-angle-down fa-3x"/>
+        </a>
 				{!this.state.load && this.renderLoadingCover()}
 			</div>
 		);

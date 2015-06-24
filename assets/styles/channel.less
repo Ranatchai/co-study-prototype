@@ -581,10 +581,10 @@ a:hover {
 }
 
 .animate-fade-infinite {
-  -webkit-animation: fade 5s infinite;
-  -moz-animation:    fade 5s infinite;
-  -o-animation:      fade 5s infinite;
-  animation:         fade 5s infinite;
+  -webkit-animation: fade 3s infinite;
+  -moz-animation:    fade 3s infinite;
+  -o-animation:      fade 3s infinite;
+  animation:         fade 3s infinite;
 }
 @-webkit-keyframes move-fade {
   0%   { opacity: 1; -webkit-transform: translateX(0); }
@@ -621,4 +621,38 @@ a:hover {
   -o-animation:      arrow-fade 2.5s;
   animation:         arrow-fade 2.5s;
 }
+@-webkit-keyframes go-down {
+  0%   { -webkit-transform: translateY(0); }
+  50% { -webkit-transform: translateY(15%); }
+  100% { -webkit-transform: translateY(0); }
+}
+@-moz-keyframes go-down {
+  0%   { -moz-transform: translateY(0); }
+  50% { -moz-transform: translateY(15%); }
+  100% { -moz-transform: translateY(0); }
+}
+@-o-keyframes go-down {
+  0%   { -o-transform: translateY(0); }
+  50% { -o-transform: translateY(15%); }
+  100% { -o-transform: translateY(0); }
+}
+@keyframes go-down {
+  0%   { transform: translateY(0); }
+  50% { transform: translateY(15%); }
+  100% { transform: translateY(0); }
+}
 
+.enter-site-btn {
+  padding: 5px 10px;
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  padding: 0;
+  color: white;
+  -webkit-transition: 300ms ease-out;
+  transition: 300ms ease-out;
+  -webkit-animation: go-down 1.5s infinite;
+  -moz-animation:    go-down 1.5s infinite;
+  -o-animation:      go-down 1.5s infinite;
+  animation:         go-down 1.5s infinite;
+}
