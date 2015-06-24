@@ -5,28 +5,7 @@ var _ = require('underscore');
 var ReactComponentWithPureRenderMixin = require('react/lib/ReactComponentWithPureRenderMixin');
 var $ = require('jquery');
 var moment = require('moment');
-// moment.locale('th');
-var titleTextStyle = {
-	fontFamily: '.HelveticaNeueDeskInterface-Regular',
-	fontSize: '18px',
-	color: '#222422',
-	lineHeight: '22px',
-	marginBottom: 15
-};
-var descriptionTextStyle = {
-	fontFamily: 'ThaiSansNeue-ExtraLight',
-	fontSize: '20px',
-	color: '#9B9B9B',
-	lineHeight: '27px'			
-};
-var authorStyle = {
-	fontFamily: 'Helvetica-Light',
-	fontSize: '9px',
-	color: '#9B9B9B',
-	lineHeight: '11px',
-	textTransform: 'uppercase',
-	marginLeft: 5
-};
+
 var ListItem = React.createClass({
 	mixins: [ReactComponentWithPureRenderMixin],
 	render: function() {
@@ -41,10 +20,10 @@ var ListItem = React.createClass({
 			<div className="item" style={{minHeight: 350, border: 0, height: 'auto', position: 'relative', padding: 0, cursor: 'inherit'}}>
 				<div style={{position: 'absolute', height: '100%', backgroundPosition: 'center center', backgroundSize: 'cover', backgroundImage: 'url(' + (this.props.thumbnail && this.props.thumbnail.src) + ')', width: '60%', right: this.props.index%2===0?0:false, left: this.props.index%2===0?false: 0}}/>
 				<div style={{width: '34%', float: this.props.index%2===0?'right': 'left', padding: '10px', marginRight: this.props.index%2===0?'60%': 0, marginLeft: this.props.index%2===0?0:'60%'}}>
-					<div style={authorStyle}>BY <a href="#" style={{color: '#27abe1', fontWeight: 'bold'}}>{this.props.user.fullname}</a></div>
+					<div className="author">BY <a href="#" style={{color: '#27abe1', fontWeight: 'bold'}}>{this.props.user.fullname}</a></div>
 					<div style={labelStyle}>{this.props.label}<span style={{fontSize: 20}}>{this.props.label_postfix}</span></div>
-					<h3 style={titleTextStyle}>{this.props.title}</h3>
-					<div style={descriptionTextStyle}>{this.props.description}</div>
+					<h3 className="title">{this.props.title}</h3>
+					<div className="description">{this.props.description}</div>
 					<div style={{clear: 'both'}}/>
 				</div>
 				<div style={{clear: 'both'}}/>
@@ -204,19 +183,19 @@ var Section = React.createClass({
 		var coverData = this.props.data[0];
 		var coverContent = [
 			<div className="gradient-black-bottom" style={{position: 'absolute', bottom: 0, left: 0, right: 0, height: '60%'}}/>,
-			<div style={{position: 'absolute', bottom: 20, left: 30, right: 30}}>
-				<h1 style={_.extend({}, titleTextStyle, {color: 'white', fontSize: 36, lineHeight: '40px', marginBottom: 0})}>{coverData.title}</h1>,
-				<div style={_.extend({}, descriptionTextStyle, {color: '#eee'})}>{coverData.description}</div>
-			</div>
+			<a href="#" style={{position: 'absolute', bottom: 20, left: 30, right: 30}} className="item">
+				<h1 className="title" style={{fontSize: 36, lineHeight: '40px', marginBottom: 0}}>{coverData.title}</h1>,
+				<div className="description">{coverData.description}</div>
+			</a>
 		];
 		return (
-			<div style={{maxWidth: MAX_WIDTH,margin: 'auto', position: 'relative', background: 'white', paddingTop: 1}}>
+			<div style={{maxWidth: MAX_WIDTH,margin: 'auto', position: 'relative', background: 'white', paddingTop: 1}} className="list-item__1a">
 				<div style={latest_style}>MOST POPULAR<br/><span style={{fontSize: 32}}>{title}</span></div>
 				{bool? (
-					<div key="hl-horz" className="hl-horz" style={{height: 300, backgroundImage: 'url(' + (coverData.thumbnail && coverData.thumbnail.src) + ')', backgroundSize: 'cover', backgroundPosition: coverData.coverConfig && coverData.coverConfig.backgroundPosition || 'center center', position: 'relative'}}>
+					<div key="hl-horz" className="hl hl-horz" style={{height: 300, backgroundImage: 'url(' + (coverData.thumbnail && coverData.thumbnail.src) + ')', backgroundSize: 'cover', backgroundPosition: coverData.coverConfig && coverData.coverConfig.backgroundPosition || 'center center', position: 'relative'}}>
 						{coverContent}
 					</div>
-				): <div key="hl-vert" className="hl-vert" ref="hl" style={{right: this.props.reverse? 0: false,width: HL_RATIO * this.props.width, minHeight: 200, height: window.innerHeight, backgroundImage: 'url(' + (coverData.thumbnail && coverData.thumbnail.src) + ')', backgroundSize: 'cover', backgroundPosition: coverData.coverConfig && coverData.coverConfig.backgroundPosition || 'center center'}}>{coverContent}</div>}
+				): <div key="hl-vert" className="hl hl-vert" ref="hl" style={{right: this.props.reverse? 0: false,width: HL_RATIO * this.props.width, minHeight: 200, height: window.innerHeight, backgroundImage: 'url(' + (coverData.thumbnail && coverData.thumbnail.src) + ')', backgroundSize: 'cover', backgroundPosition: coverData.coverConfig && coverData.coverConfig.backgroundPosition || 'center center'}}>{coverContent}</div>}
 				<div style={{margin: this.props.reverse? '0': (bool? 'auto': '0 0 0 ' + (HL_RATIO * 100) +'%'), float: bool? false: 'left', width: bool? false: ((100 * (1 - HL_RATIO)) + '%'), position: 'relative', padding: '0 5px', marginTop: 50, maxWidth: 768, background: 'black'}}>
 					<List style={{minHeight: window.innerHeight, background: 'white'}} data={_.rest(this.props.data)}/>
 				</div>								

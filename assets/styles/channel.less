@@ -310,7 +310,8 @@ p {
   zoom: 1;
   position: relative;
 	-webkit-transition: all 0.3s cubic-bezier(0,0,0.25,1);
-  transition: all 0.3s cubic-bezier(0,0,0.25,1);  
+  transition: all 0.3s cubic-bezier(0,0,0.25,1);
+  font-family: Lato;
 }
 .meta_1 {
 	height: 450px;
@@ -327,7 +328,8 @@ p {
   bottom: 0;
   font-size: 28px;
   line-height: 1.4;
-  z-index: 26;  
+  z-index: 26;
+  font-family: ThaiSansNeue-Bold;
 	@media (max-width: 1100px) {
 	  font-size: 24px;
 	}
@@ -496,8 +498,8 @@ a:hover {
 
 .latest-item {
   .title {
-    fontFamily: ThaiSansNeue-Bold;
-    fontSize: 18px;
+    font-family: ThaiSansNeue-Bold;
+    font-size: 18px;
     color: #494B4A;
     overflow: hidden;
   }
@@ -511,5 +513,37 @@ a:hover {
     font-size: 16px;
     color: #9B9B9B;
     overflow: hidden;
+  }
+}
+.list-item__1a .hl .item {
+  .title, .description {
+    color: white;
+  }
+}
+.list-item__1a .item {
+  cursor: pointer;
+  &:hover .title {
+    color: @color;
+  }
+  .title {
+    font-family: ThaiSansNeue-Regular;
+    font-size: 24px;
+    color: #222422;
+    line-height: 22px;
+    margin-bottom: 15
+  }
+  .description {
+    font-family: ThaiSansNeue-ExtraLight;
+    font-size: 20px;
+    color: #9B9B9B;
+    line-height: 27px      
+  }
+  .author {
+    font-family: ThaiSansNeue-Light;
+    font-size: 12px;
+    color: #9B9B9B;
+    line-height: 11px;
+    text-transform: uppercase;
+    margin-left: 5
   }
 }

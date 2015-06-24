@@ -14,7 +14,7 @@ var DESCRIPTION_STYLE = {
 var Item = React.createClass({
 	render: function() {
 		return (
-			<a href="#" {...this.props} className="latest-item" style={{float: 'left', width: 200, marginRight: 40, height: LINE_HEIGHT*TOTAL_NUMBER_OF_LINE + GAP_BETWEEN_TITLE_DESCRIPTION, overflow: 'hidden'}}>
+			<a href="#" className="latest-item" style={{float: 'left', width: 200, marginRight: 40, height: LINE_HEIGHT*TOTAL_NUMBER_OF_LINE + GAP_BETWEEN_TITLE_DESCRIPTION, overflow: 'hidden'}} {...this.props}>
 				<h4 className="title" style={TITLE_STYLE}>{this.props.title}</h4>
 				<div className="content" style={DESCRIPTION_STYLE}>{this.props.description}</div>
 			</a>

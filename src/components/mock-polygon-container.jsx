@@ -48,8 +48,9 @@ var Menubar = React.createClass({
 	},
 	renderSubmenuItem: function(article, index) {
 		var width = (MAX_WIDTH - 10)/6 ;
+		var url = "http://gmlive.com/post/" + article.shortenId + '-' + article.slug;
 		return (
-			<a href="#" className="submenu-item" style={{width: width}}>
+			<a href={url} className="submenu-item" style={{width: width}}>
 				<div style={{backgroundPosition: 'center center', backgroundSize: 'cover', backgroundImage: 'url(' + article.thumbnail.src + ')', width: '100%', height: 100}}/>
 				<p style={{fontSize: 18, lineHeight: '16px', maxHeight: 48, marginTop: 5, overflow: 'hidden'}}>{article.title}</p>
 			</a>
