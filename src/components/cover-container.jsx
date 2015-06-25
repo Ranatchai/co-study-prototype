@@ -32,7 +32,7 @@ var CoverMixin = {
 		this._tl = this.createTimeline();
 		var img = new Image();		
 		img.onload = this.handleLoadFinish;
-		img.src = this.props.thumbnail.src;
+		img.src = this.props.thumbnail.srcSet[3].src;
 	},
 	// createLoadingTimeline: function() {
 	// 	var tl = new TimelineMax({repeat: 2, onComplete: ()=>{
@@ -58,6 +58,9 @@ var CoverMixin = {
 	// 	return tl;
 	// },
 	handleLoadFinish: function() {
+		if (!this.isMounted()) {
+			return;
+		}
 		var MIN_TIME = 1;
 		var diff = (Date.now() - this._start)/1000;
 		var delay = diff > MIN_TIME? 0.5: (MIN_TIME - diff);		
@@ -91,12 +94,188 @@ var CoverMixin = {
 			<div ref="loading-cover" style={{position: 'absolute', color: 'white', left: 0, right: 0, top: 0, bottom: 0, background: 'rgba(0,0,0,0.7)'}}>
 				<div className="content animate-fade-infinite" style={{position: 'absolute', padding: 20, left: 0, bottom: 0, fontSize: 20}}>
 					<span style={{fontWeight: 300}}>Loading</span>
-					<h1 style={{fontSize: 28, lineHeight: 1.4, marginTop: 10, fontFamily: 'ThaiSansNeue-Regular'}}>{this.props.title}</h1>
+					<h1 style={{fontSize: 28, lineHeight: 1.4, marginTop: 10, fontFamily: 'ThaiSansNeue', fontWeight: 'normal'}}>{this.props.title}</h1>
 				</div>
 			</div>
 		);
 	}
 };
+var Cover4 = React.createClass({
+	mixins: [CoverMixin],
+	componentDidMount: function() {
+		var title_container_top = $(this.refs.title_container.getDOMNode()).position().top;
+		this.refs.hrTop.getDOMNode().style.top = title_container_top - 20 + 'px';
+		this.refs.tagline_container.getDOMNode().style.top = title_container_top - 45 + 'px';
+	},
+	createTimeline: function() {
+		var tl = new TimelineMax({paused: true, onComplete: this.handleAnimateComplete});
+		tl.staggerFromTo(['title_container', 'tagline_container'].map((c)=>this.refs[c].getDOMNode()), 0.3, {
+			x: '-' + this.state.width
+		}, {
+			x: '0%'			
+		}, 0.1, 0.05).staggerFromTo(['hrBottom', 'hrTop'].map((c)=>this.refs[c].getDOMNode()), 0.3, {
+			x: this.state.width
+		}, {
+			x: '0%',
+			borderColor: 'white'
+		}, 0.1, 0).fromTo(this.refs.img.getDOMNode(), 5, {
+			x: 0
+		}, {
+			x: -100,
+		}, 0);
+
+		return tl;
+	},
+	handleAnimateComplete: function() {
+		console.log('animate complate');
+		this._animating = false;
+	},
+	render: function() {
+		var width = this.state.width;
+		var height = this.state.height;
+		var def_img_style = {
+			position: 'absolute',
+			top: 0,
+			bottom: 0,
+			left: '50%',
+			height: '100%',
+			marginLeft: '-' + width
+		};
+		var img_style = {
+			position: 'absolute', 
+			top: 0,
+			bottom: 0,
+			left: '50%',
+			height: '100%',
+			marginLeft: '-' + width/2
+		};
+		var style = {
+			width: width,
+			height: height,
+			position: 'absolute',
+			left:0,
+			top: 0, 
+			background: 'white',
+			overflow: 'hidden',
+			fontSize: (0.8 * width/320) + 'em'
+		};
+		var textWidth = width - 20;
+		return (
+			<div style={style} {...this.props}>
+				<img height="100%" ref="img" src={this.props.thumbnail.srcSet[3].src} style={img_style}/>
+				<div onTouchStart={this.animate} className="gradient-black-bottom" style={{position: 'absolute', left: 0, bottom: 0, right: 0, height: '50%', opacity: 0.8}}/>
+				<div ref="tagline_container" style={{maxWidth: textWidth, position: 'absolute', left: 10, overflow: 'hidden', color: 'white'}}>
+					<p style={{width: textWidth, fontSize: '1.5em', fontFamily: 'ThaiSansNeue', fontWeight: '300'}}>{this.props.tagline}</p>
+				</div>
+				<hr ref="hrTop" style={{width: textWidth, position: 'absolute', left: 10, overflow: 'hidden', borderStyle: 'solid', borderColor: 'transparent', margin: 0}}/>
+				<div ref="title_container" style={{maxWidth: textWidth, position: 'absolute', left: 10, bottom: 70, overflow: 'hidden'}}>
+					<h1 ref="title" style={{
+						marginLeft: 5,
+						fontSize: '3.5em',
+						fontFamily: 'ThaiSansNeue',						
+						width: textWidth,
+						lineHeight: 0.8,
+						textTransform: 'uppercase',
+						fontWeight: 'normal',
+						position: 'relative',
+						color: 'white'
+					}}>{this.props.title}</h1>
+				</div>
+				<hr ref="hrBottom" style={{width: textWidth, position: 'absolute', left: 10, bottom: 50, borderStyle: 'solid', borderColor: 'transparent', margin: 0}}/>
+				<a className="enter-site-btn" ref="button">
+          <i className="fa fa-angle-down fa-3x"/>
+        </a>
+				{!this.state.load && this.renderLoadingCover()}
+			</div>
+		);
+	}
+});
+var Cover3 = React.createClass({
+	mixins: [CoverMixin],
+	componentDidMount: function() {
+		var title_container_top = $(this.refs.title_container.getDOMNode()).position().top;
+		this.refs.hrTop.getDOMNode().style.top = title_container_top - 20 + 'px';
+		this.refs.tagline_container.getDOMNode().style.top = title_container_top - 45 + 'px';
+	},
+	createTimeline: function() {
+		var tl = new TimelineMax({paused: true, onComplete: this.handleAnimateComplete});
+		tl.staggerFromTo(['hrBottom', 'title_container', 'hrTop', 'tagline_container'].map((c)=>this.refs[c].getDOMNode()), 0.3, {
+			width: '0%'
+		}, {
+			width: '100%',
+			borderColor: 'white'
+		}, 0.05).fromTo(this.refs.img.getDOMNode(), 5, {
+			x: 0
+		}, {
+			x: -100,
+		}, 0);
+
+		return tl;
+	},
+	handleAnimateComplete: function() {
+		console.log('animate complate');
+		this._animating = false;
+	},
+	render: function() {
+		var width = this.state.width;
+		var height = this.state.height;
+		var def_img_style = {
+			position: 'absolute',
+			top: 0,
+			bottom: 0,
+			left: '50%',
+			height: '100%',
+			marginLeft: '-' + width
+		};
+		var img_style = {
+			position: 'absolute', 
+			top: 0,
+			bottom: 0,
+			left: '50%',
+			height: '100%',
+			marginLeft: '-' + width/2
+		};
+		var style = {
+			width: width,
+			height: height,
+			position: 'absolute',
+			left:0,
+			top: 0, 
+			background: 'white',
+			overflow: 'hidden',
+			fontSize: (0.8 * width/320) + 'em'
+		};
+		var textWidth = width - 20;
+		return (
+			<div style={style} {...this.props}>
+				<img height="100%" ref="img" src={this.props.thumbnail.srcSet[3].src} style={img_style}/>
+				<div onTouchStart={this.animate} className="gradient-black-bottom" style={{position: 'absolute', left: 0, bottom: 0, right: 0, height: '50%', opacity: 0.8}}/>
+				<div ref="tagline_container" style={{maxWidth: textWidth, position: 'absolute', left: 10, overflow: 'hidden', color: 'white'}}>
+					<p style={{width: textWidth, fontSize: '1.5em', fontFamily: 'ThaiSansNeue', fontWeight: '300'}}>{this.props.tagline}</p>
+				</div>
+				<hr ref="hrTop" style={{maxWidth: textWidth, position: 'absolute', left: 10, overflow: 'hidden', borderStyle: 'solid', borderColor: 'transparent', margin: 0}}/>
+				<div ref="title_container" style={{maxWidth: textWidth, position: 'absolute', left: 10, bottom: 70, overflow: 'hidden'}}>
+					<h1 ref="title" style={{
+						marginLeft: 5,
+						fontSize: '3.5em',
+						fontFamily: 'ThaiSansNeue',
+						width: textWidth,
+						lineHeight: 0.8,
+						textTransform: 'uppercase',
+						fontWeight: 'normal',
+						position: 'relative',
+						color: 'white'
+					}}>{this.props.title}</h1>
+				</div>
+				<hr ref="hrBottom" style={{maxWidth: textWidth, position: 'absolute', left: 10, bottom: 50, borderStyle: 'solid', borderColor: 'transparent', margin: 0}}/>
+				<a className="enter-site-btn" ref="button">
+          <i className="fa fa-angle-down fa-3x"/>
+        </a>
+				{!this.state.load && this.renderLoadingCover()}
+			</div>
+		);
+	}
+});
 var Cover2 = React.createClass({
 	mixins: [CoverMixin],	
 	createTimeline: function() {		
@@ -140,12 +319,12 @@ var Cover2 = React.createClass({
 		};
 		return (
 			<div style={style}>
-				<img ref="img" src={this.props.thumbnail.src} height="120%" style={{position: 'absolute', top: '-10%', bottom: '0%', left: '50%', marginLeft: '-' + width}}/>								
+				<img ref="img" src={this.props.thumbnail.srcSet[3].src} height="120%" style={{position: 'absolute', top: '-10%', bottom: '0%', left: '50%', marginLeft: '-' + width}}/>								
 				<div className="gradient-black-top" style={{position: 'absolute', left: 0, top: 0, right: 0, height: '50%', opacity: 0.5}}/>
 				<div ref="text_container" style={{position: 'absolute', left: 0, bottom: 0, right: 0, color: 'white', background: 'black', padding: 10, paddingTop: 20}}>
-					<h1 ref="title" style={{fontSize: '1.8em', lineHeight: 1.2, fontFamily: 'ThaiSansNeue-Regular', fontWeight: 'normal', position: 'relative'}}>{this.props.title}</h1>
+					<h1 ref="title" style={{fontSize: '1.8em', lineHeight: 1.2, fontFamily: 'ThaiSansNeue', fontWeight: 'normal', position: 'relative'}}>{this.props.title}</h1>
 					<hr ref="hr" style={{width: '80%', border: '6px solid white', margin: '10px 0px'}}/>
-					<p ref="tagline" style={{fontSize: '1.25em', fontFamily: 'ThaiSansNeue-Light', fontWeight: 'normal'}}>{this.props.tagline}</p>
+					<p ref="tagline" style={{fontSize: '1.25em', fontFamily: 'ThaiSansNeue', fontWeight: '300'}}>{this.props.tagline}</p>
 				</div>
 				<img ref="logo" src={LOGO_SRC} style={{position: 'absolute', left: 10, top: 20, maxWidth: '64%'}}/>
 				{!this.state.load && this.renderLoadingCover()}
@@ -222,15 +401,15 @@ var Cover1 = React.createClass({
 		};
 		return (
 			<div style={style} {...this.props}>				
-				<img height="100%" ref="img" src={this.props.thumbnail.src} style={img_style}/>
+				<img height="100%" ref="img" src={this.props.thumbnail.srcSet[3].src} style={img_style}/>
 				<div onTouchStart={this.animate} className="gradient-black-top" style={{position: 'absolute', left: 0, top: 0, right: 0, height: '50%', opacity: 0.5}}/>
 				<div ref="text_container" style={{right: 0, left: '3%', top: (height * 0.6), lineHeight: 1.25, position: 'absolute'}}>
 					<div style={{position: 'relative'}}>
 						<div ref="title_container" style={{position: 'absolute', left: 0, top: 0, height: '100%', width: '90%', background: 'black'}}/>
-						<h1 ref="title" style={{marginLeft: 5, fontSize: '1.5em', fontFamily: 'ThaiSansNeue-Regular', width: '90%', fontWeight: 'normal', position: 'relative', color: 'white'}}>{this.props.title}</h1>
+						<h1 ref="title" style={{marginLeft: 5, fontSize: '1.5em', fontFamily: 'ThaiSansNeue', fontWeight: 'normal', width: '90%', position: 'relative', color: 'white'}}>{this.props.title}</h1>
 					</div>
 					<div ref="tagline_container" style={{width: '75%', lineHeight: 1.25, marginLeft: '3%', paddingLeft: 8, paddingTop: 8, background: 'white', position: 'relative', top: -3, color: 'black'}}>
-						<p ref="tagline" style={{fontSize: '1.25em', fontFamily: 'ThaiSansNeue-Light', fontWeight: 'normal'}}>{this.props.tagline}</p>
+						<p ref="tagline" style={{fontSize: '1.25em', fontFamily: 'ThaiSansNeue', fontWeight: '300'}}>{this.props.tagline}</p>
 					</div>
 				</div>
 				<img ref="logo" src={LOGO_SRC} style={{position: 'absolute', left: 10, top: 20, maxWidth: '64%'}}/>
@@ -242,10 +421,11 @@ var Cover1 = React.createClass({
 		);
 	}
 });
+var Covers = [Cover1, Cover2, Cover3, Cover4];
 var Cover = React.createClass({
 	getInitialState: function() {
 		return {
-			c: true
+			c: this.props.initC || Covers.length * 10 + 1
 		};
 	},
 	componentWillMount: function() {
@@ -255,10 +435,16 @@ var Cover = React.createClass({
 		window.removeEventListener('keydown', this.handleKeydown);
 	},
 	handleKeydown: function(e) {
-		if (e.keyCode === 40 || e.keyCode === 38) {
+		if (e.keyCode === 40) {
 			e.preventDefault();
 			this.setState({
-				c: !this.state.c
+				c: this.state.c + 1
+			});
+		}
+		if (e.keyCode === 38) {
+			e.preventDefault();
+			this.setState({
+				c: this.state.c - 1
 			});
 		}
 	},
@@ -279,14 +465,13 @@ var Cover = React.createClass({
 	handleTouchEnd: function(e) {		
 		if (Math.sqrt(Math.pow(this._lastX - this._startX, 2) + Math.pow(this._lastY - this._startY, 2)) > 50) {
 			this.setState({
-				c: !this.state.c
+				c: this.state.c + 1
 			});
 		}
 	},
-	render: function() {
-		console.log('c', this.state.c);
-		var Component = this.state.c? Cover1: Cover2;
-		return <Component {...this.props} onTouchStart={this.handleTouchStart} onTouchMove={this.handleTouchMove} onTouchEnd={this.handleTouchEnd}/>;
+	render: function() {		
+		var CoverComponent = Covers[this.state.c % 4];
+		return <CoverComponent {...this.props} onTouchStart={this.handleTouchStart} onTouchMove={this.handleTouchMove} onTouchEnd={this.handleTouchEnd}/>;
 	}
 });
 
