@@ -72,7 +72,6 @@ var Menubar = React.createClass({
 					</div>
 					<div style={{clear: 'both'}}/>
 				</div>
-				<ReactCSSTransitionGroup transitionName="fade" transitionLeave={false}>
 				{this.state.showSubcategory? (
 					<div key="category-submenu" style={{padding: 5, boxShadow: '0px 10px 10px rgba(0,0,0,0.3)', position: 'absolute', background: '#eee', height: submenuHeight, width: '100%', maxWidth: MAX_WIDTH, left: window.innerWidth > MAX_WIDTH? (window.innerWidth - MAX_WIDTH)/2: 0, bottom: -submenuHeight, zIndex: 100, overflow: 'hidden'}}>
 						<div style={{width: '100%', background: 'white', height: '100%'}}>
@@ -81,7 +80,6 @@ var Menubar = React.createClass({
 						<div style={{clear: 'both'}}/>
 					</div>
 				): false}
-				</ReactCSSTransitionGroup>
 			</div>
 		);
 	}

@@ -123,27 +123,19 @@ var CoverList = React.createClass({
   	this.setState({scrollLeft: this._scrollLeft});
   },
   handleTouchStart: function (e) {
-  	// e.preventDefault();
-    if (this.scroller) {
-      this.scroller.doTouchStart(e.touches, e.timeStamp);
-    }
+  	this.scroller.doTouchStart(e.touches, e.timeStamp);
   },
 
   handleTouchMove: function (e) {
-    if (this.scroller) {
-      e.preventDefault();
-      this.scroller.doTouchMove(e.touches, e.timeStamp, e.scale);
-    }
+  	e.preventDefault();
+    this.scroller.doTouchMove(e.touches, e.timeStamp, e.scale);
   },
 
   handleTouchEnd: function (e) {
-  	// e.preventDefault();
-    if (this.scroller) {
-      this.scroller.doTouchEnd(e.timeStamp);
-      // if (this.props.snapping) {
-      //   this.updateScrollingDeceleration();
-      // }     
-    }
+    this.scroller.doTouchEnd(e.timeStamp);
+    // if (this.props.snapping) {
+    //   this.updateScrollingDeceleration();
+    // }
   },
 	render: function() {
 		var windowWidth = this.state.width;

@@ -14,7 +14,10 @@
 			<div class="ui selection list">
 			    <% for(var i=0; i<list.length; i++) { %>
 			        <form class="item <%=active===list[i].key?'active':''%>" method="post">
-			           <div class="content"><%= list[i].title || list[i].key  %></div>
+			           <div class="content">
+			           	<h4><%= list[i].title || list[i].key  %></h4>
+			           	<p><%= list[i].key  %></p>
+			           </div>
 			           <input type="hidden" name="target" value="<%=list[i].key%>"/>
 			           <input type="submit" onclick="hideAllButton();" class="right floated compact ui button submit" 
                   value="<%=active===list[i].key?'Rebuild':'Build'%>"/>
