@@ -54,26 +54,26 @@ var Menubar = React.createClass({
 		if (width < 1300) {
 			return 8;
 		}
-		return 10;
+		return 6;
 	},
 	renderSubmenuItem: function(article, index) {
 		var width = (MAX_WIDTH - 10)/this.getMaxSubmenuItem() ;
 		var url = "http://gmlive.com/post/" + article.shortenId + '-' + article.slug;
 		return (
 			<a href={url} className="submenu-item" style={{width: width}}>
-				<div style={{backgroundPosition: 'center center', backgroundSize: 'cover', backgroundImage: 'url(' + article.thumbnail.src + ')', width: '100%', height: 100}}/>
-				<p style={{fontSize: 18, lineHeight: '16px', maxHeight: 48, marginTop: 5, overflow: 'hidden'}}>{article.title}</p>
+				<div style={{backgroundPosition: 'center center', backgroundSize: 'cover', backgroundImage: 'url(' + article.thumbnail.src + ')', width: '100%', height: 128}}/>
+				<p style={{fontSize: 16, lineHeight: '20px', maxHeight: 48, marginTop: 10, overflow: 'hidden'}}>{article.title}</p>
 			</a>
 		);
 	},
 	render: function() {
-		var submenuHeight = 180;
+		var submenuHeight = 215;
 		var submenuData = this.state.showSubcategory && _.first(this.props.data.filter((article)=>{
 			return article.categories.indexOf(this.state.showSubcategory) >= 0;
 		}), this.getMaxSubmenuItem());
 		return (
 			<div style={{background: 'white', position: 'relative'}} className="polygon-menu" onMouseLeave={this.closeSubmenu}>
-				<div style={{maxWidth: MAX_WIDTH, margin: 'auto', border: '1px solid #DDD', borderWidth: '0 1px', position: 'relative', boxSizing: 'content-box'}}>
+				<div style={{maxWidth: MAX_WIDTH, margin: 'auto', borderBottom: '1px solid #DDD', borderWidth: '0 1px', position: 'relative', boxSizing: 'content-box'}}>
 					<img className="logo" src={LOGO_SRC}/>
 					<div className="menu-container">
 						{this.props.categories.map((c)=>{
@@ -83,7 +83,7 @@ var Menubar = React.createClass({
 					<div style={{clear: 'both'}}/>
 				</div>
 				{this.state.showSubcategory? (
-					<div key="category-submenu" style={{padding: 5, boxShadow: '0px 10px 10px rgba(0,0,0,0.3)', position: 'absolute', background: '#eee', height: submenuHeight, width: '100%', maxWidth: MAX_WIDTH, left: window.innerWidth > MAX_WIDTH? (window.innerWidth - MAX_WIDTH)/2: 0, bottom: -submenuHeight, zIndex: 100, overflow: 'hidden'}}>
+					<div key="category-submenu" style={{padding: 5,borderTop: '1px solid #f0f0f0', boxShadow: '0px 10px 10px rgba(0,0,0,0.3)', position: 'absolute', background: 'white', height: submenuHeight, width: '100%', maxWidth: MAX_WIDTH, left: window.innerWidth > MAX_WIDTH? (window.innerWidth - MAX_WIDTH)/2: 0, bottom: -submenuHeight, zIndex: 100, overflow: 'hidden'}}>
 						<div style={{width: '100%', background: 'white', height: '100%'}}>
 							{submenuData.map(this.renderSubmenuItem)}
 						</div>

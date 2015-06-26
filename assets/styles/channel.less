@@ -5,9 +5,9 @@
 @top: 209px;
 .indicator {
   position: absolute;
-  top: @top; 
-  padding: 0 5px; 
-  line-height: 25px; 
+  top: @top;
+  padding: 0 5px;
+  line-height: 25px;
   background: white;
   &.fixed {
     position: fixed;
@@ -16,7 +16,7 @@
   }
   a {
     color: #89919c;
-    &:hover { 
+    &:hover {
       text-decoration: underline;
     }
   }
@@ -149,7 +149,7 @@ p {
 .channel__heading{
 	height: 300px;
 	color: white;
-	position: relative;	
+	position: relative;
 	.channel__max-width-container{
 		position: absolute;
 		bottom: 0;
@@ -191,7 +191,7 @@ p {
 	margin: auto;
 }
 .channel__item-create {
-	margin-top: 2*@baseLineHeight; 
+	margin-top: 2*@baseLineHeight;
 	background-color: #ddd;
 	width: 100%;
 	.input {
@@ -237,8 +237,8 @@ p {
 	background:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAADCAYAAABWKLW/AAAAHUlEQVQIW2NkYGCQZGBgeM7AwMDACCJgAjAOWAAALlYCHfp/01cAAAAASUVORK5CYII=") repeat;
 }
 .channel__item-list__item__image-zone__image{
-	padding-top: 100%; 	
-	background-size: cover; 
+	padding-top: 100%;
+	background-size: cover;
 }
 .channel__item-list__item__text-zone{
 	width: 66%;
@@ -247,11 +247,11 @@ p {
 	text-align: left;
 }
 .channel .item {
-	padding: 10px 0; 
-	position: relative; 
-	height: 100px; 
+	padding: 10px 0;
+	position: relative;
+	height: 100px;
 	border-top: 1px solid rgba(0,0,0,0.3);
-	overflow: hidden; 
+	overflow: hidden;
 	cursor: pointer;
 	-webkit-transition: all 0.3s;
   -moz-transition: all 0.3s;
@@ -299,8 +299,8 @@ p {
 }
 .entry_2, .entry_3, .entry_4, .entry_5 {
 	height: 225px;
-  border: 1px solid #EEE;
-  border-width: 1px 0 0 1px;
+  // border: 1px solid #EEE;
+  // border-width: 1px 0 0 1px;
   float: left;
   width: 30%;
 }
@@ -318,7 +318,7 @@ p {
 	height: 450px;
 }
 .meta_2, .meta_3, .meta_4, .meta_5 {
-	height: 225px;	
+	height: 225px;
 }
 
 .m-hero__title {
@@ -327,16 +327,17 @@ p {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   bottom: 0;
-  font-size: 28px;
-  line-height: 1.4;
+  font-size: 36px;
+  line-height: 1.2;
   z-index: 26;
-  font-family: ThaiSansNeue-Bold;
+  font-weight: 100;
+  font-family:'supermarketRegular';
 	@media (max-width: 1100px) {
 	  font-size: 24px;
 	}
 }
 .meta_2 .m-hero__title, .meta_3 .m-hero__title, .meta_4 .m-hero__title, .meta_5 .m-hero__title {
-	font-size: 22px;
+	font-size: 28px;
 	@media (max-width: 1100px) {
 		font-size: 18px;
   	line-height: 1.25;
@@ -373,7 +374,7 @@ a {
   padding: 10px;
   margin-bottom: 4px;
   width: auto !important;
-  display: inline-block !important; 
+  display: inline-block !important;
 }
 .m-hero__title a {
 	display: inline-block;
@@ -444,8 +445,8 @@ a {
 .polygon-menu .logo {
   max-width: 158px;
   padding: 12px;
-  height: 40px;
-  line-height: 40px;
+  height: 46px;
+  line-height: 46px;
   overflow: hidden;
   text-indent: -9999px;
   display: block;
@@ -458,20 +459,23 @@ a {
 }
 .polygon-menu .menu-item {
   float: left;
-  height: 40px;
-  line-height: 40px;
-  font-size: 13px;
-  font-family: Lato;
+  height: 46px;
+  line-height: 46px;
+  font-size: 12px;
+  font-family: 'Raleway', sans-serif;
+  /*font-family: Lato;*/
   font-weight: 600;
-  text-transform: uppercase;
-  padding: 2px 15px;
-  color: #237CA0;
+  letter-spacing: 0.05em;
+  text-transform: capitalize;
+  padding: 2px 24px;
+  color: #212121;
   cursor: pointer;
-  -webkit-transition: all 0.2s;
-  -moz-transition: all 0.2s;
-  transition: all 0.2s;
+  -webkit-transition: all 0.5s;
+  -moz-transition: all 0.5s;
+  transition: all 0.5s;
   &:hover, &.active {
-    background: #eee;
+    background: #32C4ED;
+    color: white;
   }
 }
 a {
@@ -485,10 +489,10 @@ a:hover {
   float: left;
   overflow: hidden;
   height: 100%;
-  padding: 10px;
+  padding: 15px;
   background: white;
   padding-left: 0px;
-  font-family: ThaiSansNeue-Regular;
+  font-family:'supermarketRegular';
   &:first-child {
     padding-left: 10px;
   }
@@ -502,7 +506,7 @@ a:hover {
   opacity: 1;
 }
 .fade-leave {
-  opacity: 1;  
+  opacity: 1;
   transition: opacity .2s ease-in;
 }
 .fade-leave.fade-leave-active {
@@ -549,7 +553,7 @@ a:hover {
     font-family: ThaiSansNeue-ExtraLight;
     font-size: 20px;
     color: #9B9B9B;
-    line-height: 27px      
+    line-height: 27px
   }
   .author {
     font-family: ThaiSansNeue-Light;
@@ -573,7 +577,7 @@ a:hover {
 @-moz-keyframes fade {
   0%   { opacity: 0.2; }
   50% { opacity: 1; }
-  100% { opacity: 0.2; } 
+  100% { opacity: 0.2; }
 }
 @-o-keyframes fade {
   0%   { opacity: 0.2; }
@@ -613,7 +617,7 @@ a:hover {
 
 }
 .arrow-fade {
-  
+
 }
 .animate-arrow {
   opacity: 1;
