@@ -1,6 +1,7 @@
 var React = require('react');
 var ReactComponentWithPureRenderMixin = require('react/lib/ReactComponentWithPureRenderMixin');
 var ReactCSSTransitionGroup = require('react/lib/ReactCSSTransitionGroup');
+var BackgroundUtil = require('../common/background-util');
 var MAX_WIDTH = 414;
 var MAX_HEIGHT = 736;
 var LOGO_SRC = '/images/cover-logo.png';
@@ -9,30 +10,19 @@ var DEFAULT_BG = 'http://gmlive.com/images/GM_Mobile_Cover_v2.jpg';
 var $ = require('jquery');
 var CoverMixin = {
 	mixins: [ReactComponentWithPureRenderMixin],
-	getInitialState: function() {
-		var size = this.getSizeState();
-		return {
-			width: size.width,
-			height: size.height,
-			load: false
-		};
-	},
-	getSizeState: function() {
-		var width = window.innerWidth > MAX_WIDTH? MAX_WIDTH: window.innerWidth;
-		var height = window.innerHeight > MAX_HEIGHT? MAX_HEIGHT: window.innerHeight;
-		return {
-			width: width,
-			height: height
-		};
-	},
 	componentDidMount: function() {
 		this._start = Date.now();
-		window.addEventListener('resize', ()=>this.setState(this.getSizeState()));		
 		// this._loadingTL = this.createLoadingTimeline();
 		this._tl = this.createTimeline();
 		var img = new Image();		
 		img.onload = this.handleLoadFinish;
-		img.src = this.props.thumbnail.srcSet[3].src;
+		img.src = BackgroundUtil.getImageSrc(this.props, this.props.width, this.props.height);
+		window.addEventListener('resize', this.handleResize);
+	},
+	getInitialState: function() {
+		return {
+			load: false
+		};
 	},
 	// createLoadingTimeline: function() {
 	// 	var tl = new TimelineMax({repeat: 2, onComplete: ()=>{
@@ -110,11 +100,11 @@ var Cover4 = React.createClass({
 	createTimeline: function() {
 		var tl = new TimelineMax({paused: true, onComplete: this.handleAnimateComplete});
 		tl.staggerFromTo(['title_container', 'tagline_container'].map((c)=>this.refs[c].getDOMNode()), 0.3, {
-			x: '-' + this.state.width
+			x: '-' + this.props.width
 		}, {
 			x: '0%'			
 		}, 0.1, 0.05).staggerFromTo(['hrBottom', 'hrTop'].map((c)=>this.refs[c].getDOMNode()), 0.3, {
-			x: this.state.width
+			x: this.props.width
 		}, {
 			x: '0%',
 			borderColor: 'white'
@@ -131,8 +121,8 @@ var Cover4 = React.createClass({
 		this._animating = false;
 	},
 	render: function() {
-		var width = this.state.width;
-		var height = this.state.height;
+		var width = this.props.width;
+		var height = this.props.height;
 		var def_img_style = {
 			position: 'absolute',
 			top: 0,
@@ -162,7 +152,7 @@ var Cover4 = React.createClass({
 		var textWidth = width - 20;
 		return (
 			<div style={style} {...this.props}>
-				<img height="100%" ref="img" src={this.props.thumbnail.srcSet[3].src} style={img_style}/>
+				<img height="100%" ref="img" src={BackgroundUtil.getImageSrc(this.props, this.props.width, this.props.height)} style={img_style}/>
 				<div onTouchStart={this.animate} className="gradient-black-bottom" style={{position: 'absolute', left: 0, bottom: 0, right: 0, height: '50%', opacity: 0.8}}/>
 				<div ref="tagline_container" style={{maxWidth: textWidth, position: 'absolute', left: 10, overflow: 'hidden', color: 'white'}}>
 					<p style={{width: textWidth, fontSize: '1.5em', fontFamily: 'ThaiSansNeue', fontWeight: '300'}}>{this.props.tagline}</p>
@@ -217,8 +207,8 @@ var Cover3 = React.createClass({
 		this._animating = false;
 	},
 	render: function() {
-		var width = this.state.width;
-		var height = this.state.height;
+		var width = this.props.width;
+		var height = this.props.height;
 		var def_img_style = {
 			position: 'absolute',
 			top: 0,
@@ -248,7 +238,7 @@ var Cover3 = React.createClass({
 		var textWidth = width - 20;
 		return (
 			<div style={style} {...this.props}>
-				<img height="100%" ref="img" src={this.props.thumbnail.srcSet[3].src} style={img_style}/>
+				<img height="100%" ref="img" src={BackgroundUtil.getImageSrc(this.props, this.props.width, this.props.height)} style={img_style}/>
 				<div onTouchStart={this.animate} className="gradient-black-bottom" style={{position: 'absolute', left: 0, bottom: 0, right: 0, height: '50%', opacity: 0.8}}/>
 				<div ref="tagline_container" style={{maxWidth: textWidth, position: 'absolute', left: 10, overflow: 'hidden', color: 'white'}}>
 					<p style={{width: textWidth, fontSize: '1.5em', fontFamily: 'ThaiSansNeue', fontWeight: '300'}}>{this.props.tagline}</p>
@@ -290,7 +280,7 @@ var Cover2 = React.createClass({
 		}, {
 			y: '5%'
 		}, 0).fromTo(this.refs.title.getDOMNode(), 0.5, {
-			y: this.state.height - text_container_pos.top
+			y: this.props.height - text_container_pos.top
 		}, {
 			y: 0
 		}, 0.2).fromTo(this.refs.tagline.getDOMNode(), 0.5, {
@@ -305,8 +295,8 @@ var Cover2 = React.createClass({
 		return tl;
 	},
 	render: function() {		
-		var width = this.state.width;
-		var height = this.state.height;
+		var width = this.props.width;
+		var height = this.props.height;
 		var style = {
 			width: width,
 			height: height, 
@@ -319,7 +309,7 @@ var Cover2 = React.createClass({
 		};
 		return (
 			<div style={style}>
-				<img ref="img" src={this.props.thumbnail.srcSet[3].src} height="120%" style={{position: 'absolute', top: '-10%', bottom: '0%', left: '50%', marginLeft: '-' + width}}/>								
+				<img ref="img" src={BackgroundUtil.getImageSrc(this.props, this.props.width, this.props.height)} height="120%" style={{position: 'absolute', top: '-10%', bottom: '0%', left: '50%', marginLeft: '-' + width}}/>								
 				<div className="gradient-black-top" style={{position: 'absolute', left: 0, top: 0, right: 0, height: '50%', opacity: 0.5}}/>
 				<div ref="text_container" style={{position: 'absolute', left: 0, bottom: 0, right: 0, color: 'white', background: 'black', padding: 10, paddingTop: 20}}>
 					<h1 ref="title" style={{fontSize: '1.8em', lineHeight: 1.2, fontFamily: 'ThaiSansNeue', fontWeight: 'normal', position: 'relative'}}>{this.props.title}</h1>
@@ -371,8 +361,8 @@ var Cover1 = React.createClass({
 		this._animating = false;
 	},
 	render: function() {
-		var width = this.state.width;
-		var height = this.state.height;
+		var width = this.props.width;
+		var height = this.props.height;
 		var def_img_style = {
 			position: 'absolute',
 			top: 0,
@@ -401,7 +391,7 @@ var Cover1 = React.createClass({
 		};
 		return (
 			<div style={style} {...this.props}>				
-				<img height="100%" ref="img" src={this.props.thumbnail.srcSet[3].src} style={img_style}/>
+				<img height="100%" ref="img" src={BackgroundUtil.getImageSrc(this.props, this.props.width, this.props.height)} style={img_style}/>
 				<div onTouchStart={this.animate} className="gradient-black-top" style={{position: 'absolute', left: 0, top: 0, right: 0, height: '50%', opacity: 0.5}}/>
 				<div ref="text_container" style={{right: 0, left: '3%', top: (height * 0.6), lineHeight: 1.25, position: 'absolute'}}>
 					<div style={{position: 'relative'}}>
@@ -424,15 +414,39 @@ var Cover1 = React.createClass({
 var Covers = [Cover1, Cover2, Cover3, Cover4];
 var Cover = React.createClass({
 	getInitialState: function() {
+		var size = this.getSizeState();
 		return {
-			c: this.props.initC || Covers.length * 10 + 1
+			c: this.props.initC || Covers.length * 10 + 1,
+			width: size.width,
+			height: size.height
 		};
-	},
+	},	
 	componentWillMount: function() {
 		window.addEventListener('keydown', this.handleKeydown);
 	},
+	componentDidMount: function() {
+		TweenMax.fromTo(this.getDOMNode(), 0.3, {
+			scale: 250/this.state.width,
+			force3D: 'auto'
+		}, {
+			scale: 1,
+			force3D: 'auto'
+		});
+	},
 	componentWillUnmount: function() {
 		window.removeEventListener('keydown', this.handleKeydown);
+		window.removeEventListener('resize', this.handleResize);
+	},
+	handleResize: function() {
+		this.setState(this.getSizeState());
+	},
+	getSizeState: function() {
+		var width = window.innerWidth;
+		var height = window.innerHeight;
+		return {
+			width: width,
+			height: height
+		};
 	},
 	handleKeydown: function(e) {
 		if (e.keyCode === 40) {
@@ -471,7 +485,7 @@ var Cover = React.createClass({
 	},
 	render: function() {		
 		var CoverComponent = Covers[this.state.c % 4];
-		return <CoverComponent {...this.props} onTouchStart={this.handleTouchStart} onTouchMove={this.handleTouchMove} onTouchEnd={this.handleTouchEnd}/>;
+		return <CoverComponent width={this.state.width} height={this.state.height} {...this.props} onTouchStart={this.handleTouchStart} onTouchMove={this.handleTouchMove} onTouchEnd={this.handleTouchEnd}/>;
 	}
 });
 

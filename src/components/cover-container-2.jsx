@@ -1,4 +1,5 @@
 var React = require('react');
+var BackgroundUtil = require('../common/background-util');
 var CoverContainer = require('./cover-container');
 var _ = require('underscore');
 var Scroller = require('scroller').Scroller;
@@ -7,7 +8,7 @@ var ReactComponentWithPureRenderMixin = require('react/lib/ReactComponentWithPur
 var CardItem = React.createClass({
 	mixins: [ReactComponentWithPureRenderMixin],
 	render: function() {
-		var backgroundImage = this.props.thumbnail && ('url(' + this.props.thumbnail.srcSet[4].src + ')');
+		var backgroundImage = this.props.thumbnail && ('url(' + BackgroundUtil.getImageSrc(this.props, 250, 250) + ')');
 		var backgroundImageS = this.props.thumbnail && ('url(' + this.props.thumbnail.srcSet[this.props.thumbnail.srcSet.length - 2].src + ')');
 		var backgroundPosition = (this.props.coverConfig && this.props.coverConfig.backgroundPosition) || 'center center';
 		var titleStyle = {
@@ -39,13 +40,15 @@ var CardItem = React.createClass({
 			backgroundSize: 'cover',
 			WebkitUserSelect: 'none',
 			boxShadow: '0px 6px 12px 0px rgba(0,0,0,0.20), 0px 4px 8px 0px rgba(0,0,0,0.25)'
-		};
-		if (!this.props.isRender) {
-			cardStyle.backgroundImage = backgroundImageS;
+		};		
+		if (!this.props.isOnScreen) {
+			if (this.props.notRender) {
+				cardStyle.backgroundImage = false;
+			} else {
+				cardStyle.backgroundImage = backgroundImageS;
+			}
 			return (
-				<div style={this.props.style} key="card-container">
-					<div style={cardStyle} key="card"/>
-				</div>
+				<div style={_.extend({}, this.props.style, cardStyle)} key="card-container"/>
 			);
 		}
 		return (
@@ -60,55 +63,42 @@ var CardItem = React.createClass({
 		);
 	}
 });
+var MAX_WIDTH = 414;
+var MAX_HEIGHT = 736;
 var LOGO_SRC = 'http://touchedition.s3.amazonaws.com/asset/555edb0290a3d98a63e42aa0.png';
-var Container = React.createClass({
+var CoverList = React.createClass({
+	mixins: [ReactComponentWithPureRenderMixin],
 	getInitialState: function() {
-		var initData = null;
-		var initId = location.hash.substr(1);
-		if (initId) {
-			for (var i = 0; i < this.props.data.length; i++) {
-				if (this.props.data[i]._id === initId) {
-					initData = this.props.data[i];
-					break;
-				}
-			}
-		}
-		return {data: initData, scrollLeft: 0};
+		var size = this.getSizeState();
+		return {
+			width: size.width,
+			height: size.height
+		};
 	},
 	componentDidMount: function() {
 		this.createScroller();
-		window.addEventListener('popstate', this.handlePopState);
-		history.replaceState(this.state, document.title, '/#' + (this.state.data? this.state.data._id: ''));
+		window.addEventListener('resize', this.handleResize);
 	},
-	componentDidUpdate: function(prevProps, prevState) {		
-		if (this.state.data !== prevState.data) {
-			if (!this._notPushState) {
-				history.pushState(this.state, document.title, '/#' + (this.state.data? this.state.data._id: ''));
-			}
-			this._notPushState = false;
-			if (this.state.data) {
-				TweenMax.fromTo(this.getDOMNode(), 0.3, {
-					scale: 250/window.innerWidth,
-					force3D: 'auto'
-				}, {
-					scale: 1,
-					force3D: 'auto'
-				});
-			} else {
-				console.log('scrollTo', this._scrollLeft);
-				this.scroller.scrollTo(this._scrollLeft, 0);
-			}
-		}
+	componentWillUnmount: function() {
+		window.removeEventListener('resize', this.handleResize);
 	},
-	handlePopState: function(e) {
-		this._notPushState = true;
-		this.setState(e.state);
+	handleResize: function() {
+		this.setState(this.getSizeState());
+	},
+	getSizeState: function() {
+		var width = window.innerWidth;
+		var height = window.innerHeight;
+		return {
+			width: width,
+			height: height
+		};
 	},
 	createScroller: function () {
     var options = {
       scrollingX: true,
       scrollingY: false,
       snapping: true,
+      zooming: true,
       scrollingComplete: _.throttle(this.handleScrollComplete, 300, {leading: false})
       // decelerationRate: this.props.scrollingDeceleration,
       // penetrationAcceleration: this.props.scrollingPenetrationAcceleration,
@@ -118,20 +108,22 @@ var Container = React.createClass({
     // dataLength = 5;
     this.scroller.setDimensions(250, 250, (250 + 10) * dataLength, 250);
     this.scroller.setSnapSize((250 + 10), 250);    
-    this._scrollLeft = this._scrollLeft || 0;
+    this._scrollLeft = this.props.initScrollLeft || 0;
+    if (this._scrollLeft !== 0) {
+    	this.scroller.scrollTo(this._scrollLeft, 0);
+    	this.handleScrollComplete();
+    }
   },
-  handleScroll: function(left, top) {
-  	if (this.state.data) {
-  		return;
-  	}
-  	this.refs['card-container'].getDOMNode().style[getVendorPropertyName('transform')] = 'translate3d(' + (-left) + 'px, 0, 0)';
+  handleScroll: function(left, top, zoom) {  	
+  	this._zoom = zoom;
+  	this.refs['card-container'].getDOMNode().style[getVendorPropertyName('transform')] = 'translate3d(' + (-left) + 'px, 0, 0) scale(' + zoom + ')';
   	this._scrollLeft = left;
   },
   handleScrollComplete: function() {
-  	console.log('handleScrollComplete', this._scrollLeft);
   	this.setState({scrollLeft: this._scrollLeft});
   },
-  handleTouchStart: function (e) {  	
+  handleTouchStart: function (e) {
+  	// e.preventDefault();
     if (this.scroller) {
       this.scroller.doTouchStart(e.touches, e.timeStamp);
     }
@@ -145,34 +137,80 @@ var Container = React.createClass({
   },
 
   handleTouchEnd: function (e) {
+  	// e.preventDefault();
     if (this.scroller) {
       this.scroller.doTouchEnd(e.timeStamp);
       // if (this.props.snapping) {
       //   this.updateScrollingDeceleration();
-      // }
-      
+      // }     
     }
   },
 	render: function() {
+		var windowWidth = this.state.width;
+		var style = {background: 'white', maxWidth: MAX_WIDTH, maxHeight: MAX_HEIGHT, lineHeight: "36px", height: '100%', width: '100%', position: 'absolute', overflow: 'hidden'};
+		return (
+			<ul onTouchStart={this.handleTouchStart} onTouchMove={this.handleTouchMove} onTouchEnd={this.handleTouchEnd} style={style}>
+				<h4 style={{textAlign: 'center', borderBottom: '1px solid #ccc', color: '#404040', fontWeight: 400}}>LATEST</h4>
+				<img style={{height: 10, position: 'absolute', left: 15, top: 15}} src={LOGO_SRC}/>
+				<img style={{height: 14, position: 'absolute', right: 10, top: 13}} src='images/close.png'/>
+				<div ref="card-container">
+				{this.props.data.map((d, index)=>{
+					var left = (windowWidth - 250)/2 + (250 + 10) * index;
+					var absLeft = -(this._scrollLeft || 0) + left;
+					var isOnScreen = !(absLeft + 250 < 0 || absLeft > windowWidth);
+					var notRender = false;
+					if (!isOnScreen) {
+						notRender = absLeft < -250 * 1 || absLeft > windowWidth + 250 * 5;						
+					}
+					return (
+						<CardItem key={'card-' + d._id} index={index} {...d} isOnScreen={isOnScreen} notRender={notRender} style={{position: 'absolute', top: 30, left: left}} href="#" onClick={()=>this.props.handleChangeArticle(d)}/>
+					);
+				})}
+				</div>
+			</ul>
+		);
+	}
+});
+var Container = React.createClass({
+	getInitialState: function() {
+		var initData = null;
+		var initId = location.hash.substr(1);
+		if (initId) {
+			for (var i = 0; i < this.props.data.length; i++) {
+				if (this.props.data[i]._id === initId) {
+					initData = this.props.data[i];
+					break;
+				}
+			}
+		}
+		return {data: initData};
+	},
+	componentDidMount: function() {
+		window.addEventListener('popstate', this.handlePopState);
+		history.replaceState(this.state, document.title, '/#' + (this.state.data? this.state.data._id: ''));
+	},
+	componentWillUpdate: function(nextProps, nextState) {
+		if (this.state.data !== nextState.data) {
+			if (nextState.data) {
+				this._scrollLeft = this.refs['cover-list']._scrollLeft;
+			}
+		}
+	},
+	componentDidUpdate: function(prevProps, prevState) {		
+		if (this.state.data !== prevState.data) {
+			if (!this._notPushState) {
+				history.pushState(this.state, document.title, '/#' + (this.state.data? this.state.data._id: ''));
+			}
+			this._notPushState = false;
+		}
+	},
+	handlePopState: function(e) {
+		this._notPushState = true;
+		this.setState(e.state);
+	},
+	render: function() {
 		if (!this.state.data) {
-			var windowWidth = window.innerWidth;
-			return (
-				<ul onTouchStart={this.handleTouchStart} onTouchMove={this.handleTouchMove} onTouchEnd={this.handleTouchEnd} style={{background: 'white', maxWidth: 960, lineHeight: "36px", height: '100%', width: '100%', position: 'absolute'}}>
-					<h3 style={{textAlign: 'center', borderBottom: '1px solid #ccc', color: '#404040', fontWeight: 400}}>LATES</h3>
-					<img style={{height: 10, position: 'absolute', left: 15, top: 15}} src={LOGO_SRC}/>
-					<img style={{height: 20, position: 'absolute', right: 10, top: 10}} src='images/close.png'/>
-					<div ref="card-container">
-					{this.props.data.map((d, index)=>{
-						var left = (windowWidth - 250)/2 + (250 + 10) * index;
-						var absLeft = -this._scrollLeft + left;
-						var isRender = !(absLeft + 250 < 0 || absLeft > windowWidth);
-						return (
-							<CardItem key={'card-' + d._id} index={index} {...d} isRender={isRender} style={{position: 'absolute', top: 30, left: left}} href="#" onClick={()=>this.setState({data: d})}/>
-						);
-					})}
-					</div>
-				</ul>
-			);
+			return <CoverList initScrollLeft={this._scrollLeft} ref="cover-list" {...this.props} handleChangeArticle={(d)=>this.setState({data: d})}/>;
 		}
 		return <CoverContainer {...this.state.data}/>
 	}	
