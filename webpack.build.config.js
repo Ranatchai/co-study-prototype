@@ -4,7 +4,7 @@ var webpack = require('webpack');
  * This is the Webpack configuration file for production.
  */
 var config = require('./app.config');
-var target = 'cover';
+var target = process.env.target || 'cover';
 for (var i = 0; i < process.argv.length; i++) {
   var value = process.argv[i];
   if (value.indexOf('--target:') >= 0) {

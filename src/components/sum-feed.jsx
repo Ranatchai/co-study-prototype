@@ -210,11 +210,11 @@ var SumFeed = React.createClass({
 				<FullWidthSection1 data={_.first(data2, 2)} title="JUST ARRIVE"/>
 				<AdContainer src={ad1}/>
 				<PolygonContainer data={features}/>
-				<AdContainer src={ad1}/>
-				<SectionA data={data3} title="JUNE 19 - 21"/>
 				<AdContainer src={ad2}/>
-				<SectionA data={data4} title="Kodomo Club"/>
+				<SectionA data={data3} title="JUNE 19 - 21"/>
 				<AdContainer src={ad1}/>
+				<SectionA data={data4} title="Kodomo Club"/>
+				<AdContainer src={ad2}/>
 				<SectionA data={data5} title="UnionPay International"/>
 			</div>
 		);
