@@ -29,11 +29,11 @@ var Slider = React.createClass({
 	}
 });
 var LOGO_SRC = 'http://touchedition.s3.amazonaws.com/asset/555edb0290a3d98a63e42aa0.png';
-var MAX_WIDTH = 1100;
+var MAX_WIDTH = window.innerWidth;
 var Menubar = React.createClass({
 	getInitialState: function() {
 		return {
-			showSubcategory: false
+			showSubcategory: 'Gear'
 		};
 	},
 	openMenuCategory: function(c) {
@@ -43,11 +43,21 @@ var Menubar = React.createClass({
 	},
 	closeSubmenu: function() {
 		this.setState({
-			showSubcategory: false
+			// showSubcategory: false
 		});
 	},
+	getMaxSubmenuItem: function() {
+		var width = window.innerWidth;
+		if (width < 1100) {
+			return 6;
+		}
+		if (width < 1300) {
+			return 8;
+		}
+		return 10;
+	},
 	renderSubmenuItem: function(article, index) {
-		var width = (MAX_WIDTH - 10)/6 ;
+		var width = (MAX_WIDTH - 10)/this.getMaxSubmenuItem() ;
 		var url = "http://gmlive.com/post/" + article.shortenId + '-' + article.slug;
 		return (
 			<a href={url} className="submenu-item" style={{width: width}}>
@@ -57,10 +67,10 @@ var Menubar = React.createClass({
 		);
 	},
 	render: function() {
-		var submenuHeight = MAX_WIDTH/6;
+		var submenuHeight = 180;
 		var submenuData = this.state.showSubcategory && _.first(this.props.data.filter((article)=>{
 			return article.categories.indexOf(this.state.showSubcategory) >= 0;
-		}), 6);
+		}), this.getMaxSubmenuItem());
 		return (
 			<div style={{background: 'white', position: 'relative'}} className="polygon-menu" onMouseLeave={this.closeSubmenu}>
 				<div style={{maxWidth: MAX_WIDTH, margin: 'auto', border: '1px solid #DDD', borderWidth: '0 1px', position: 'relative', boxSizing: 'content-box'}}>
