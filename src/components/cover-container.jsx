@@ -422,7 +422,7 @@ var Cover = React.createClass({
 		};
 	},	
 	componentWillMount: function() {
-		window.addEventListener('keydown', this.handleKeydown);
+		window.addEventListener('keydown', this.handleKeydown);		
 	},
 	componentDidMount: function() {
 		TweenMax.fromTo(this.getDOMNode(), 0.3, {
@@ -432,6 +432,7 @@ var Cover = React.createClass({
 			scale: 1,
 			force3D: 'auto'
 		});
+		window.addEventListener('resize', this.handleResize);
 	},
 	componentWillUnmount: function() {
 		window.removeEventListener('keydown', this.handleKeydown);

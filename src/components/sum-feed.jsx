@@ -20,6 +20,28 @@ var AdContainer = React.createClass({
 		);
 	}
 });
+var AdFixedContainer = React.createClass({
+	componentDidMount: function() {
+		var img = new Image();
+		img.onload = ()=>{
+			this._width = img.width;
+			this._height = img.height;
+			this.updateMaxSize();
+		};
+		img.src = this.props.src;
+	},
+	updateMaxSize: function() {
+		var scale = window.innerWidth/this._width;
+		this.getDOMNode().style.maxHeight = scale * this._height + 'px';
+		console.log("scale", scale, this._height, this._width);
+	},
+	render: function() {
+		return (
+			<div style={{width: '100%', height: 500, backgroundSize: '100% auto', backgroundPosition: 'center center', backgroundImage: 'url(' + this.props.src + ')', backgroundRepeat: 'no-repeat', backgroundAttachment: 'fixed'}}>
+			</div>
+		);
+	}
+});
 var CoverCategoryPreview = React.createClass({
 	render: function() {
 		return (
@@ -184,9 +206,9 @@ var SumFeed = React.createClass({
 				<Menubar data={this.props.data}/>
 				<LatestSection data={data1}/>
 				<Section1 title="Latest Review" data={_.first(data1, 6)}/>
-				<AdContainer src={ad1}/>
+				<AdFixedContainer src={ad2}/>
 				<FullWidthSection1 data={_.first(data2, 2)} title="JUST ARRIVE"/>
-				<AdContainer src={ad2}/>
+				<AdContainer src={ad1}/>
 				<PolygonContainer data={features}/>
 				<AdContainer src={ad1}/>
 				<SectionA data={data3} title="JUNE 19 - 21"/>

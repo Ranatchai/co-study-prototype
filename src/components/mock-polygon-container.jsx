@@ -30,7 +30,6 @@ var Slider = React.createClass({
 });
 var LOGO_SRC = 'http://touchedition.s3.amazonaws.com/asset/555edb0290a3d98a63e42aa0.png';
 var MAX_WIDTH = window.innerWidth;
-var Menubar = require('./menubar');
 var MockContainer = React.createClass({
 	render: function() {
 		var data = this.props.data;
