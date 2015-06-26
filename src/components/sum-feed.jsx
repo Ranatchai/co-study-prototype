@@ -1,11 +1,14 @@
 var React = require('react');
 var SectionA = require('./section-1');
 var LatestSection = require('./latest-section');
+var BackgroundUtil = require('../common/background-util');
 var PolygonContainer = require('./mock-polygon-container');
+var FullWidthSection1 = require('./full-width-section');
 var _ = require('underscore');
-var ad = "/images/ad1.jpg";
 var ad1 = 'http://touchedition.s3.amazonaws.com/asset/55420f2fe57b85e332bfdcab.jpg';
 var ad2 = 'http://touchedition.s3.amazonaws.com/asset/5559d77d6526e2152c531adb.jpg';
+var moment = require('moment');
+var Menubar = require('./menubar');
 var AdContainer = React.createClass({
 	render: function() {
 		return (
@@ -17,6 +20,88 @@ var AdContainer = React.createClass({
 		);
 	}
 });
+var CoverCategoryPreview = React.createClass({
+	render: function() {
+		return (
+			<div style={{marginBottom: 30}}>
+				<h5 style={{color: '#58C9F7', fontWeight: 'bold', fontSize: 18, marginBottom: 5}}>{this.props.categories[0]}</h5>
+				<p style={{color: 'white', fontSize: 24}}>{this.props.title}</p>
+			</div>
+		);
+	}
+});
+var CoverSection = React.createClass({
+	getInitialState: function() {
+		var size = this.getSizeState();
+		return {
+			width: size.width,
+			height: size.height
+		};
+	},	
+	componentDidMount: function() {
+		window.addEventListener('resize', this.handleResize);
+	},
+	componentWillUnmount: function() {		
+		window.removeEventListener('resize', this.handleResize);
+	},
+	handleResize: function() {
+		this.setState(this.getSizeState());
+	},
+	getSizeState: function() {
+		var width = window.innerWidth;
+		var height = window.innerHeight;
+		return {
+			width: width,
+			height: height
+		};
+	},
+	render: function() {
+		return (
+			<div style={{width: this.state.width, height: this.state.height, backgroundPosition: 'center center', backgroundImage: 'url(/images/cover-desktop.jpg)', backgroundSize: 'cover'}}>
+				<div style={{position: 'absolute', left: 40, bottom: 40}}>
+					{this.props.data.map((d)=><CoverCategoryPreview {...d}/>)}
+				</div>
+				<img src={'/images/cover-logo.png'} style={{position: 'absolute', left: 40, top: 40, width: 240}}/>
+			</div>
+		);
+	}
+});
+
+var Section1Card = React.createClass({
+	render: function() {
+		return (
+			<div style={{width: 330, height: 400, overflow: 'hidden', float: 'left', marginLeft: (this.props.index%3) === 0? 0: 35}}>
+				<p style={{textTransform: 'uppercase', fontSize: 11, lineHeight: '25px'}}>{this.props.categories.map(c=><span><a style={{color: '#27abe1', borderBottom: '2px solid #27abe1', paddingBottom: 5}} href={"/category/" + c}>{c}</a></span>)}</p>
+				<div style={_.extend({width: '100%', height: 187}, BackgroundUtil.getBackgroundProps(this.props, 330, 187))}/>
+				<h6 style={{fontFamily: 'ThaiSansNeue', fontWeight: 'bold', fontSize: 28, margin: '10px 0 5px'}}>{this.props.title}</h6>
+				<p style={{marginBottom: 10, color: 'rgb(102, 102, 102)', fontSize: 12}}>By <a style={{color: '#27abe1', fontWeight: 'bold'}}>{this.props.user.fullname}</a> on {moment(this.props.publishedDate).format('MMM DD, YYYY')}</p>
+				<p style={{fontFamily: 'ThaiSansNeue', fontSize: 18, lineHeight: 1}}>{this.props.description}</p>
+			</div>
+		);
+	}
+});
+var Section1 = React.createClass({
+	render: function() {
+		var titleStyle = {
+		  textTransform: 'uppercase',
+		  fontWeight: 100,
+		  fontStyle: 'normal',
+		  fontSize: '24px',
+		  color: '#27abe1',
+		  padding: '10px 0',
+		  margin: '30px 0',
+		  borderBottom: '1px solid #ddd'
+		};
+		return (
+			<div style={{maxWidth: 1060, margin: '20px auto'}}>
+				<h5 style={titleStyle}>{this.props.title}</h5>
+				{this.props.data.map((d, index)=><Section1Card index={index} {...d}/>)}
+				<div style={{clear: 'both'}}/>
+			</div>
+		);
+	}
+});
+
 var SumFeed = React.createClass({
 	render: function() {
 		var data = this.props.data;
@@ -32,11 +117,11 @@ var SumFeed = React.createClass({
 			data3 = [];
 
 		data.forEach((item, index)=> {
-			if (index < 5) {
+			if (index < 6) {
 				data1.push(item);
-			} else if (index < 15) {
+			} else if (index < 16) {
 				data2.push(item);
-			} else if (index < 25) {
+			} else if (index < 26) {
 				data3.push(item);
 			}
 		});
@@ -85,16 +170,27 @@ var SumFeed = React.createClass({
 			description: '12 more outlets in the US are now offering exclusive UnionPay card privileges，the total number of US outlets providing such offers has reached 16. \nFrom today to May 31, 2016, you can get a free US$5 VIP Coupon Book from 12 Tanger Outlets Service Centers including Branson and Riverhead with UnionPay cards. The Book offers discount coupons with a total value of over US$1,000.\nCurrently, UnionPay cards are accepted by over 90% of ATMs for cash withdrawal and by over 80% of merchants for payments in the US. #TravelYourWay and don’t miss those offers!',
 			user: {fullname: 'Union Pay'}
 		}];
-
+		var uniqFC = [];
 		return (
 			<div style={{background: 'white', minHeight: '100%', paddingBottom: 20}}>
-				<PolygonContainer data={features} categories={categories}/>
+				<CoverSection data={_.first(features.filter((d)=>{
+					var cat = d.categories[0];
+					if (uniqFC.indexOf(cat) >= 0) {
+						return false;
+					}
+					uniqFC.push(cat);
+					return true;
+				}), 3)}/>
+				<Menubar data={this.props.data}/>
 				<LatestSection data={data1}/>
+				<Section1 title="Latest Review" data={_.first(data1, 6)}/>
 				<AdContainer src={ad1}/>
-				<SectionA data={data2} title="JUST ARRIVE"/>
+				<FullWidthSection1 data={_.first(data2, 2)} title="JUST ARRIVE"/>
 				<AdContainer src={ad2}/>
+				<PolygonContainer data={features}/>
+				<AdContainer src={ad1}/>
 				<SectionA data={data3} title="JUNE 19 - 21"/>
-				<AdContainer src={ad}/>
+				<AdContainer src={ad2}/>
 				<SectionA data={data4} title="Kodomo Club"/>
 				<AdContainer src={ad1}/>
 				<SectionA data={data5} title="UnionPay International"/>

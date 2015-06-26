@@ -23,6 +23,15 @@ module.exports = {
   getBackgroundPosition: function(article) {
     return article.coverConfig && article.coverConfig.backgroundPosition;
   },
+  getBackgroundProps: function(article, width, height) {
+    var backgroundImage = article.thumbnail? 'url(' + this.getImageSrc(article, width, height) + ')': false;
+    var backgroundPosition = (article.coverConfig && article.coverConfig.backgroundPosition) || 'center center';
+    return {
+      backgroundImage: backgroundImage,
+      backgroundPosition: backgroundPosition,
+      backgroundSize: 'cover'
+    };
+  },
   getWordbreak: function(article, attr) {    
     var wordbreakSequence = article.wordbreakSequence;
     if (!wordbreakSequence || !article[attr] || !wordbreakSequence[attr] || !wordbreakSequence[attr].length) {

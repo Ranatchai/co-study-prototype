@@ -31,7 +31,7 @@ var LatestSection = React.createClass({
 			marginBottom: 15			
 		};
 		return (
-			<div style={{background: 'white', padding: 20, maxWidth: 1280, margin: 'auto', position: 'relative', height: (LINE_HEIGHT*TOTAL_NUMBER_OF_LINE + GAP_BETWEEN_TITLE_DESCRIPTION + 20*2), overflow: 'hidden'}}>
+			<div style={{background: 'white', padding: 20, maxWidth: 1060, margin: 'auto', position: 'relative', height: (LINE_HEIGHT*TOTAL_NUMBER_OF_LINE + GAP_BETWEEN_TITLE_DESCRIPTION + 20*2), overflow: 'hidden'}}>
 				<h3 style={titleStyle}>Latest</h3>
 				{this.props.data.map((item)=><Item {...item}/>)}
 				<div style={{clear: 'both'}}/>
