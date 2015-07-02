@@ -104,13 +104,15 @@ var Container = React.createClass({
 			textAlign: 'right'
 		};
 		var bool = window.innerWidth < 1024;
-		var title = this.props.title;
-		var splitTitle = title.split(' ');
-		var t1 = splitTitle[0];
-		var t2 = splitTitle[1];
-		splitTitle.splice(0, 1);
-		splitTitle.splice(0, 1);
-		var tr = splitTitle.join(' ');
+		var title = this.props.title, splitTitle, t1, t2, tr;
+		if (title) {			
+			var splitTitle = title.split(' ');
+			var t1 = splitTitle[0];
+			var t2 = splitTitle[1];
+			splitTitle.splice(0, 1);
+			splitTitle.splice(0, 1);
+			tr = splitTitle.join(' ');
+		}
 		var coverData = this.props.data[0];
 		var coverContent = [
 			<div className="gradient-black-bottom" style={{position: 'absolute', bottom: 0, left: 0, right: 0, height: '60%'}}/>,

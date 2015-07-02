@@ -1,8 +1,6 @@
 var DOM_APP_EL_ID = 'app';
 var React = require('react');
-var SectionA = require('../components/section-1a');
-var LatestSection = require('../components/latest-section');
-var PolygonContainer = require('../components/mock-polygon-container');
+var SectionA = require('../components/section-2a');
 var _ = require('underscore');
 var ad = "/images/ad1.jpg";
 var ad1 = 'http://touchedition.s3.amazonaws.com/asset/55420f2fe57b85e332bfdcab.jpg';
@@ -21,7 +19,7 @@ var AdContainer = React.createClass({
 var SumFeed = React.createClass({
 	render: function() {
 		return (
-			<div style={{background: 'white', minHeight: '100%', paddingBottom: 20}}>
+			<div style={{background: 'white', minHeight: '100%', paddingBottom: 0}}>
 				<SectionA data={_.first(this.props.data, 100)} title="GM LIVE"/>
 			</div>
 		);

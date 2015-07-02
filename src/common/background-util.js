@@ -7,6 +7,9 @@ module.exports = {
     var thumbnail = article.thumbnail; 
     var imageUrl = thumbnail.src;
     var srcSet = thumbnail.srcSet;
+    if (!thumbnail.srcSet) {
+      return imageUrl;
+    }
     var ratio = Cropping.getFitOutsideRatio(thumbnail.width, thumbnail.height, width, height);    
     var expectP = (thumbnail.width * ratio) * (thumbnail.height * ratio);
     var min = 999999, minIndex = false;

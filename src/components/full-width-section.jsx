@@ -21,7 +21,7 @@ var FullWidthSection1 = React.createClass({
 		var d1 = this.props.data[0];
 		var d2 = this.props.data[1];
 		return (
-			<div>
+			<div {...this.props}>
 				<HalfScreenWidthCard {...d1} float="left"/>
 				<HalfScreenWidthCard {...d2} float="right"/>
 			</div>

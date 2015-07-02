@@ -3,6 +3,10 @@ module.exports = {
 		title: 'Mix Content Feed',
 		path: "./src/mains/content-feed-mock"
 	},
+	"paging-feed": {
+		title: 'Paging Feed',
+		path: "./src/mains/paging-feed"
+	},
 	"cover": {
 		title: "Article Cover",
 		path: "./src/mains/cover-mock"
