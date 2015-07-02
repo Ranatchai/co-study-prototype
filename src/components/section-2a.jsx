@@ -183,7 +183,7 @@ var Section = React.createClass({
 		var coverData = this.props.author;
 		console.log('coverData', coverData.coverAsset.src);
 		var coverContent = [
-			<div className="gradient-black-bottom" style={{position: 'absolute', bottom: 0, left: 0, right: 0, height: '60%'}}/>,
+			<div style={{position: 'absolute', bottom: 0, left: 0, right: 0, top: 0, background: 'rgba(0,0,0,0.4)'}}/>,
 			<a href="#" style={{position: 'absolute', top: '20%', left: 30, right: 30, textAlign: 'center'}} className="item">
 				<div style={{margin: 'auto', borderRadius: '50%', width: 150, height: 150, backgroundImage: 'url(' + coverData.avatarAsset.src + ')', backgroundPosition: 'center center', backgroundSize: 'cover'}}/>
 				<h1 className="title" style={{fontSize: 36, lineHeight: '40px', marginBottom: 0}}>{coverData.title}</h1>,
