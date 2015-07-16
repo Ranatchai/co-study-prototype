@@ -272,7 +272,8 @@ var categoryStyle = {
 	lineHeight: '26px',
 	textAlign: 'center',
 	textTransform: 'uppercase',
-	color: 'white'
+	color: 'white',
+	maxWidth: 77
 };
 var authorStyle = {
 	fontFamily: 'HelveticaNeue',
@@ -303,8 +304,8 @@ var SectionListItem = React.createClass({
 					<h3 style={_.extend({}, titleStyle, {fontSize: 18, lineHeight: '16px'})}>{d.title}</h3>
 					<div style={_.extend({position: 'absolute', left: 0, bottom: 0, right: 0}, authorStyle)}>
 						<img src={author.avatar} height="24" width="24" style={{borderRadius: '50%', float: 'left'}}/>
-						<span style={{marginLeft: 7}}>{author.title}</span>
-						{d.categories.map((c)=><div style={categoryStyle}>{c}</div>)}
+						<span style={{marginLeft: 7, maxWidth: 80, overflow: 'hidden', float: 'left', height: 24, whiteSpace: 'nowrap', textOverflow: 'ellipsis'}}>{author.title}</span>
+						{d.categories && d.categories[0] && <div style={categoryStyle}>{d.categories[0]}</div>}
 					</div>
 				</div>
 			</div>
