@@ -6,7 +6,7 @@ var CoverCategoryPreview = React.createClass({
 		return (
 			<div style={{float: 'left', maxWidth: 200, borderRight: '1px solid white', padding: '0 20px', height: '100%'}}>
 				<h5 style={{color: 'white', fontFamily: 'Open Sans', fontWeight: 'bold', fontSize: 12, marginBottom: 5, textTransform: 'uppercase'}}>{this.props.categories[0]}</h5>
-				<p style={{color: 'white', fontSize: 20, lineHeight: '20px', fontFamily: 'ThaiSansNeue-UltraLight'}}>{this.props.title}</p>
+				<p style={{color: 'white', fontSize: 20, lineHeight: '20px', fontFamily: 'ThaiSansNeue', fontWeight: 100}}>{this.props.title}</p>
 			</div>
 		);
 	}

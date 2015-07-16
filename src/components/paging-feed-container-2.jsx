@@ -86,12 +86,12 @@ var PagingFeedContainer = React.createClass({
   	// console.log('absTop', absTop, top);
   	if (absTop >= 0 && absTop <= window.innerHeight) {
   		currentCard.getDOMNode().style[getVendorPropertyName('transform')] = 'translate3d(0px,' + (-absTop) + 'px, 0) scale(' + zoom + ')';
-  	} else if (currentIndex - 1 >= 0) {
+  	} else if (currentIndex - 1 >= 0 && absTop < 0) {
   		var prevIndex = currentIndex - 1;
   		var prevCard = this.refs['card-' + prevIndex];
   		absTop += window.innerHeight;
-  		currentCard.getDOMNode().style[getVendorPropertyName('transform')] = 'translate3d(0,0,0)';
-  		if (prevCard) {
+  		currentCard.getDOMNode().style[getVendorPropertyName('transform')] = 'translate3d(0,0,0)';  		
+  		if (prevCard && absTop >= 0) {
   			prevCard.getDOMNode().style[getVendorPropertyName('transform')] = 'translate3d(0px,' + (-absTop) + 'px, 0) scale(' + zoom + ')';
   		}
   	}
