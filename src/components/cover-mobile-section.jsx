@@ -4,7 +4,7 @@ var _ = require('underscore');
 var CoverCategoryPreview = React.createClass({
 	render: function() {
 		return (
-			<div style={{float: 'left', maxWidth: 200, borderRight: '1px solid white', padding: '0 20px', height: '100%'}}>
+			<div style={_.extend({float: 'left', maxWidth: 200, borderRight: '1px solid white', padding: '0 20px', height: '100%'}, this.props.style)}>
 				<h5 style={{color: 'white', fontFamily: 'Open Sans', fontWeight: 'bold', fontSize: 12, marginBottom: 5, textTransform: 'uppercase'}}>{this.props.categories[0]}</h5>
 				<p style={{color: 'white', fontSize: 20, lineHeight: '20px', fontFamily: 'ThaiSansNeue', fontWeight: 100}}>{this.props.title}</p>
 			</div>
@@ -37,13 +37,28 @@ var CoverSection = React.createClass({
 		};
 	},
 	render: function() {
-		var coverSrc = '/images/cover-mobile.jpg';		
+		var coverSrc = this.props.background;
+		var title = this.props.title;
+		var titleStyle = {
+			fontFamily: 'Antonio, Open Sans',
+			fontWeight: 100,
+			fontSize: '36px',
+			color: '#FFFFFF',
+			letterSpacing: '5.09px',
+			lineHeight: '57px',
+			marginLeft: 20,
+			marginBottom: 20
+		};
+		var d1 = this.props.data[0];
+		var otherD = _.rest(this.props.data);
 		return (
-			<div style={_.extend({width: this.state.width, height: this.state.height}, BackgroundUtil.getBackgroundProps(this.props.data[0], window.innerWidth, window.innerHeight))}>
+			<div style={_.extend({width: this.state.width, height: this.state.height}, BackgroundUtil.getBackgroundProps(this.props.data[0], window.innerWidth, window.innerHeight), coverSrc? {backgroundImage: 'url(' + coverSrc + ')'}: {})}>
 				<div className="gradient-black-bottom" style={{position: 'absolute', left: 0, bottom: 0, paddingBottom: 20, width: this.props.data.length * 300, minWidth: '100%'}}>
-					{this.props.data.map((d)=><CoverCategoryPreview {...d}/>)}
+					<h2 style={titleStyle}>{title}</h2>
+					<CoverCategoryPreview {...d1} style={{display: 'block', float: 'none', border: 0, marginBottom: 20}}/>
+					{otherD.map((d)=><CoverCategoryPreview {...d}/>)}
 				</div>
-				<img src={'/images/Logo_GMLive_for_profile_white.png'} style={{position: 'absolute', left: 20, top: 20, width: 120}}/>				
+				<img src={'/images/Logo_GMLive_for_profile_white.png'} style={{position: 'absolute', left: 20, top: 20, width: 120}}/>								
 			</div>
 		);
 	}

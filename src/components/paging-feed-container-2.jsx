@@ -411,11 +411,27 @@ var HighlightItem = React.createClass({
 var getData = function(data, number) {
 	var n = [];
 	for (var i = 0; i < number; i++) {
+		if (data.length === 0) {
+			return n;
+		}
 		n.push(data.splice(0, 1)[0]);		
 	}
 	return n;
 };
-var getCoverData = function(data, number) {
+var getCategoryData = function(data, category, number) {	
+	var result = [];
+	for (var i = 0; i < data.length; i++) {
+		var c = data[i].categories[0];
+		if (c.toLowerCase() === category.toLowerCase()) {
+			result.push(data[i]);
+			if (result.length >= number) {
+				return result;
+			}
+		}
+	}
+	return result;
+};
+var getUniqCategoryData = function(data, number) {
 	var uniq_cats = [];
 	var result = [];
 	for (var i = 0; i < data.length; i++) {
@@ -438,16 +454,18 @@ module.exports = React.createClass({
 	},
 	render: function() {
 		var data = Array.prototype.slice.call(this.props.data);
-		var Player = IsMobile()? MobilePlayer: DesktopPlayer;				
-		return (
-			<Player>
-				<CoverSection data={getCoverData(data, 3)}/>
-				<HighlightItem header="Latest" data={getData(data, 1)[0]}/>
-				<SectionListItem data={getData(data, 4)}/>
-				<CoverSection data={getCoverData(data, 3)}/>
-				<SectionListItem data={getData(data, 4)}/>
-			</Player>
-		);
-		//<SectionContents title="Latest" tagline="From GM Live" data={getData(data, 3)}/>
+		var Player = IsMobile()? MobilePlayer: DesktopPlayer;
+		var result = [
+			<CoverSection background='/images/cover-mobile.jpg' data={getUniqCategoryData(data, 3)}/>,
+			<HighlightItem header="Featured" data={getCategoryData(data, 'Featured', 1)[0]}/>,
+			<SectionListItem data={getData(data, 4)}/>,
+			<SectionListItem data={getData(data, 4)}/>,
+			<CoverSection title="Latest" data={getUniqCategoryData(data, 3)}/>
+		];		
+		while (data.length > 0) {
+			var d = getData(data, 4);
+			result.push(<SectionListItem data={d}/>);
+		}
+		return React.createElement(Player, {children: result});
 	}
 });
