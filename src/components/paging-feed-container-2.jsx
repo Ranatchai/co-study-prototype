@@ -301,10 +301,11 @@ var SectionListItem = React.createClass({
     	title: d.user.fullname,
     	avatar: '/images/author.jpg'
     };
+    var itemHeight = window.innerHeight/4;
 		return (
-			<div style={{height: 120, position: 'relative', padding: 6, borderBottom: '1px solid #C0C0C0'}}>
-				<div style={_.extend({width: 108, height: 105, border: '1px solid #979797'}, BackgroundUtil.getBackgroundProps(d, 108, 105))}/>
-				<div style={{position: 'absolute', left: 120, top: 6, bottom: 6, right: 6}}>
+			<div style={{height: itemHeight, position: 'relative', padding: 6, borderBottom: '1px solid #C0C0C0'}}>
+				<div style={_.extend({width: itemHeight - 12, height: itemHeight - 12, border: '1px solid #979797'}, BackgroundUtil.getBackgroundProps(d, 108, 105))}/>
+				<div style={{position: 'absolute', left: itemHeight, top: 6, bottom: 6, right: 6}}>
 					<p style={dateStyle}>{moment(d.publishedDate).format('DD MMMM YYYY')}</p>
 					<h3 style={_.extend({}, titleStyle, {fontSize: 18, lineHeight: '16px'})}>{d.title}</h3>
 					<div style={_.extend({position: 'absolute', left: 0, bottom: 0, right: 0}, authorStyle)}>
@@ -365,7 +366,7 @@ var HighlightItem = React.createClass({
 			borderWidth: '24px 0 0 ' + window.innerWidth + 'px',
 			borderColor: 'transparent transparent transparent #ffffff',
 		}}/>
-		var author = this.getAuthor();		
+		var author = this.getAuthor();			
 		return (
 			<div style={{background: 'white', width: '100%', height: '100%'}}>
 				<div style={_.extend({
@@ -421,7 +422,7 @@ module.exports = React.createClass({
 	},
 	render: function() {
 		var data = Array.prototype.slice.call(this.props.data);
-		var Player = IsMobile()? MobilePlayer: DesktopPlayer;
+		var Player = IsMobile()? MobilePlayer: DesktopPlayer;		
 		return (
 			<Player>
 				<CoverSection data={getData(data, 3)}/>
