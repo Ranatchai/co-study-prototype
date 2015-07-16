@@ -1,5 +1,6 @@
 var React = require('react');
 var BackgroundUtil = require('../common/background-util');
+var IsMobile = require('../common/is-mobile');
 var _ = require('underscore');
 var moment = require('moment');
 var Scroller = require('scroller').Scroller;
@@ -25,7 +26,7 @@ var PageComponent = React.createClass({
 		);
 	}
 });
-var PagingFeedContainer = React.createClass({
+var MobilePlayer = React.createClass({
 	mixins: [ReactComponentWithPureRenderMixin, Mixins.ListenTo, Mixins.WindowSizeMixin],
 	getInitialState: function() {
 		return {
@@ -44,7 +45,7 @@ var PagingFeedContainer = React.createClass({
 		return (
 			index - 1 <= currentIndex && index + 1 >= currentIndex ?<PageComponent width={this.state.width} height={this.state.height} ref={"card-" + index} key={"page-" + index} index={index} style={{
 				transitionDuration: 0,
-				transform: index < currentIndex? 'translate3d(0, ' + (-window.innerHeight) + 'px, 0)': 'translate3d(0, 0, 0)'
+				transform: index < currentIndex? 'translate3d(0, ' + (-window.innerHeight - 20) + 'px, 0)': 'translate3d(0, 0, 0)'
 			}}>
 				{page}
 			</PageComponent>: null
@@ -113,7 +114,7 @@ var PagingFeedContainer = React.createClass({
   			nextCard.getDOMNode().style[getVendorPropertyName('transform')] = 'translate3d(0,0,0)';
   		}
   		if (prevCard) {
-  			prevCard.getDOMNode().style[getVendorPropertyName('transform')] = 'translate3d(0,' + (-window.innerHeight) + 'px,0)';
+  			prevCard.getDOMNode().style[getVendorPropertyName('transform')] = 'translate3d(0,' + (-window.innerHeight - 20) + 'px,0)';
   		}
   	});
   },
@@ -154,7 +155,7 @@ var PagingFeedContainer = React.createClass({
 		);
 	}
 });
-var PagingFeedContainer1 = React.createClass({
+var DesktopPlayer = React.createClass({
 	mixins: [ReactComponentWithPureRenderMixin, Mixins.ListenTo, Mixins.WindowSizeMixin],
 	getInitialState: function() {
 		return {
@@ -183,7 +184,6 @@ var PagingFeedContainer1 = React.createClass({
 	},
 	componentDidUpdate: function(prevProps, prevState) {
 		if (prevState.currentIndex !== this.state.currentIndex) {
-			// console.log('will playAnimation');
 			setTimeout(this.playPageAnimation, TRANSITION_DURATION);
 		}
 	},
@@ -207,39 +207,6 @@ var PagingFeedContainer1 = React.createClass({
 			</PageComponent>
 		);
 	},
-	handleTouchStart: function(e) {
-		this._start = [e.touches[0].pageX, e.touches[0].pageY];
-    this._move = false;
-    this._action = false;
-	},
-	handleTouchMove: function(e) {
-		e.preventDefault();
-		this._move = [e.touches[0].pageX, e.touches[0].pageY];
-		if (this._action) {
-      return;
-    }
-    var delta = this._move[1] - this._start[1];
-    if (delta < -40) {
-    	if (this.state.currentIndex === this.props.children.length - 1) {
-				return;
-			}
-    	this._action = true;
-			this.setState({
-				currentIndex: this.state.currentIndex + 1
-			});
-    } else if (delta > 40) {
-    	if (this.state.currentIndex === 0) {
-				return;
-			}
-			this._action = true;
-			this.setState({
-				currentIndex: this.state.currentIndex - 1
-			});
-    }
-	},
-	handleTouchEnd: function(e) {
-
-	},
 	render: function() {
 		var transitionName;
     var currentPageIndex = this.state.currentIndex;
@@ -255,7 +222,7 @@ var PagingFeedContainer1 = React.createClass({
     this._prevIndex = currentPageIndex;    
 
 		return (
-			<TimeoutTransitionGroup onTouchStart={this.handleTouchStart} onTouchMove={this.handleTouchMove} onTouchEnd={this.handleTouchEnd} transitionName={transitionName} enterTimeout={TRANSITION_DURATION} leaveTimeout={TRANSITION_DURATION} transitionEnter={!isNextPage} style={{position: 'absolute', left: 0, top: 0, width: '100%', height: '100%'}}>
+			<TimeoutTransitionGroup transitionName={transitionName} enterTimeout={TRANSITION_DURATION} leaveTimeout={TRANSITION_DURATION} transitionEnter={!isNextPage} style={{position: 'absolute', left: 0, top: 0, width: '100%', height: '100%'}}>
 				{this.getCurrentPage()}
 			</TimeoutTransitionGroup>
 		);
@@ -447,16 +414,22 @@ var HighlightItem = React.createClass({
 	}
 });
 module.exports = React.createClass({
+	componentDidMount: function() {
+		window.addEventListener('resize', ()=> {
+			this.forceUpdate();
+		});
+	},
 	render: function() {
 		var data = Array.prototype.slice.call(this.props.data);
+		var Player = IsMobile()? MobilePlayer: DesktopPlayer;
 		return (
-			<PagingFeedContainer>
+			<Player>
 				<CoverSection data={getData(data, 3)}/>
 				<HighlightItem header="Latest" data={getData(data, 1)[0]}/>
 				<SectionListItem data={getData(data, 4)}/>
 				<CoverSection data={getData(data, 3)}/>
 				<SectionListItem data={getData(data, 4)}/>
-			</PagingFeedContainer>
+			</Player>
 		);
 		//<SectionContents title="Latest" tagline="From GM Live" data={getData(data, 3)}/>
 	}
