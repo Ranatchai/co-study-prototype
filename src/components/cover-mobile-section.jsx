@@ -47,7 +47,7 @@ var CoverSection = React.createClass({
 			letterSpacing: '5.09px',
 			lineHeight: '57px',
 			marginLeft: 12,
-			marginBottom: 12
+			marginBottom: 20
 		};
 		var d1 = this.props.data[0];
 		var otherD = _.rest(this.props.data);
@@ -55,7 +55,7 @@ var CoverSection = React.createClass({
 			<div style={_.extend({width: this.state.width, height: this.state.height}, BackgroundUtil.getBackgroundProps(this.props.data[0], window.innerWidth, window.innerHeight), coverSrc? {backgroundImage: 'url(' + coverSrc + ')'}: {})}>
 				<div className="gradient-black-bottom" style={{position: 'absolute', left: 0, bottom: 0, paddingBottom: 12, width: this.props.data.length * 300, minWidth: '100%'}}>
 					<h2 style={titleStyle}>{title}</h2>
-					<CoverCategoryPreview {...d1} style={{display: 'block', float: 'none', border: 0, marginBottom: 12}}/>
+					<CoverCategoryPreview {...d1} style={{display: 'block', float: 'none', border: 0, marginBottom: 20}}/>
 					{otherD.map((d)=><CoverCategoryPreview {...d}/>)}
 				</div>
 				<img src={'/images/Logo_GMLive_for_profile_white.png'} style={{position: 'absolute', left: 20, top: 20, width: 120}}/>								
