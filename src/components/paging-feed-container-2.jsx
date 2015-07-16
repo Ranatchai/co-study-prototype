@@ -237,13 +237,6 @@ var ad2 = 'http://touchedition.s3.amazonaws.com/asset/5559d77d6526e2152c531adb.j
 var Menubar = require('./menubar');
 var CoverSection = require('./cover-mobile-section');
 var Section2 = require('./section-2');
-var getData = function(data, number) {
-	var n = [];
-	for (var i = 0; i < number; i++) {
-		n.push(data.splice(0, 1)[0]);		
-	}
-	return n;
-};
 var transitionEvents = require('react-kit/transitionEvents');
 var SectionContents = React.createClass({
 	render: function() {
@@ -414,6 +407,28 @@ var HighlightItem = React.createClass({
 		);
 	}
 });
+var getData = function(data, number) {
+	var n = [];
+	for (var i = 0; i < number; i++) {
+		n.push(data.splice(0, 1)[0]);		
+	}
+	return n;
+};
+var getCoverData = function(data, number) {
+	var uniq_cats = [];
+	var result = [];
+	for (var i = 0; i < data.length; i++) {
+		var c = data[i].categories[0];
+		if (uniq_cats.indexOf(c) < 0) {
+			uniq_cats.push(c);
+			result.push(data[i]);
+			if (result.length >= number) {
+				return result;
+			}
+		}
+	}
+	return result;
+};
 module.exports = React.createClass({
 	componentDidMount: function() {
 		window.addEventListener('resize', ()=> {
@@ -422,13 +437,13 @@ module.exports = React.createClass({
 	},
 	render: function() {
 		var data = Array.prototype.slice.call(this.props.data);
-		var Player = IsMobile()? MobilePlayer: DesktopPlayer;		
+		var Player = IsMobile()? MobilePlayer: DesktopPlayer;				
 		return (
 			<Player>
-				<CoverSection data={getData(data, 3)}/>
+				<CoverSection data={getCoverData(data, 3)}/>
 				<HighlightItem header="Latest" data={getData(data, 1)[0]}/>
 				<SectionListItem data={getData(data, 4)}/>
-				<CoverSection data={getData(data, 3)}/>
+				<CoverSection data={getCoverData(data, 3)}/>
 				<SectionListItem data={getData(data, 4)}/>
 			</Player>
 		);
