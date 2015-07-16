@@ -40,7 +40,7 @@ var CoverSection = React.createClass({
 				<div style={{position: 'absolute', left: 40, bottom: 40}}>
 					{this.props.data.map((d)=><CoverCategoryPreview {...d}/>)}
 				</div>
-				<img src={'/images/cover-logo.png'} style={{position: 'absolute', left: 40, top: 40, width: 240}}/>
+				<img src={'/images/Logo_GMLive_for_profile_white.png'} style={{position: 'absolute', left: 20, top: 20, width: 120}}/>
 			</div>
 		);
 	}

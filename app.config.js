@@ -15,6 +15,10 @@ module.exports = {
 		title: "Article Cover 2",
 		path: "./src/mains/cover-mock-2"
 	},
+	"cover-3": {
+		title: "Article Cover 3",
+		path: "./src/mains/cover-mock-3"
+	},
 	"eateeni": {
 		title: "Eateeni Shop list",
 		path: "./src/mains/eateeni-mock"

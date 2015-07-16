@@ -11,13 +11,15 @@ module.exports = {
       return imageUrl;
     }
     var ratio = Cropping.getFitOutsideRatio(thumbnail.width, thumbnail.height, width, height);    
-    var expectP = (thumbnail.width * ratio) * (thumbnail.height * ratio);
+    var expectWidth = (thumbnail.width * ratio);
+    var expectHeight = (thumbnail.height * ratio);
+    console.log("expectWidth", expectWidth, expectHeight);
     var min = 999999, minIndex = false;
     for (var i = 0; i < srcSet.length; i++) {
-      var p = srcSet[i].width * srcSet[i].height;
-      if (srcSet[i].width > width && Math.abs(expectP - p) < min) {
-        min = Math.abs(expectP - p);
+      if (srcSet[i].width >= expectWidth && srcSet[i].height >= expectHeight && srcSet[i].width < min) {
+        min = srcSet[i].width;
         minIndex = i;
+        console.log('minIndex', minIndex, srcSet[i].width)
       }
     }
     imageUrl = srcSet[minIndex]? srcSet[minIndex].src: thumbnail.src;

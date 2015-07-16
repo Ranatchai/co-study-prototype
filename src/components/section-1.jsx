@@ -12,8 +12,9 @@ var titleTextStyle = {
 	marginBottom: 15
 };
 var descriptionTextStyle = {
-	fontFamily: 'ThaiSansNeue-ExtraLight',
+	fontFamily: 'ThaiSansNeue',
 	fontSize: '20px',
+	fontWeight: 100,
 	color: '#9B9B9B',
 	lineHeight: '27px'			
 };
