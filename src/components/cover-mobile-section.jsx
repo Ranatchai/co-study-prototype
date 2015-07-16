@@ -4,7 +4,7 @@ var _ = require('underscore');
 var CoverCategoryPreview = React.createClass({
 	render: function() {
 		return (
-			<div style={_.extend({float: 'left', maxWidth: window.innerWidth/2 - 12 + 1, borderRight: '1px solid white', marginLeft: 12, height: '100%'}, this.props.style)}>
+			<div style={_.extend({float: 'left', maxWidth: window.innerWidth/2 - 12 + 1, borderRight: '1px solid white', marginLeft: 12, paddingRight: 12, height: '100%'}, this.props.style)}>
 				<h5 style={{color: 'white', fontFamily: 'Open Sans', fontWeight: 'bold', fontSize: 12, marginBottom: 5, textTransform: 'uppercase'}}>{this.props.categories[0]}</h5>
 				<p style={{color: 'white', fontSize: 20, lineHeight: '20px', fontFamily: 'ThaiSansNeue', fontWeight: 100}}>{this.props.title}</p>
 			</div>
