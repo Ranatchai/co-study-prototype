@@ -289,13 +289,21 @@ var titleStyle = {
 	lineHeight: '27px',
 	marginTop: 12
 };
-var SectionListItem = React.createClass({
-	renderItem: function(d) {
+var descriptionStyle = {
+	fontFamily: 'ThaiSansNeue',
+	fontSize: '18px',
+	color: '#000000',
+	fontWeight: 100,
+	lineHeight: '19.1px'
+};
+var SmallItem = React.createClass({
+	render: function() {
+		var d = this.props.data;
 		var author = {
     	title: d.user.fullname,
     	avatar: '/images/author.jpg'
     };
-    var itemHeight = window.innerHeight/4;
+    var itemHeight = this.props.height;
 		return (
 			<div style={{height: itemHeight, position: 'relative', padding: 6, borderBottom: '1px solid #C0C0C0'}}>
 				<div style={_.extend({width: itemHeight - 12, height: itemHeight - 12, border: '1px solid #979797'}, BackgroundUtil.getBackgroundProps(d, 108, 105))}/>
@@ -310,18 +318,53 @@ var SectionListItem = React.createClass({
 				</div>
 			</div>
 		);
-	},
+	}
+});
+var SmallItemList = React.createClass({
 	render: function() {
+		var itemHeight = window.innerHeight/4;
 		return (
 			<div style={{background: 'white', width: '100%', height: '100%'}}>
-				{this.props.data.map(d=>this.renderItem(d))}
+				{this.props.data.map(d=><SmallItem height={itemHeight} data={d}/>)}
+				<img src="/images/paging-navigator.png" width="40" height="40" style={{position: 'absolute', left: 10, top: 10}}/>
+			</div>
+		);
+	}
+});
+var SmallAndLargeSection = React.createClass({
+	render: function() {
+		var itemHeight = 120;
+		var imageHeight = (window.innerHeight - itemHeight) * 0.55;
+		var author = {
+    	title: this.props.data[0].user.fullname,
+    	avatar: '/images/author.jpg'
+    };
+		return (
+			<div style={{background: 'white', width: '100%', height: '100%'}}>
+				<div style={{position: 'relative', borderBottom: '1px solid #C0C0C0', height: window.innerHeight - itemHeight}}>
+					<div style={_.extend({
+						position: 'relative',
+						width: '100%',
+						height: imageHeight
+					}, BackgroundUtil.getBackgroundProps(this.props.data[0], window.innerWidth, imageHeight))}/>
+					<div style={{position: 'absolute', left: 12, right: 12, top: imageHeight, bottom: 30, overflow: 'hidden'}}>
+						<p style={_.extend({}, dateStyle, {marginTop: 6})}>{moment(this.props.data[0].publishedDate).format('DD MMMM YYYY')}</p>
+						<h3 style={_.extend({}, titleStyle, {fontSize: 26, lineHeight: '27px', marginBottom: 5, marginTop: 6, maxHeight: 27 * 2, overflow: 'hidden'})}>{this.props.data[0].title}</h3>
+						<p style={_.extend({}, descriptionStyle, {maxHeight: 19.1 * 2, overflow: 'hidden'})}>{this.props.data[0].description}</p>
+					</div>
+					<div style={_.extend({position: 'absolute', left: 6, bottom: 6, right: 6}, authorStyle)}>
+						<img src={author.avatar} height="24" width="24" style={{borderRadius: '50%', float: 'left'}}/>
+						<span style={{marginLeft: 7, maxWidth: 80, overflow: 'hidden', float: 'left', height: 24, whiteSpace: 'nowrap', textOverflow: 'ellipsis'}}>{author.title}</span>
+						{this.props.data[0].categories && this.props.data[0].categories[0] && <div style={categoryStyle}>{this.props.data[0].categories[0]}</div>}
+					</div>
+				</div>
+				<SmallItem height={itemHeight} data={this.props.data[1]}/>
 				<img src="/images/paging-navigator.png" width="40" height="40" style={{position: 'absolute', left: 10, top: 10}}/>
 			</div>
 		);
 	}
 });
 var HighlightItem = React.createClass({
-
   getAuthor: function() {
     return {
     	title: this.props.data.user.fullname,
@@ -343,14 +386,7 @@ var HighlightItem = React.createClass({
 			textTransform: 'uppercase',
 			width: '50%',
 			left: 12,
-		};		
-		var descriptionStyle = {
-			fontFamily: 'ThaiSansNeue',
-			fontSize: '18px',
-			color: '#000000',
-			fontWeight: 100,
-			lineHeight: '19.1px'
-		};
+		};				
 		var triangle = <div style={{
 			width: 0,
 			height: 0,
@@ -370,15 +406,15 @@ var HighlightItem = React.createClass({
 					width: '100%',
 					height: '50%'					
 				}, BackgroundUtil.getBackgroundProps(this.props.data, window.innerWidth, window.innerHeight/2))}>
-					<div style={{
+					{header && [<div style={{
 						position: 'absolute',
 						top: 0,
 						left: 0,
 						width: '100%',
 						height: '100%',
 						background: 'rgba(0,0,0,0.44)'
-					}}/>
-					<h1 style={headerStyle}>{header}</h1>
+					}}/>,
+					<h1 style={headerStyle}>{header}</h1>]}
 				</div>
 				<img src="/images/paging-navigator.png" width="40" height="40" style={{position: 'absolute', left: 10, top: 10}}/>
 				{triangle}
@@ -414,7 +450,7 @@ var getData = function(data, number) {
 		if (data.length === 0) {
 			return n;
 		}
-		n.push(data.splice(0, 1)[0]);		
+		n.push(data.splice(0, 1)[0]);
 	}
 	return n;
 };
@@ -423,7 +459,7 @@ var getCategoryData = function(data, category, number) {
 	for (var i = 0; i < data.length; i++) {
 		var c = data[i].categories[0];
 		if (c.toLowerCase() === category.toLowerCase()) {
-			result.push(data[i]);
+			result.push(data.splice(i, 1)[0]);
 			if (result.length >= number) {
 				return result;
 			}
@@ -438,7 +474,7 @@ var getUniqCategoryData = function(data, number) {
 		var c = data[i].categories[0];
 		if (uniq_cats.indexOf(c) < 0) {
 			uniq_cats.push(c);
-			result.push(data[i]);
+			result.push(data.splice(i, 1)[0]);
 			if (result.length >= number) {
 				return result;
 			}
@@ -458,14 +494,17 @@ module.exports = React.createClass({
 		var result = [
 			<CoverSection background='/images/cover-mobile.jpg' data={getUniqCategoryData(data, 3)}/>,
 			<HighlightItem header="Featured" data={getCategoryData(data, 'Featured', 1)[0]}/>,
-			<SectionListItem data={getData(data, 4)}/>,
-			<SectionListItem data={getData(data, 4)}/>,
+			<SmallAndLargeSection data={getData(data, 2)}/>,
+			<SmallItemList data={getData(data, 4)}/>,
 			<CoverSection title="Latest" data={getUniqCategoryData(data, 3)}/>
-		];		
+		];
+		// while (result.length < 10) {
 		while (data.length > 0) {
-			var d = getData(data, 4);
-			result.push(<SectionListItem data={d}/>);
+			result.push(<HighlightItem data={getData(data, 1)[0]}/>);
 		}
+		// while (data.length > 0) {
+		// 	result.push(<SmallItemList data={getData(data, 4)}/>);
+		// }
 		return React.createElement(Player, {children: result});
 	}
 });
