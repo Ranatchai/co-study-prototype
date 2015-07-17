@@ -548,7 +548,7 @@ module.exports = React.createClass({
 				result.push(<HighlightItem data={getData(data, 1)[0]}/>);
 			}
 		});		
-		result.push(<CoverSection title="Lastest" data={getData(data, 3)}/>);
+		result.push(<CoverSection title="Latest" data={getData(data, 3)}/>);
 		while (data.length > 0) {
 			result.push(<SmallItemList data={getData(data, 4)}/>);
 		}
