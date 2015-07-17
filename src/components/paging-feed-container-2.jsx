@@ -530,13 +530,17 @@ module.exports = React.createClass({
 		var result = [
 			<CoverSection background='/images/cover-mobile.jpg' data={getUniqCategoryData(data, 3)}/>,
 			<HighlightItem header="Featured" data={getCategoryData(data, 'Featured', 1)[0]}/>,
-			<SmallAndLargeSection data={getData(data, 2)}/>,
-			<SmallItemList data={getData(data, 4)}/>,
-			<CoverSection title="Latest" data={getUniqCategoryData(data, 3)}/>
+			<SmallAndLargeSection data={getData(data, 2)}/>
 		];
-		// while (result.length < 10) {
+		['Gear', 'Life', 'Sex', 'People', 'Style', 'Entertain'].forEach(function(c) {
+			result.push(<CoverSection title={c} data={getCategoryData(data, c, 3)}/>);
+			for (var i = 0; i < 4; i++) {
+				result.push(<HighlightItem data={getData(data, 1)[0]}/>);
+			}
+		});		
+		result.push(<CoverSection title="Lastest" data={getData(data, 3)}/>);
 		while (data.length > 0) {
-			result.push(<HighlightItem data={getData(data, 1)[0]}/>);
+			result.push(<SmallItemList data={getData(data, 4)}/>);
 		}
 		// while (data.length > 0) {
 		// 	result.push(<SmallItemList data={getData(data, 4)}/>);

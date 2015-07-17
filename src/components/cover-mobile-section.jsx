@@ -53,7 +53,15 @@ var CoverSection = React.createClass({
 		var otherD = _.rest(this.props.data);
 		return (
 			<div style={_.extend({width: this.state.width, height: this.state.height}, BackgroundUtil.getBackgroundProps(this.props.data[0], window.innerWidth, window.innerHeight), coverSrc? {backgroundImage: 'url(' + coverSrc + ')'}: {})}>
-				<div className="gradient-black-bottom" style={{position: 'absolute', left: 0, bottom: 0, paddingBottom: 12, width: this.props.data.length * 300, minWidth: '100%'}}>
+				{coverSrc? false: <div style={{
+						position: 'absolute',
+						top: 0,
+						left: 0,
+						width: '100%',
+						height: '100%',
+						background: 'rgba(0,0,0,0.2)'
+					}}/>}
+				<div className={coverSrc? "": "gradient-black-bottom"} style={{position: 'absolute', left: 0, bottom: 0, paddingBottom: 12, width: this.props.data.length * 300, minWidth: '100%'}}>
 					<h2 style={titleStyle}>{title}</h2>
 					<CoverCategoryPreview {...d1} style={{display: 'block', float: 'none', border: 0, marginBottom: 20}}/>
 					{otherD.map((d)=><CoverCategoryPreview {...d}/>)}
