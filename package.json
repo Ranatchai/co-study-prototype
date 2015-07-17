@@ -38,7 +38,7 @@
     "react-proxy-loader": "^0.3.4",
     "react-router": "^0.13.1",
     "request": "^2.57.0",
-    "scroller": "0.0.2",
+    "scroller": "git://github.com/mjohnston/scroller",
     "shelljs": "^0.5.1",
     "underscore": "^1.8.3",
     "validator": "^3.38.0",

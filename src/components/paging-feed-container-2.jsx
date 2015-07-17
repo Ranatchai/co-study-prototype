@@ -3,7 +3,7 @@ var BackgroundUtil = require('../common/background-util');
 var IsMobile = require('../common/is-mobile');
 var _ = require('underscore');
 var moment = require('moment');
-var Scroller = require('scroller').Scroller;
+var Scroller = require('scroller');
 var $ = require('jquery');
 var getVendorPropertyName = require("react-kit/getVendorPropertyName");
 var ReactComponentWithPureRenderMixin = require('react/lib/ReactComponentWithPureRenderMixin');
@@ -28,6 +28,12 @@ var PageComponent = React.createClass({
 });
 var MobilePlayer = React.createClass({
 	mixins: [ReactComponentWithPureRenderMixin, Mixins.ListenTo, Mixins.WindowSizeMixin],
+	getDefaultProps: function() {
+		return {
+			scrollingDeceleration: 0.95,
+			scrollingPenetrationAcceleration: 0.08
+		}
+	},
 	getInitialState: function() {
 		return {
 			currentIndex: 0
@@ -55,13 +61,13 @@ var MobilePlayer = React.createClass({
     var options = {
       scrollingX: false,
       scrollingY: true,
+      decelerationRate: this.props.scrollingDeceleration,
+      penetrationAcceleration: this.props.scrollingPenetrationAcceleration,
       // snapping: false,
       // zooming: true,
       bouncing: false,
       paging: true,
-      scrollingComplete: _.throttle(this.handleScrollComplete, 300, {leading: false})
-      // decelerationRate: this.props.scrollingDeceleration,
-      // penetrationAcceleration: this.props.scrollingPenetrationAcceleration,
+      scrollingComplete: _.throttle(this.handleScrollComplete, 300, {leading: false})      
     };
     this._scrollTop = this.props.initScrollTop || 0;
     this.scroller = new Scroller(this.handleScroll, options);
@@ -117,6 +123,36 @@ var MobilePlayer = React.createClass({
   			prevCard.getDOMNode().style[getVendorPropertyName('transform')] = 'translate3d(0,' + (-window.innerHeight - 20) + 'px,0)';
   		}
   	});
+  	this.updateScrollingDeceleration();
+  },
+
+  updateScrollingDeceleration: function () {
+    var currVelocity = this.scroller.__decelerationVelocityY;
+    var currScrollTop = this._scrollTop;
+    var targetScrollTop = 0;
+    var estimatedEndScrollTop = currScrollTop;
+
+    while (Math.abs(currVelocity).toFixed(6) > 0) {
+      estimatedEndScrollTop += currVelocity;
+      currVelocity *= this.props.scrollingDeceleration;
+    }
+
+    // Find the page whose estimated end scrollTop is closest to 0.
+    var closestZeroDelta = Infinity;
+    var pageHeight = window.innerHeight;
+    var pageCount = this.props.children.length;
+    var pageScrollTop;
+
+    for (var pageIndex=0, len=pageCount; pageIndex < len; pageIndex++) {
+      pageScrollTop = (pageHeight * pageIndex) - estimatedEndScrollTop;
+      if (Math.abs(pageScrollTop) < closestZeroDelta) {
+        closestZeroDelta = Math.abs(pageScrollTop);
+        targetScrollTop = pageHeight * pageIndex;
+      }
+    }
+
+    this.scroller.__minDecelerationScrollTop = targetScrollTop;
+    this.scroller.__maxDecelerationScrollTop = targetScrollTop;
   },
   handleTouchStart: function (e) {
   	// this._touchDOM = $(e.target).parents('.page-box-shadow')[0];
