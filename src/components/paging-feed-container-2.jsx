@@ -46,10 +46,10 @@ var MobilePlayer = React.createClass({
 		if (!page) {
 			return null;
 		}
-		page = React.cloneElement(page, {ref: 'page-' + index});
+		page = React.cloneElement(page, {ref: 'page-' + index, key: 'page-' + index});
 		var currentIndex = this.state.currentIndex;
 		return (
-			index - 1 <= currentIndex && index + 1 >= currentIndex ?<PageComponent width={this.state.width} height={this.state.height} ref={"card-" + index} key={"page-" + index} index={index} style={{
+			index - 1 <= currentIndex && index + 1 >= currentIndex ?<PageComponent width={this.state.width} height={this.state.height} ref={"card-" + index} key={"card-" + index} index={index} style={{
 				transitionDuration: 0,
 				transform: index < currentIndex? 'translate3d(0, ' + (-window.innerHeight - 20) + 'px, 0)': 'translate3d(0, 0, 0)'
 			}}>
@@ -106,6 +106,7 @@ var MobilePlayer = React.createClass({
   },
   handleScrollComplete: function() {
   	var currentIndex = Math.round(this._scrollTop/window.innerHeight);  	
+  	this._preventScroll = true;
   	this.setState({
   		scrollTop: this._scrollTop,
   		currentIndex: currentIndex
@@ -122,6 +123,7 @@ var MobilePlayer = React.createClass({
   		if (prevCard) {
   			prevCard.getDOMNode().style[getVendorPropertyName('transform')] = 'translate3d(0,' + (-window.innerHeight - 20) + 'px,0)';
   		}
+  		this._preventScroll = false;
   	});
   	this.updateScrollingDeceleration();
   },
@@ -155,17 +157,25 @@ var MobilePlayer = React.createClass({
     this.scroller.__maxDecelerationScrollTop = targetScrollTop;
   },
   handleTouchStart: function (e) {
-  	// this._touchDOM = $(e.target).parents('.page-box-shadow')[0];
-  	// console.log('this._currentDOM', this._currentDOM);
+  	if (this._preventScroll) {
+  		return;
+  	}
+  	this._touch = true;
   	this.scroller.doTouchStart(e.touches, e.timeStamp);
   },
 
   handleTouchMove: function (e) {
+  	if (!this._touch) {
+  		return;
+  	}
   	e.preventDefault();
     this.scroller.doTouchMove(e.touches, e.timeStamp, e.scale);
   },
 
   handleTouchEnd: function (e) {
+  	if (!this._touch) {
+  		return;
+  	}
     this.scroller.doTouchEnd(e.timeStamp);
   },
 	render: function() {
@@ -236,9 +246,9 @@ var DesktopPlayer = React.createClass({
 		if (!page) {
 			return null;
 		}
-		page = React.cloneElement(page, {ref: 'page-' + index});
+		page = React.cloneElement(page, {ref: 'page-' + index, key: 'page-' + index});
 		return (
-			<PageComponent width={this.state.width} height={this.state.height} key={"page-" + index} index={index}>
+			<PageComponent width={this.state.width} height={this.state.height} key={"page-container-" + index} index={index}>
 				{page}
 			</PageComponent>
 		);
@@ -534,7 +544,7 @@ module.exports = React.createClass({
 		];
 		['Gear', 'Life', 'Sex', 'People', 'Style', 'Entertain'].forEach(function(c) {
 			result.push(<CoverSection title={c} data={getCategoryData(data, c, 3)}/>);
-			for (var i = 0; i < 4; i++) {
+			for (var i = 0; i < 3; i++) {
 				result.push(<HighlightItem data={getData(data, 1)[0]}/>);
 			}
 		});		
