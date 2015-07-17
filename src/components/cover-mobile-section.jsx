@@ -1,6 +1,5 @@
 var React = require('react');
 var BackgroundUtil = require('../common/background-util');
-var eventBus = require('../common/event-bus');
 var _ = require('underscore');
 var Touchable = require('./touchable');
 var CoverCategoryPreview = React.createClass({

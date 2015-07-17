@@ -14,7 +14,6 @@ var Mixins = require('../common/mixins');
 var TRANSITION_DURATION = 800;
 var appendVendorPrefix = require('react-kit/appendVendorPrefix');
 
-var eventBus = require('../common/event-bus');
 var PageComponent = React.createClass({
 	mixins: [ReactComponentWithPureRenderMixin],
 	render: function() {
