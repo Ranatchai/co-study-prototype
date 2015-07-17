@@ -9,14 +9,15 @@ var getVendorPropertyName = require("react-kit/getVendorPropertyName");
 var ReactComponentWithPureRenderMixin = require('react/lib/ReactComponentWithPureRenderMixin');
 var TimeoutTransitionGroup = require('../common/timeout-transition-group');
 var ReactCSSTransitionGroup = require('react/lib/ReactCSSTransitionGroup');
-
+var Backbone = require('backbone');
 var Mixins = require('../common/mixins');
 var TRANSITION_DURATION = 800;
 var appendVendorPrefix = require('react-kit/appendVendorPrefix');
+
+var eventBus = require('../common/event-bus');
 var PageComponent = React.createClass({
 	mixins: [ReactComponentWithPureRenderMixin],
 	render: function() {
-		// console.log('this.props.style', this.props.style);
 		var style = _.extend({boxShadow: 'rgba(39, 41, 43, 0.8) 0px 1px 6px 0px', background: 'white', transitionProperty: 'transform', transitionDuration: TRANSITION_DURATION + 'ms', position: 'absolute', left: 0, top: 0, width: this.props.width, height: this.props.height, overflow: 'hidden', zIndex: 1000 - this.props.index}, this.props.style);
 		style = appendVendorPrefix(style);
 		return (
@@ -42,14 +43,37 @@ var MobilePlayer = React.createClass({
 	componentDidMount: function() {
 		this.createScroller();
 	},
+	componentDidUpdate: function() {
+		this.state.nextIndex = false;
+	},
+	changeToPageIndex: function(index) {
+		if (this._preventScroll) {
+			return;
+		}
+		if (typeof index === 'number') {
+			this._preventScroll = true;
+			this.setState({
+				nextIndex: index
+			}, ()=> {
+				requestAnimationFrame(()=>{
+					this.scroller.scrollTo(0, index * window.innerHeight, 500);
+					this._preventScroll = false;
+				});
+			});
+		}
+	},
+	getCurrentPageIndex: function() {
+		return this.state.currentIndex;
+	},
 	renderPage: function(page, index) {				
 		if (!page) {
 			return null;
 		}
 		page = React.cloneElement(page, {ref: 'page-' + index, key: 'page-' + index});
-		var currentIndex = this.state.currentIndex;
+		var currentIndex = this.state.currentIndex;		
+		var isRender = this.state.nextIndex? (index === currentIndex || index === this.state.nextIndex):(index - 1 <= currentIndex && index + 1 >= currentIndex);
 		return (
-			index - 1 <= currentIndex && index + 1 >= currentIndex ?<PageComponent width={this.state.width} height={this.state.height} ref={"card-" + index} key={"card-" + index} index={index} style={{
+			isRender ?<PageComponent width={this.state.width} height={this.state.height} ref={"card-" + index} key={"card-" + index} index={index} style={{
 				transitionDuration: 0,
 				transform: index < currentIndex? 'translate3d(0, ' + (-window.innerHeight - 20) + 'px, 0)': 'translate3d(0, 0, 0)'
 			}}>
@@ -67,7 +91,7 @@ var MobilePlayer = React.createClass({
       // zooming: true,
       bouncing: false,
       paging: true,
-      scrollingComplete: _.throttle(this.handleScrollComplete, 300, {leading: false})      
+      scrollingComplete: this.handleScrollComplete
     };
     this._scrollTop = this.props.initScrollTop || 0;
     this.scroller = new Scroller(this.handleScroll, options);
@@ -90,7 +114,6 @@ var MobilePlayer = React.createClass({
   		return;
   	}
   	var absTop = top - (window.innerHeight * currentIndex);
-  	// console.log('absTop', absTop, top);
   	if (absTop >= 0 && absTop <= window.innerHeight) {
   		currentCard.getDOMNode().style[getVendorPropertyName('transform')] = 'translate3d(0px,' + (-absTop) + 'px, 0) scale(' + zoom + ')';
   	} else if (currentIndex - 1 >= 0 && absTop < 0) {
@@ -125,7 +148,7 @@ var MobilePlayer = React.createClass({
   		}
   		this._preventScroll = false;
   	});
-  	this.updateScrollingDeceleration();
+  	this.updateScrollingDeceleration();  	
   },
 
   updateScrollingDeceleration: function () {
@@ -179,24 +202,9 @@ var MobilePlayer = React.createClass({
     this.scroller.doTouchEnd(e.timeStamp);
   },
 	render: function() {
-		var transitionName;
-    var currentPageIndex = this.state.currentIndex;
-    var isNextPage = true;
-    if (!this._prevIndex) {
-    	transitionName = 'moveFromBottom';
-    } else if (currentPageIndex > this._prevIndex) {
-      transitionName = 'moveFromBottom';
-    } else {
-      transitionName = 'moveToBottom';
-      isNextPage = false;
-    }
-    this._prevIndex = currentPageIndex;    
-
 		return (
 			<div onTouchStart={this.handleTouchStart} onTouchMove={this.handleTouchMove} onTouchEnd={this.handleTouchEnd} style={{position: 'absolute', left: 0, top: 0, width: '100%', height: '100%'}}>
-				<div className="card-container" ref="card-container">
-					{this.props.children.map(this.renderPage)}
-				</div>
+				{this.props.children.map(this.renderPage)}
 			</div>
 		);
 	}
@@ -233,6 +241,9 @@ var DesktopPlayer = React.createClass({
 			setTimeout(this.playPageAnimation, TRANSITION_DURATION);
 		}
 	},
+	changeToPageIndex: function(index) {
+		this.setState({currentIndex: index});
+	},
 	playPageAnimation: function() {
 		var index = this.state.currentIndex;
 		var page = this.refs['page-' + index];
@@ -240,7 +251,7 @@ var DesktopPlayer = React.createClass({
 			page.playAnimation();
 		}
 	},
-	getCurrentPage: function() {
+	renderCurrentPage: function() {
 		var index = this.state.currentIndex;
 		var page = this.props.children[index];
 		if (!page) {
@@ -269,7 +280,7 @@ var DesktopPlayer = React.createClass({
 
 		return (
 			<TimeoutTransitionGroup transitionName={transitionName} enterTimeout={TRANSITION_DURATION} leaveTimeout={TRANSITION_DURATION} transitionEnter={!isNextPage} style={{position: 'absolute', left: 0, top: 0, width: '100%', height: '100%'}}>
-				{this.getCurrentPage()}
+				{this.renderCurrentPage()}
 			</TimeoutTransitionGroup>
 		);
 	}
@@ -490,22 +501,30 @@ var HighlightItem = React.createClass({
 		);
 	}
 });
-var getData = function(data, number) {
-	var n = [];
+var getData = function(data, number, removeFromOriginal) {	
+	var result = [];
 	for (var i = 0; i < number; i++) {
 		if (data.length === 0) {
-			return n;
+			return result;
 		}
-		n.push(data.splice(0, 1)[0]);
+		if (removeFromOriginal){
+			result.push(data.splice(0, 1)[0]);
+		} else {
+			result.push(data[0]);
+		}
 	}
-	return n;
+	return result;
 };
-var getCategoryData = function(data, category, number) {	
+var getCategoryData = function(data, category, number, removeFromOriginal) {	
 	var result = [];
 	for (var i = 0; i < data.length; i++) {
 		var c = data[i].categories[0];
 		if (c.toLowerCase() === category.toLowerCase()) {
-			result.push(data.splice(i, 1)[0]);
+			if (removeFromOriginal){
+				result.push(data.splice(i, 1)[0]);
+			} else {
+				result.push(data[i]);
+			}
 			if (result.length >= number) {
 				return result;
 			}
@@ -513,14 +532,18 @@ var getCategoryData = function(data, category, number) {
 	}
 	return result;
 };
-var getUniqCategoryData = function(data, number) {
+var getUniqCategoryData = function(data, number, removeFromOriginal) {
 	var uniq_cats = [];
 	var result = [];
 	for (var i = 0; i < data.length; i++) {
 		var c = data[i].categories[0];
 		if (uniq_cats.indexOf(c) < 0) {
 			uniq_cats.push(c);
-			result.push(data.splice(i, 1)[0]);
+			if (removeFromOriginal){
+				result.push(data.splice(i, 1)[0]);
+			} else {
+				result.push(data[i]);
+			}
 			if (result.length >= number) {
 				return result;
 			}
@@ -534,27 +557,51 @@ module.exports = React.createClass({
 			this.forceUpdate();
 		});
 	},
+	openCategoryPage: function(info) {
+		var pageName = 'c-' + info.categories[0].toLowerCase();
+		this.openPageName(pageName);
+	},
+	openArticlePage: function(info) {
+		var pageName = 'c-' + info.categories[0].toLowerCase() + '-a-' + info._id;
+		this.openPageName(pageName);
+	},
+	openPageName: function(pageName) {
+		var page, pageIndex;
+		var player = this.refs.player;
+		var pages = player.props.children;
+		for (var i = 0; i < pages.length; i++) {
+			if (pages[i].props.name && pages[i].props.name.toLowerCase() === pageName) {
+				page = pages[i];
+				pageIndex = i;
+				break;
+			}
+		}		
+		if (page) {
+			player.changeToPageIndex(pageIndex);
+		}
+	},
 	render: function() {
 		var data = Array.prototype.slice.call(this.props.data);
 		var Player = IsMobile()? MobilePlayer: DesktopPlayer;
 		var result = [
-			<CoverSection background='/images/cover-mobile.jpg' data={getUniqCategoryData(data, 3)}/>,
-			<HighlightItem header="Featured" data={getCategoryData(data, 'Featured', 1)[0]}/>,
-			<SmallAndLargeSection data={getData(data, 2)}/>
+			<CoverSection handleItemAction={this.openCategoryPage} background='/images/cover-mobile.jpg' data={getUniqCategoryData(data, 3, false)}/>,
+			<HighlightItem header="Featured" name={"c-featured"} data={getCategoryData(data, 'Featured', 1, true)[0]}/>,
+			<SmallAndLargeSection data={getData(data, 2, true)}/>
 		];
 		['Gear', 'Life', 'Sex', 'People', 'Style', 'Entertain'].forEach(function(c) {
-			result.push(<CoverSection title={c} data={getCategoryData(data, c, 3)}/>);
+			result.push(<CoverSection handleItemAction={this.openArticlePage} name={"c-" + c} ref={'cat-' + c.toLowerCase()} title={c} data={getCategoryData(data, c, 3, false)}/>);
 			for (var i = 0; i < 3; i++) {
-				result.push(<HighlightItem data={getData(data, 1)[0]}/>);
+				var d = getCategoryData(data, c, 1, true)[0];
+				result.push(<HighlightItem name={"c-" + c + "-a-" + d._id} data={d}/>);
 			}
-		});		
-		result.push(<CoverSection title="Latest" data={getData(data, 3)}/>);
+		}, this);
+		result.push(<CoverSection title="Latest" data={getData(data, 3, false)}/>);
 		while (data.length > 0) {
-			result.push(<SmallItemList data={getData(data, 4)}/>);
+			result.push(<SmallItemList data={getData(data, 4, true)}/>);
 		}
 		// while (data.length > 0) {
 		// 	result.push(<SmallItemList data={getData(data, 4)}/>);
 		// }
-		return React.createElement(Player, {children: result});
+		return React.createElement(Player, {children: result, ref: 'player'});
 	}
 });
