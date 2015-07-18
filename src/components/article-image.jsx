@@ -27,7 +27,7 @@ var ArticleImage = React.createClass({
 	},
 	render: function() {
 		var { article, width, height, style, ...other } = this.props;
-		var imageWidth = width, imageHeight = width;
+		var imageWidth = width, imageHeight = height;
 		if (!this.state.loaded) {
 			imageWidth = 50;
 			imageHeight = 50;
