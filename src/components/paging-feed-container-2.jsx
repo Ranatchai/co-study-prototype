@@ -206,6 +206,7 @@ var MobilePlayer = React.createClass({
 		return (
 			<div onTouchStart={this.handleTouchStart} onTouchMove={this.handleTouchMove} onTouchEnd={this.handleTouchEnd} style={{position: 'absolute', left: 0, top: 0, width: '100%', height: '100%'}}>
 				{this.props.children.map(this.renderPage)}
+				<img src="/images/paging-navigator.png" width="40" height="40" style={{position: 'absolute', right: 10, top: 10, zIndex: 1001}}/>
 			</div>
 		);
 	}
@@ -286,16 +287,9 @@ var DesktopPlayer = React.createClass({
 		);
 	}
 });
-var SectionA = require('./section-1');
-var LatestSection = require('./latest-section');
-var PolygonContainer = require('./mock-polygon-container');
-var FullWidthSection1 = require('./full-width-section');
 var ad1 = 'http://touchedition.s3.amazonaws.com/asset/55420f2fe57b85e332bfdcab.jpg';
 var ad2 = 'http://touchedition.s3.amazonaws.com/asset/5559d77d6526e2152c531adb.jpg';
-var Menubar = require('./menubar');
 var CoverSection = require('./cover-mobile-section');
-var Section2 = require('./section-2');
-var transitionEvents = require('react-kit/transitionEvents');
 var SectionContents = React.createClass({
 	render: function() {
 		return (
@@ -383,8 +377,7 @@ var SmallItemList = React.createClass({
 		var itemHeight = window.innerHeight/4;
 		return (
 			<div style={{background: 'white', width: '100%', height: '100%'}}>
-				{this.props.data.map(d=><SmallItem key={d._id} height={itemHeight} data={d}/>)}
-				<img src="/images/paging-navigator.png" width="40" height="40" style={{position: 'absolute', left: 10, top: 10}}/>
+				{this.props.data.map(d=><SmallItem key={d._id} height={itemHeight} data={d}/>)}				
 			</div>
 		);
 	}
@@ -413,7 +406,6 @@ var SmallAndLargeSection = React.createClass({
 					</div>
 				</div>
 				<SmallItem key={this.props.data[1]._id} height={itemHeight} data={this.props.data[1]}/>
-				<img src="/images/paging-navigator.png" width="40" height="40" style={{position: 'absolute', left: 10, top: 10}}/>
 			</div>
 		);
 	}
@@ -470,7 +462,6 @@ var HighlightItem = React.createClass({
 					}}/>,
 					<h1 key="header" style={headerStyle}>{header}</h1>]}
 				</ArticleImage>
-				<img src="/images/paging-navigator.png" width="40" height="40" style={{position: 'absolute', left: 10, top: 10}}/>
 				{triangle}
 				<div style={{
 					position: 'absolute',
@@ -595,10 +586,7 @@ module.exports = React.createClass({
 		result.push(<CoverSection title="Latest" data={getData(data, 3, false)}/>);
 		while (data.length > 0) {
 			result.push(<SmallItemList data={getData(data, 4, true)}/>);
-		}
-		// while (data.length > 0) {
-		// 	result.push(<SmallItemList data={getData(data, 4)}/>);
-		// }
+		}		
 		return React.createElement(Player, {children: result, ref: 'player'});
 	}
 });

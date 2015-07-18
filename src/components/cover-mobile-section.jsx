@@ -5,6 +5,7 @@ var _ = require('underscore');
 var Touchable = require('./touchable');
 var TimeoutTransitionGroup = require('../common/timeout-transition-group');
 var ReactCSSTransitionGroup = require('react/lib/ReactCSSTransitionGroup');
+var appendVendorPrefix = require('react-kit/appendVendorPrefix');
 var CoverCategoryPreview = React.createClass({
 	render: function() {
 		var category = this.props.categories[0];
@@ -80,6 +81,7 @@ var CoverSection = React.createClass({
 		if (coverSrc) {
 			coverStyle.backgroundImage = 'url(' + coverSrc + ')';
 		}
+		coverStyle = appendVendorPrefix(coverStyle);
 		return (
 			<TimeoutTransitionGroup transitionName="fade" enterTimeout={500} leaveTimeout={500} style={{position: 'absolute', left: 0, top: 0, width: this.state.width, height: this.state.height}}>				
 				<ArticleImage key={this.props.data[this.state.coverIndex]._id} width={this.state.width} height={this.state.height} article={this.props.data[this.state.coverIndex]} style={coverStyle}/>
