@@ -383,7 +383,7 @@ var SmallItemList = React.createClass({
 		var itemHeight = window.innerHeight/4;
 		return (
 			<div style={{background: 'white', width: '100%', height: '100%'}}>
-				{this.props.data.map(d=><SmallItem height={itemHeight} data={d}/>)}
+				{this.props.data.map(d=><SmallItem key={d._id} height={itemHeight} data={d}/>)}
 				<img src="/images/paging-navigator.png" width="40" height="40" style={{position: 'absolute', left: 10, top: 10}}/>
 			</div>
 		);
@@ -412,7 +412,7 @@ var SmallAndLargeSection = React.createClass({
 						{this.props.data[0].categories && this.props.data[0].categories[0] && <div style={categoryStyle}>{this.props.data[0].categories[0]}</div>}
 					</div>
 				</div>
-				<SmallItem height={itemHeight} data={this.props.data[1]}/>
+				<SmallItem key={this.props.data[1]._id} height={itemHeight} data={this.props.data[1]}/>
 				<img src="/images/paging-navigator.png" width="40" height="40" style={{position: 'absolute', left: 10, top: 10}}/>
 			</div>
 		);
@@ -460,7 +460,7 @@ var HighlightItem = React.createClass({
 					width: '100%',
 					height: '50%'
 				}}>
-					{header && [<div style={{
+					{header && [<div key="dim" style={{
 						position: 'absolute',
 						top: 0,
 						left: 0,
@@ -468,7 +468,7 @@ var HighlightItem = React.createClass({
 						height: '100%',
 						background: 'rgba(0,0,0,0.44)'
 					}}/>,
-					<h1 style={headerStyle}>{header}</h1>]}
+					<h1 key="header" style={headerStyle}>{header}</h1>]}
 				</ArticleImage>
 				<img src="/images/paging-navigator.png" width="40" height="40" style={{position: 'absolute', left: 10, top: 10}}/>
 				{triangle}
@@ -480,9 +480,9 @@ var HighlightItem = React.createClass({
 					paddingTop: 5,
 					bottom: 0
 				}}>
-					<p style={dateStyle}>{moment(this.props.data.publishedDate).format('DD MMMM YYYY')}</p>
+					<p key="date" style={dateStyle}>{moment(this.props.data.publishedDate).format('DD MMMM YYYY')}</p>
 					<h2 style={titleStyle}>{this.props.data.title}</h2>
-					<p style={descriptionStyle}>{this.props.data.description}</p>
+					<p key="description" style={descriptionStyle}>{this.props.data.description}</p>
 					<div style={_.extend({
 						position: 'absolute',
 						left: 0,
@@ -491,7 +491,7 @@ var HighlightItem = React.createClass({
 					}, authorStyle)}>
 						<img src={author.avatar} height="24" width="24" style={{borderRadius: '50%', float: 'left'}}/>
 						<span style={{marginLeft: 7}}>{author.title}</span>
-						{this.props.data.categories.map((c)=><div style={categoryStyle}>{c}</div>)}
+						{this.props.data.categories.map((c)=><div key={this.props.data._id + '-' + c} style={categoryStyle}>{c}</div>)}
 					</div>
 				</div>
 			</div>
@@ -582,14 +582,14 @@ module.exports = React.createClass({
 		var Player = IsMobile()? MobilePlayer: DesktopPlayer;
 		var result = [
 			<CoverSection handleItemAction={this.openCategoryPage} background='/images/cover-mobile.jpg' data={getUniqCategoryData(data, 3, false)}/>,
-			<HighlightItem header="Featured" name={"c-featured"} data={getCategoryData(data, 'Featured', 1, true)[0]}/>,
+			<HighlightItem key={'Featured'} header="Featured" name={"c-featured"} data={getCategoryData(data, 'Featured', 1, true)[0]}/>,
 			<SmallAndLargeSection data={getData(data, 2, true)}/>
 		];
 		['Gear', 'Life', 'Sex', 'People', 'Style', 'Entertain'].forEach(function(c) {
 			result.push(<CoverSection handleItemAction={this.openArticlePage} name={"c-" + c} ref={'cat-' + c.toLowerCase()} title={c} data={getCategoryData(data, c, 3, false)}/>);
 			for (var i = 0; i < 3; i++) {
 				var d = getCategoryData(data, c, 1, true)[0];
-				result.push(<HighlightItem name={"c-" + c + "-a-" + d._id} data={d}/>);
+				result.push(<HighlightItem key={"c-" + c + "-a-" + d._id}  name={"c-" + c + "-a-" + d._id} data={d}/>);
 			}
 		}, this);
 		result.push(<CoverSection title="Latest" data={getData(data, 3, false)}/>);

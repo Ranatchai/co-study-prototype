@@ -3,6 +3,8 @@ var BackgroundUtil = require('../common/background-util');
 var ArticleImage = require('./article-image');
 var _ = require('underscore');
 var Touchable = require('./touchable');
+var TimeoutTransitionGroup = require('../common/timeout-transition-group');
+var ReactCSSTransitionGroup = require('react/lib/ReactCSSTransitionGroup');
 var CoverCategoryPreview = React.createClass({
 	render: function() {
 		var category = this.props.categories[0];
@@ -15,18 +17,33 @@ var CoverCategoryPreview = React.createClass({
 	}
 });
 var CoverSection = React.createClass({
+	getDefaultProps: function() {
+		return {
+			rotationDelay: 3000
+		};
+	},
 	getInitialState: function() {
 		var size = this.getSizeState();
 		return {
 			width: size.width,
-			height: size.height
+			height: size.height,
+			coverIndex: 0
 		};
 	},	
 	componentDidMount: function() {
 		window.addEventListener('resize', this.handleResize);
+		var dataLength = this.props.data.length;
+		if (!this.props.background) {			
+			this._interval = setInterval(()=>{
+				this.setState({
+					coverIndex: (this.state.coverIndex + 1) % dataLength
+				});
+			}, this.props.rotationDelay);
+		}
 	},
-	componentWillUnmount: function() {		
+	componentWillUnmount: function() {
 		window.removeEventListener('resize', this.handleResize);
+		clearInterval(this._interval);
 	},
 	handleResize: function() {
 		this.setState(this.getSizeState());
@@ -40,7 +57,7 @@ var CoverSection = React.createClass({
 		};
 	},
 	render: function() {
-		var coverSrc = this.props.background;
+		var coverSrc = this.props.background;		
 		var title = this.props.title;
 		var titleStyle = {
 			fontFamily: 'Antonio, Open Sans',
@@ -54,8 +71,18 @@ var CoverSection = React.createClass({
 		};
 		var d1 = this.props.data[0];
 		var otherD = _.rest(this.props.data);
+		var coverStyle = {
+			position: 'absolute',
+			left: 0,
+			top: 0,
+			transitionDuration: '500ms'
+		};
+		if (coverSrc) {
+			coverStyle.backgroundImage = 'url(' + coverSrc + ')';
+		}
 		return (
-			<ArticleImage width={this.state.width} height={this.state.height} article={this.props.data[0]} style={coverSrc? {backgroundImage: 'url(' + coverSrc + ')'}: {}}>
+			<TimeoutTransitionGroup transitionName="fade" enterTimeout={500} leaveTimeout={500} style={{position: 'absolute', left: 0, top: 0, width: this.state.width, height: this.state.height}}>				
+				<ArticleImage key={this.props.data[this.state.coverIndex]._id} width={this.state.width} height={this.state.height} article={this.props.data[this.state.coverIndex]} style={coverStyle}/>
 				{coverSrc? false: <div style={{
 						position: 'absolute',
 						top: 0,
@@ -66,11 +93,11 @@ var CoverSection = React.createClass({
 					}}/>}
 				<div className={coverSrc? "": "gradient-black-bottom"} style={{position: 'absolute', left: 0, bottom: 0, paddingBottom: 12, width: this.props.data.length * 300, minWidth: '100%'}}>
 					<h2 style={titleStyle}>{title}</h2>
-					<CoverCategoryPreview handleAction={this.props.handleItemAction} {...d1} style={{display: 'block', float: 'none', border: 0, marginBottom: 20}}/>
-					{otherD.map((d)=><CoverCategoryPreview handleAction={this.props.handleItemAction} {...d}/>)}
+					<CoverCategoryPreview key={d1._id} handleAction={this.props.handleItemAction} {...d1} style={{display: 'block', float: 'none', border: 0, marginBottom: 20}}/>
+					{otherD.map((d)=><CoverCategoryPreview key={d._id} handleAction={this.props.handleItemAction} {...d}/>)}
 				</div>
 				<img src={'/images/Logo_GMLive_for_profile_white.png'} style={{position: 'absolute', left: 20, top: 20, width: 120}}/>								
-			</ArticleImage>
+			</TimeoutTransitionGroup>
 		);
 	}
 });
