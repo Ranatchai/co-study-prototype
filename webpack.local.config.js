@@ -55,7 +55,7 @@ module.exports = {
   module: {
     loaders: [
       { test: /\.async.jsx?$/, exclude: /node_modules/, loaders: ["react-proxy"]},
-      { test: /\.jsx?$/, exclude: /node_modules/, loaders: ["react-hot", "babel-loader"]}
+      { test: /\.jsx?$/, exclude: /node_modules/, loaders: ["react-hot", "jsx-loader?harmony"]}
     ]
   },
 

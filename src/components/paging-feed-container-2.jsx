@@ -13,6 +13,8 @@ var Backbone = require('backbone');
 var Mixins = require('../common/mixins');
 var TRANSITION_DURATION = 800;
 var appendVendorPrefix = require('react-kit/appendVendorPrefix');
+var ArticleImage = require('./article-image');
+
 
 var PageComponent = React.createClass({
 	mixins: [ReactComponentWithPureRenderMixin],
@@ -361,8 +363,8 @@ var SmallItem = React.createClass({
     };
     var itemHeight = this.props.height;
 		return (
-			<div style={{height: itemHeight, position: 'relative', padding: 6, borderBottom: '1px solid #C0C0C0'}}>
-				<div style={_.extend({width: itemHeight - 12, height: itemHeight - 12, border: '1px solid #979797'}, BackgroundUtil.getBackgroundProps(d, 108, 105))}/>
+			<div style={{height: itemHeight, position: 'relative', padding: 6, borderBottom: '1px solid #C0C0C0'}}>				
+				<ArticleImage article={d} width={itemHeight - 12} height={itemHeight - 12} style={{border: '1px solid #979797'}}/>
 				<div style={{position: 'absolute', left: itemHeight, top: 6, bottom: 6, right: 6}}>
 					<p style={dateStyle}>{moment(d.publishedDate).format('DD MMMM YYYY')}</p>
 					<h3 style={_.extend({}, titleStyle, {fontSize: 18, lineHeight: '16px'})}>{d.title}</h3>
@@ -397,12 +399,8 @@ var SmallAndLargeSection = React.createClass({
     };
 		return (
 			<div style={{background: 'white', width: '100%', height: '100%'}}>
-				<div style={{position: 'relative', borderBottom: '1px solid #C0C0C0', height: window.innerHeight - itemHeight}}>
-					<div style={_.extend({
-						position: 'relative',
-						width: '100%',
-						height: imageHeight
-					}, BackgroundUtil.getBackgroundProps(this.props.data[0], window.innerWidth, imageHeight))}/>
+				<div style={{position: 'relative', borderBottom: '1px solid #C0C0C0', height: window.innerHeight - itemHeight}}>					
+					<ArticleImage article={this.props.data[0]} width={window.innerWidth} height={imageHeight} style={{position: 'relative'}}/>
 					<div style={{position: 'absolute', left: 12, right: 12, top: imageHeight, bottom: 30, overflow: 'hidden'}}>
 						<p style={_.extend({}, dateStyle, {marginTop: 6})}>{moment(this.props.data[0].publishedDate).format('DD MMMM YYYY')}</p>
 						<h3 style={_.extend({}, titleStyle, {fontSize: 26, lineHeight: '27px', marginBottom: 5, marginTop: 6, maxHeight: 27 * 2, overflow: 'hidden'})}>{this.props.data[0].title}</h3>
@@ -454,14 +452,14 @@ var HighlightItem = React.createClass({
 		}}/>
 		var author = this.getAuthor();			
 		return (
-			<div style={{background: 'white', width: '100%', height: '100%'}}>
-				<div style={_.extend({
+			<div style={{background: 'white', width: '100%', height: '100%'}}>				
+				<ArticleImage article={this.props.data} width={window.innerWidth} height={window.innerHeight/2} style={{
 					position: 'absolute',
 					top: 0,
 					left: 0,
 					width: '100%',
-					height: '50%'					
-				}, BackgroundUtil.getBackgroundProps(this.props.data, window.innerWidth, window.innerHeight/2))}>
+					height: '50%'
+				}}>
 					{header && [<div style={{
 						position: 'absolute',
 						top: 0,
@@ -471,7 +469,7 @@ var HighlightItem = React.createClass({
 						background: 'rgba(0,0,0,0.44)'
 					}}/>,
 					<h1 style={headerStyle}>{header}</h1>]}
-				</div>
+				</ArticleImage>
 				<img src="/images/paging-navigator.png" width="40" height="40" style={{position: 'absolute', left: 10, top: 10}}/>
 				{triangle}
 				<div style={{

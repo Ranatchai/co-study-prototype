@@ -1,5 +1,6 @@
 var React = require('react');
 var BackgroundUtil = require('../common/background-util');
+var ArticleImage = require('./article-image');
 var _ = require('underscore');
 var Touchable = require('./touchable');
 var CoverCategoryPreview = React.createClass({
@@ -54,7 +55,7 @@ var CoverSection = React.createClass({
 		var d1 = this.props.data[0];
 		var otherD = _.rest(this.props.data);
 		return (
-			<div style={_.extend({width: this.state.width, height: this.state.height}, BackgroundUtil.getBackgroundProps(this.props.data[0], window.innerWidth, window.innerHeight), coverSrc? {backgroundImage: 'url(' + coverSrc + ')'}: {})}>
+			<ArticleImage width={this.state.width} height={this.state.height} article={this.props.data[0]} style={coverSrc? {backgroundImage: 'url(' + coverSrc + ')'}: {}}>
 				{coverSrc? false: <div style={{
 						position: 'absolute',
 						top: 0,
@@ -69,7 +70,7 @@ var CoverSection = React.createClass({
 					{otherD.map((d)=><CoverCategoryPreview handleAction={this.props.handleItemAction} {...d}/>)}
 				</div>
 				<img src={'/images/Logo_GMLive_for_profile_white.png'} style={{position: 'absolute', left: 20, top: 20, width: 120}}/>								
-			</div>
+			</ArticleImage>
 		);
 	}
 });
