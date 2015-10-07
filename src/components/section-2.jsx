@@ -1,4 +1,7 @@
 var React = require('react');
+var BackgroundUtil = require('../common/background-util');
+var moment = require('moment');
+var _ = require('underscore');
 var Section2Card = React.createClass({
 	render: function() {
 		return (

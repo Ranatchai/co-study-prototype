@@ -154,6 +154,9 @@ var WindowSizeMixin = {
 	componentWillUnmount: function() {
 		window.removeEventListener('resize', this.handleResize);
 	},
+	handleResize: function() {
+		this.setState(this.getSizeState());
+	},
 	getSizeState: function() {
 		var width = window.innerWidth;
 		var height = window.innerHeight;

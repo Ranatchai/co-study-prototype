@@ -205,7 +205,7 @@ var Section = React.createClass({
 		);
 	}
 });
-var ads = ["/images/ad1.jpg", 'http://touchedition.s3.amazonaws.com/asset/55420f2fe57b85e332bfdcab.jpg', 'http://touchedition.s3.amazonaws.com/asset/5559d77d6526e2152c531adb.jpg'];
+var ads = ["./images/ad1.jpg", 'http://touchedition.s3.amazonaws.com/asset/55420f2fe57b85e332bfdcab.jpg', 'http://touchedition.s3.amazonaws.com/asset/5559d77d6526e2152c531adb.jpg'];
 var AdContainer = React.createClass({
 	render: function() {
 		return (
@@ -232,7 +232,7 @@ var authorData = {
 		src: 'http://t2.gstatic.com/images?q=tbn:ANd9GcQHmvXyN8XuRbjW9gfBQTUOhoO-q4JmTQtqymWgMu_I18ZuHTH_'
 	},
 	coverAsset: {
-		src: '/images/author-cover.jpg'
+		src: './images/author-cover.jpg'
 	}
 };
 var Container = React.createClass({

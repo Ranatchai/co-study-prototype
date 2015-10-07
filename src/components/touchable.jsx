@@ -1,4 +1,5 @@
 var React = require('react');
+var _ = require('underscore');
 var Touchable = React.createClass({
 	getDefaultProps: function() {
 		return {
@@ -26,7 +27,8 @@ var Touchable = React.createClass({
 		}
 	},
 	render: function() {
-		return <div {...this.props} onTouchStart={this.handleTouchStart} onTouchMove={this.handleTouchMove} onTouchEnd={this.handleTouchEnd}/>;
+		var { style, ...other } = this.props;
+		return <a href="#" style={_.extend({textDecoration: 'none'}, style)} {...other} onTouchStart={this.handleTouchStart} onTouchMove={this.handleTouchMove} onTouchEnd={this.handleTouchEnd}/>;
 	}
 });
 

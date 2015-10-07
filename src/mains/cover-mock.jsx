@@ -4,6 +4,6 @@ var CoverContainer = require('../components/cover-container');
 var data = {
 	title: 'BMW Motorrad’s Path 22 Concept',
 	tagline: 'พาหนะสองล้อที่พร้อมลุยกับคุณไปทุกที่',
-	thumbnail: {src: '/images/cover-1.jpg'}
+	thumbnail: {src: './images/cover-1.jpg'}
 };
 React.render(<CoverContainer {...data}/>, document.getElementById(DOM_APP_EL_ID));

@@ -4,9 +4,9 @@ var ReactCSSTransitionGroup = require('react/lib/ReactCSSTransitionGroup');
 var BackgroundUtil = require('../common/background-util');
 var MAX_WIDTH = 414;
 var MAX_HEIGHT = 736;
-var LOGO_SRC = '/images/cover-logo.png';
-// var DEFAULT_BG = '/images/cover-default.jpg'
-var DEFAULT_BG = 'http://gmlive.com/images/GM_Mobile_Cover_v2.jpg';
+var LOGO_SRC = './images/cover-logo.png';
+// var DEFAULT_BG = './images/cover-default.jpg'
+var DEFAULT_BG = 'http://gmlive.com./images/GM_Mobile_Cover_v2.jpg';
 var $ = require('jquery');
 var CoverMixin = {
 	mixins: [ReactComponentWithPureRenderMixin],

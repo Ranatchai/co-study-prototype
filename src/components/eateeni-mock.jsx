@@ -1,5 +1,5 @@
 var React = require('react');
-var bank_data = ['/images/c-unionpay.jpg', '/images/c-scb.jpg', '/images/c-bangkok.jpg']
+var bank_data = ['./images/c-unionpay.jpg', './images/c-scb.jpg', './images/c-bangkok.jpg']
 var ItemCard = React.createClass({
 	render: function() {
 		var cardStyle = {
@@ -98,7 +98,7 @@ var EateeniMock = React.createClass({
 		return (
 			<div style={{width: width, height: height, background: 'white', overflow: 'scroll', position: 'relative'}}>
 				<div style={{position: 'fixed', top: 0, left: 0, width: width, background: 'white', zIndex: 20}}>
-					<img src="/images/topbar.jpg" style={{width: '100%', paddingLeft: 4, paddingTop: 4}}/>
+					<img src="./images/topbar.jpg" style={{width: '100%', paddingLeft: 4, paddingTop: 4}}/>
 					<div style={{height: 30, width: '100%', margin: '10px 0', position: 'relative'}}>
 						<div style={{
 							fontFamily: 'SukhumvitSet-Light',
@@ -107,10 +107,10 @@ var EateeniMock = React.createClass({
 							lineHeight: '31.5px',
 							textAlign: 'center'
 						}}>จองคิว</div>
-						<img src="/images/user.png" height={25} style={{position: 'absolute', top: 0, left: 12}}/>
-						<img src="/images/notification.png" height={25} style={{position: 'absolute', top: 0, right: 12}}/>
+						<img src="./images/user.png" height={25} style={{position: 'absolute', top: 0, left: 12}}/>
+						<img src="./images/notification.png" height={25} style={{position: 'absolute', top: 0, right: 12}}/>
 					</div>
-					<img src="/images/menu-list.png" width="100%" style={{boxShadow: '0px 1px 2px 0px rgba(0,0,0,0.2)'}}/>
+					<img src="./images/menu-list.png" width="100%" style={{boxShadow: '0px 1px 2px 0px rgba(0,0,0,0.2)'}}/>
 				</div>
 				<div style={{background: '#f8f8f8', marginTop: 100}}>
 					<BankList width={width} height={height}/>

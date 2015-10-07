@@ -56,7 +56,7 @@ var CardItem = React.createClass({
 				<div onClick={this.props.onClick} style={cardStyle} key="card">
 					<div className="gradient-black-top" style={{position: 'absolute', left: 0, top: 0, right: 0, height: '50%', opacity: 0.9}}/>
 					<h1 style={titleStyle}>{this.props.title}</h1>
-					<img src="/images/share.png" style={{position: 'absolute', bottom: 0, left: 0}}/>
+					<img src="./images/share.png" style={{position: 'absolute', bottom: 0, left: 0}}/>
 				</div>
 				<div style={descriptionStyle}>{this.props.description}</div>
 			</div>

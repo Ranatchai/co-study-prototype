@@ -36,11 +36,11 @@ var CoverSection = React.createClass({
 	},
 	render: function() {
 		return (
-			<div style={{width: this.state.width, height: this.state.height, backgroundPosition: 'center center', backgroundImage: 'url(/images/cover-desktop.jpg)', backgroundSize: 'cover'}}>
+			<div style={{width: this.state.width, height: this.state.height, backgroundPosition: 'center center', backgroundImage: 'url(./images/cover-desktop.jpg)', backgroundSize: 'cover'}}>
 				<div style={{position: 'absolute', left: 40, bottom: 40}}>
 					{this.props.data.map((d)=><CoverCategoryPreview {...d}/>)}
 				</div>
-				<img src={'/images/Logo_GMLive_for_profile_white.png'} style={{position: 'absolute', left: 20, top: 20, width: 120}}/>
+				<img src={'./images/Logo_GMLive_for_profile_white.png'} style={{position: 'absolute', left: 20, top: 20, width: 120}}/>
 			</div>
 		);
 	}

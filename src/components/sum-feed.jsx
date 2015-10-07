@@ -1,4 +1,6 @@
 var React = require('react');
+var classnames = require('classnames');
+var TimeoutTransitionGroup = require('../common/timeout-transition-group');
 var SectionA = require('./section-1');
 var LatestSection = require('./latest-section');
 var BackgroundUtil = require('../common/background-util');
@@ -8,7 +10,172 @@ var _ = require('underscore');
 var ad1 = 'http://touchedition.s3.amazonaws.com/asset/55420f2fe57b85e332bfdcab.jpg';
 var ad2 = 'http://touchedition.s3.amazonaws.com/asset/5559d77d6526e2152c531adb.jpg';
 var moment = require('moment');
-var Menubar = require('./menubar');
+var LOGO_SRC = 'http://touchedition.s3.amazonaws.com/asset/555edb0290a3d98a63e42aa0.png';
+var insertRule = require('react-kit/insertRule');
+insertRule('.p-menu-item{float: left; height: 40px}')
+insertRule('.p-menu-item.right {float: right;}');
+insertRule('.p-menu-item .fa + span {margin-left: 10px;}');
+insertRule('.article__item-thumbnail{float:left;width: 40px;height: 40px}');
+insertRule('.article__item-label {line-height: 10px; font-size: 10px; color: rgb(45,167,231); font-weight: 600;}');
+insertRule('.article__item-header {line-height: 20px; font-size: 18px; font-family: ThaiSansNeue; font-weight: 600;white-space:nowrap;text-overflow:ellipsis;overflow: hidden;}');
+insertRule('.article__item-text {width: 303px; overflow: hidden; height: 40px;float: left; padding: 5px 10px;}');
+insertRule('.article__item {position: absolute; left: 0; right: 0; top: 0; bottom: 0, overflow: hidden;}');
+insertRule('.article__item.active {background: rgb(33,33,33)}')
+insertRule('.article__item.active {color: white;}')
+insertRule('.p-menu-item .fa, .article__item .fa {line-height: 40px; height: 40px; color: rgba(33,33,33,0.5)} ');
+insertRule('.article__item.active .fa {color: white;} ');
+insertRule('.border-left {border-left: 1px solid rgba(151,151,151, 0.22);}');
+insertRule('.active .border-left {border-color: rgba(240,240,240,0.3);}');
+insertRule('.slide-up-enter {transform: translateY(100%); transition: 0.3s all ease-out;}');
+insertRule('.slide-up-enter-active {transform: translateY(0%);}');
+insertRule('.slide-up-leave {transform: translateY(0%); transition: 0.3s all ease-out;}');
+insertRule('.slide-up-leave-active {transform: translateY(-100%);}');
+var ReactComponentWithPureRenderMixin = require('react/lib/ReactComponentWithPureRenderMixin');
+var ArticleInfo = React.createClass({
+	render: function() {		
+		var {data, active, ...other} = this.props;
+		return (
+			<div className={classnames("article__item", active && 'active')} {...other}>
+				<div className="article__item-thumbnail" style={BackgroundUtil.getBackgroundProps(data, 40, 40)}/>
+				<div className="article__item-text">
+					<div className="article__item-label">{active? 'Next': 'Reading'}</div>
+					<h4 className="article__item-header">{data.title}</h4>
+				</div>				
+			</div>
+		);
+	}
+});
+insertRule('.p_menu_float {font-family: Open Sans; position: fixed; bottom: 50px; width: 370px; padding: 13px; background: rgb(33,33,33); border-radius: 5px;}')
+insertRule('.p_menu_float-title {font-weight: 600; margin-top: 0; margin-bottom: 26px; color: white; font-size: 18px;}')
+insertRule('.p_menu_float_item {position: relative; width: 100%; padding: 8px 0; border-bottom: 1px solid rgba(74,74,74,0.21)}')
+insertRule('.p_menu_float_item:last-child {border: 0;')
+insertRule('.p_menu_float_item-thumbnail{width: 64px; height: 64px;}')
+insertRule('.p_menu_float_item-text{position: absolute; left: 75px; right: 11px; top: 8px; bottom: 8px;}');
+insertRule('.p_menu_float_item-label{font-weight: 600;font-size: 11px;color: rgb(25,187,241);margin-bottom: 5px;}');
+insertRule('.p_menu_float_item-header{font-family: ThaiSansNeue; font-size: 22px; color: white;}');
+
+insertRule('.little-slide-up-enter {transform: translateY(10px); transition: 0.2s all ease-out; opacity: 0;}');
+insertRule('.little-slide-up-enter-active {transform: translateY(0); opacity: 1;}');
+insertRule('.little-slide-up-leave {transform: translateY(0); transition: 0.2s all ease-out; opacity: 1;}');
+insertRule('.little-slide-up-leave-active {transform: translateY(10px); opacity: 0;}');
+var MenuFloat = React.createClass({
+	renderItem: function(data) {
+		return (
+			<div className="p_menu_float_item">
+				<div className="p_menu_float_item-thumbnail" style={BackgroundUtil.getBackgroundProps(data, 64, 64)}/>
+				<div className="p_menu_float_item-text">
+					{data.categories[0] && <div className="p_menu_float_item-label">{data.categories[0]}</div>}
+					<h4 className="p_menu_float_item-header">{data.title}</h4>
+				</div>
+				<span style={{clear: 'both'}}/>
+			</div>
+		);
+	},
+	render: function() {
+		var {data, ...other} = this.props;
+		return (
+			<div className="p_menu_float" {...other}>
+				<h3 className="p_menu_float-title">Comming up</h3>
+				{data.map(this.renderItem)}
+			</div>
+		);
+	}
+});
+var Menubar = React.createClass({
+	mixins: [ReactComponentWithPureRenderMixin],
+	getDefaultProps: function() {
+		return {
+			interval: 10000
+		};
+	},
+	getInitialState: function() {
+		return {
+			nextIndex: 0,
+			showNext: false,
+			showFloatMenu: false
+		};
+	},
+	componentDidMount: function() {
+		this._interval = setInterval(()=>{
+			if (this.state.showFloatMenu) {
+				return;
+			}
+			var nextState = {
+				showNext: !this.state.showNext
+			};
+			if (nextState.showNext) {
+				nextState.nextIndex = (this.state.nextIndex + 1)%this.props.data.length;
+			}
+			this.setState(nextState);
+		}, this.props.interval);
+	},
+	componentDidUpdate: function(prevProps, prevState) {
+		if (this.state.showFloatMenu && !prevState.showFloatMenu) {
+			this.refs['menu-float'].getDOMNode().style.left = this.refs['article-info-container'].getDOMNode().getBoundingClientRect().left + 'px';
+		}
+	},
+	componentWillUnmount: function() {
+		clearInterval(this._interval);
+		clearTimeout(this._timeout);
+	},
+	handleMouseEnter: function(e) {
+		console.log('handleMouseEnter', e.currentTarget);
+		clearTimeout(this._timeout);
+		this.setState({
+			showFloatMenu: true
+		});
+	},
+	handleMouseLeave: function(e) {
+		console.log('handleMouseLeave', e.currentTarget);
+		this._timeout = setTimeout(()=>{
+			this.setState({
+				showFloatMenu: false
+			});
+		}, 200);
+	},
+	renderNavigation: function() {
+		return (
+			<div style={{position: 'absolute', right: 0, bottom: 40}}>
+				<img src="/images/player-back-btn.png" style={{display: 'block'}}/>
+				<img src="/images/player-next-btn.png" style={{display: 'block'}}/>
+			</div>
+		);
+	},
+	render: function() {
+		var current = this.props.data[0];
+		var showNext = this.state.showNext || this.state.showFloatMenu;
+		var data = showNext? this.props.data[this.state.nextIndex]: current;
+		return (
+			<div>
+				<div style={{overflow: 'hidden', position: 'fixed', left: 0, right: 0, bottom: 0, background: 'white', fontFamily: 'Open Sans', lineHeight: '40px', color: 'rgb(74,74,74)'}}>
+					<img className="p-menu-item" src={LOGO_SRC} style={{margin: 10, height: 20}}/>
+					<div style={{padding: '0 20px', float: 'right', background: '#2d609b', color: 'white', fontWeight: 600, fontSize: 13, lineHeight: '36px', marginTop: 2, borderRadius: 2, marginRight: 12}}>
+						<i className="icon icon-facebook2" style={{lineHeight: '36px', float: 'left', marginRight: 8}}/>
+						<span style={{lineHeight: '36px', float: 'left'}}>Share on Facebook</span>
+						<div style={{lineHeight: '36px', float: 'left', borderLeft: '1px solid white', marginLeft: 12, paddingLeft: 8}}>
+							...
+						</div>
+					</div>
+					<TimeoutTransitionGroup ref="article-info-container" transitionName="slide-up" enterTimeout={500} leaveTimeout={500} style={{position: 'relative', width: 343, height: 40, float: 'right'}}>
+						<ArticleInfo data={data} active={showNext} key={data._id} onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}/>
+					</TimeoutTransitionGroup>
+					<div className="p-menu-item border-left" style={{float: 'right', padding: '10px 20px', lineHeight: '20px', fontWeight: 600, color: 'rgb(155,155,155)', fontSize: 13}}>
+						<img src="/images/share-icon.png" style={{height: 20, marginRight: 10, float: 'left'}}/>
+						<span>Share</span>
+					</div>
+				</div>
+				{this.renderNavigation()}
+				<TimeoutTransitionGroup transitionName="little-slide-up" enterTimeout={500} leaveTimeout={500}>
+					{this.state.showFloatMenu && <MenuFloat ref="menu-float" key="menu-float" data={this.props.data} onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}/>}
+				</TimeoutTransitionGroup>
+			</div>
+		);
+	}
+});
+				// <div style={{padding: '0 20px'}}>
+				// 	<i className="fa fa-share fa-2x"/>
+				// 	<span>SHARE</span>
+				// </div>
 var AdContainer = React.createClass({
 	render: function() {
 		return (
@@ -37,7 +204,7 @@ var AdFixedContainer = React.createClass({
 	},
 	render: function() {
 		return (
-			<div style={{width: '100%', height: 500, backgroundSize: '100% auto', backgroundPosition: 'center center', backgroundImage: 'url(' + this.props.src + ')', backgroundRepeat: 'no-repeat', backgroundAttachment: 'fixed'}}>
+			<div style={{width: '100%', height: 500, backgroundSize: '100% auto', backgroundPosition: 'center center', backgroundImage: 'url(' + this.props.src + ')', backgroundRepeat: 'no-repeat'}}>
 			</div>
 		);
 	}
@@ -124,7 +291,7 @@ var SumFeed = React.createClass({
 					uniqFC.push(cat);
 					return true;
 				}), 3)}/>
-				<Menubar data={this.props.data}/>
+				<Menubar data={_.first(this.props.data, 5)}/>
 				<LatestSection data={data1}/>
 				<Section2 title="Latest Review" data={_.first(data1, 6)}/>
 				<AdFixedContainer src={ad2}/>
