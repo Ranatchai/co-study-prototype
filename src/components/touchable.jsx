@@ -1,9 +1,10 @@
+'use strict';
 var React = require('react');
-var _ = require('underscore');
+var isTouchDevice = require('../common/touch-util');
 var Touchable = React.createClass({
 	getDefaultProps: function() {
 		return {
-			threshold: 3,
+			threshold: 15,
 			component: React.createFactory('a'),
 			preventDefault: true
 		};
@@ -11,6 +12,12 @@ var Touchable = React.createClass({
 	handleTouchStart: function(e) {
 		if (this.props.preventDefault) {
 			e.preventDefault();
+		}
+		if (this.props.handleTouchStart) {
+			this.props.handleTouchStart(e);
+		}
+		if (e.isPropagationStopped()) {
+			return;
 		}
 		this._start = [e.touches[0].pageX, e.touches[0].pageY];
     this._move = false;
@@ -20,7 +27,10 @@ var Touchable = React.createClass({
 		if (this.props.preventDefault) {
 			e.preventDefault();
 		}
-    if (this._isDrag) {
+		if (this.props.handleTouchMove) {
+			this.props.handleTouchMove(e);
+		}
+    if (this._isDrag || !this._start || e.isPropagationStopped()) {
       return;
     }
 		this._move = [e.touches[0].pageX, e.touches[0].pageY];
@@ -33,14 +43,31 @@ var Touchable = React.createClass({
 		if (this.props.preventDefault) {
 			e.preventDefault();
 		}
-		console.log('_isDrag', this._isDrag)
+		if (this.props.handleTouchEnd) {
+			this.props.handleTouchEnd(e);
+		}
+		if (e.isPropagationStopped()) {
+			return;
+		}
 		if (!this._isDrag) {
-			this.props.handleAction && this.props.handleAction();
+			if (this.props.handleAction) {
+		 		this.props.handleAction(e);
+			}
 		}
 	},
 	render: function() {
-		var {component, style, ...other } = this.props;		
-		return <component href="#" style={_.extend({textDecoration: 'none'}, style)} {...other} onTouchStart={this.handleTouchStart} onTouchMove={this.handleTouchMove} onTouchEnd={this.handleTouchEnd}/>;
+		var { style, children, component, ...other } = this.props;
+		var options = {
+			style: _.extend({textDecoration: 'none'}, style)			
+		};
+		if (isTouchDevice) {
+			options.onTouchStart = this.handleTouchStart;
+			options.onTouchMove = this.handleTouchMove;
+			options.onTouchEnd = this.handleTouchEnd;
+		} else {
+			options.onClick = this.props.handleAction;
+		}
+		return component(_.extend(other, options), children);
 	}
 });
 
