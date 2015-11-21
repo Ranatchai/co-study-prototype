@@ -1,6 +1,8 @@
 var React = require('react');
 var _ = require('lodash');
 window._ = _;
+document.title = 'Co-Study';
+var Touchable = require('../touchable');
 var isTablet = (function tabletcheck(a) {
   if (typeof a !== 'string') {
     return false;
@@ -127,7 +129,9 @@ var Page4Review = React.createClass({
 		return (
 			<div style={{textAlign: 'center'}}>
 				<div style={{position: 'absolute', minHeight: 568, left: -8, right: -8, top: -8, bottom: -8, background: `url(${src})`, backgroundSize: 'cover', WebkitFilter: 'blur(8px)'}}/>
-				<Icon name="angle-left" style={{zIndex: 55, color: 'white', fontSize: 32, padding: 10, position: 'absolute', left: 0, top: 0}} onClick={this.props.onBack}/>
+				<Touchable handleAction={this.props.onBack}>
+					<Icon name="angle-left" style={{zIndex: 55, color: 'white', fontSize: 32, padding: 10, position: 'absolute', left: 0, top: 0}}/>
+				</Touchable>
 				<div style={{position: 'relative'}}>
 					<p style={{margin: '20px auto', color: 'white'}}>Thank you for choosing us.</p>
 					<div style={{margin: 30, border: '1px solid black', padding: 15, background: 'white'}}>
@@ -235,10 +239,10 @@ var Page3BookingDone = React.createClass({
 		console.log('active', active, active?'#000':'#bbb');
 		var color = active?'#000':'#bbb';
 		return (
-			<div key={name + (active? '-active': '')} style={{float: align, textAlign: 'center', margin: 20, color: color}} onClick={handleClick}>
+			<Touchable key={name + (active? '-active': '')} style={{float: align, textAlign: 'center', margin: 20, color: color}} handleAction={handleClick}>
 				<UserIcon color={color}/>
 				You
-			</div>
+			</Touchable>
 		);
 	},
 	render: function() {
@@ -268,7 +272,9 @@ var Page3BookingDone = React.createClass({
 					<div style={{position: 'absolute', left: -8, right: -8, top: -8, bottom: -8, background: `url(${src})`, backgroundSize: 'cover', WebkitFilter: 'blur(8px)'}}/>
 					<div ref="bg-to-hide" style={{position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, background: `url(${src})`, backgroundSize: 'cover'}}/>
 					<div style={{position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, background: 'rgba(0,0,0,0.2)'}}/>
-					<Icon name="angle-left" style={{color: 'white', fontSize: 32, padding: 10, position: 'absolute', left: 0, top: 0}} onClick={this.props.onBack}/>
+					<Touchable handleAction={this.props.onBack}>
+						<Icon name="angle-left" style={{color: 'white', fontSize: 32, padding: 10, position: 'absolute', left: 0, top: 0}}/>
+					</Touchable>
 					<div style={{position: 'relative', color: 'rgba(255,255,255,0.9)', textAlign: 'center', margin: '40px auto'}}>
 						<div>You are going to...</div>
 						<h3 style={{marginTop: 20}}>{title}</h3>
@@ -287,7 +293,7 @@ var Page3BookingDone = React.createClass({
 						})}
 						<div style={{clear: 'both'}}/>
 					</div>
-					<button onClick={()=>{
+					<Touchable handleAction={()=>{
 						switch (n) {
 							case 0: 
 								this.setState({userState: true});
@@ -297,7 +303,7 @@ var Page3BookingDone = React.createClass({
 								this.goNextStep();
 								break;
 						}
-					}} style={{border: n === 1?'none':'1px solid rgba(0,0,0,0.8)', background: 'transparent', display: 'block', width: 60 + 30*2, padding: '10px 30px', margin: 'auto'}}>{states[n].bt}</button>
+					}} style={{border: n === 1?'none':'1px solid rgba(0,0,0,0.8)', background: 'transparent', display: 'block', width: 60 + 30*2, padding: '10px 30px', margin: 'auto'}}>{states[n].bt}</Touchable>
 					<p style={{marginTop: 5}}>{states[n].des}</p>
 				</div>
 				<div style={{width: 40 + 40 + 15, margin: '40px auto 0'}}>
@@ -371,7 +377,9 @@ var Page2Detail = React.createClass({
 					<div style={{position: 'absolute', left: -8, right: -8, top: -8, bottom: -8, background: `url(${src})`, backgroundSize: 'cover', WebkitFilter: 'blur(8px)'}}/>
 					<div ref="bg-to-show" style={{opacity: 0, position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, background: `url(${src})`, backgroundSize: 'cover'}}/>
 					<div ref="bg-to-overide" style={{opacity: 0, position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, background: 'rgba(0,0,0,0.4)'}}/>
-					<Icon name="angle-left" style={{position: 'absolute', left: 0, top: 0, color: 'white', fontSize: 32, padding: 10}} onClick={this.props.onBack}/>
+					<Touchable handleAction={this.props.onBack}>
+						<Icon name="angle-left" style={{position: 'absolute', left: 0, top: 0, color: 'white', fontSize: 32, padding: 10}}/>
+					</Touchable>
 				</div>
 				<div style={{height: 200}}/>
 				<div style={{position: 'relative', background: 'white'}}>
@@ -417,10 +425,10 @@ var Page2Detail = React.createClass({
 		      		<div style={{margin: '10px 0'}}>
 			      		{_.range(detail.maxUser).map((n)=>{
 			      			return (
-			      				<div onClick={()=>this.setState({userAmount: n + 1})} style={{position: 'relative', textAlign: 'center', float: 'left', width: `${npWidth}px`}}>
+			      				<Touchable handleAction={()=>this.setState({userAmount: n + 1})} style={{position: 'relative', textAlign: 'center', float: 'left', width: `${npWidth}px`}}>
 			      					<div style={{border: '1px solid', borderColor: this.state.userAmount === (n+1)?'black': 'transparent', borderRadius: '50%', margin: 'auto', display: 'inline-block', padding: 15}}/>
 			      					<div style={{position: 'absolute', left: 0, top: 0, right: 0, bottom: 0, lineHeight: '30px'}}>{n + 1}</div>
-			      				</div>
+			      				</Touchable>
 			      			);
 			      		})}
 			      		<div style={{clear: 'both'}}/>
@@ -437,7 +445,7 @@ var Page2Detail = React.createClass({
 		      	<div style={sectionStyle}>
 		      		<h3 style={{padding: '10px 0 20px'}}>Room Options</h3>
 		      		{options.map((d, index)=>(
-		      			<div style={{marginBottom: 10}} onClick={()=>this.setState({selectedPackage: index})}>
+		      			<Touchable style={{marginBottom: 10}} handleAction={()=>this.setState({selectedPackage: index})}>
 			      			<div style={{lineHeight: '20px'}}>
 			      				<i className={this.state.selectedPackage === index? "fa fa-dot-circle-o": "fa fa-circle-o"} style={{float: 'left', lineHeight: '20px'}}/>
 			      				<h3 style={{marginLeft: 10, float: 'left'}}>{d.title}</h3>
@@ -452,12 +460,12 @@ var Page2Detail = React.createClass({
 			      					<span style={{}}>{Math.round(d.price/this.state.userAmount)}</span> Baht / Person
 			      				</div>
 			      			</div>
-			      		</div>
+			      		</Touchable>
 		      		))}
 		      	</div>
 		      </div>
 	      	<div style={{height: 40}}/>      	
-	      	<div style={{
+	      	<Touchable style={{
 	      		position: 'fixed',
 	      		left: 0,
 	      		right: 0,
@@ -468,9 +476,9 @@ var Page2Detail = React.createClass({
 	      		background: 'green',
 	      		color: 'white',
 	      		fontSize: 20
-	      	}} onClick={this.handleClickBook}>
+	      	}} handleAction={this.handleClickBook}>
 	      		Book the {options[this.state.selectedPackage].unit}
-	      	</div>
+	      	</Touchable>
 				</div>
       	{this.state.showLoading && <Loading/>}
 			</div>
@@ -504,7 +512,7 @@ var Card = React.createClass({
   	}
   	console.log('stars', stars.length);
     return (
-      <div onClick={this.props.onClick}>
+      <Touchable handleAction={this.props.handleAction}>
       	<div style={{position: 'relative', width: '100%', height: 200, background: `url(${src})`, backgroundSize: 'cover'}}>
       		<div style={{textAlign: 'center',background: '#222', position: 'absolute', right: 4, bottom: 4, padding: 5, color: 'white'}}>
       			<div style={{fontSize: '0.8em'}}>Starting Price </div>
@@ -523,7 +531,7 @@ var Card = React.createClass({
       			{description}
       		</p>
       	</div>
-      </div>
+      </Touchable>
     );
   }
 });
@@ -532,7 +540,7 @@ var Page1Discovery = React.createClass({
 	render: function() {
 		return (
 			<div>
-				{list.map((d)=><Card {...d} onClick={this.props.onComplete.bind(null, d)}/>)}
+				{list.map((d)=><Card {...d} handleAction={this.props.onComplete.bind(null, d)}/>)}
 				<div style={{position: 'absolute', left: 10, top: 10, borderRadius: '50%', padding: 10, color: 'black', background: 'white'}}>
 					<Icon name="search"/>
 				</div>
@@ -546,6 +554,7 @@ var App = React.createClass({
 		return {currentPage: 0};
 	},
 	componentWillUpdate: function(nextProps, nextStates) {
+		console.log(nextStates.currentPage, this.state.currentPage, nextStates.currentPage !== this.state.currentPage);
 		if (nextStates.currentPage !== this.state.currentPage) {
 			window.scrollTo(0, 0);
 		}
