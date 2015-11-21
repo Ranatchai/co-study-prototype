@@ -1,6 +1,6 @@
 'use strict';
 var React = require('react');
-var isTouchDevice = require('../common/touch-util');
+var isTouchDevice = require('../common/touch-util').isTouchDevice;
 var Touchable = React.createClass({
 	getDefaultProps: function() {
 		return {

@@ -3,7 +3,7 @@ var _ = require('lodash');
 window._ = _;
 document.title = 'Co-Study';
 var Touchable = require('../touchable');
-var isTouchDevice = require('../../common/touch-util');
+var isTouchDevice = require('../../common/touch-util').isTouchDevice;
 var sample1 = {
   title: 'Papa Coffee Shop',
   description: 'Private room (max 6)',
