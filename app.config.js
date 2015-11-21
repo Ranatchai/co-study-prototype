@@ -36,5 +36,9 @@ module.exports = {
 	"single-feed": {
 		title: "Single Type Feed",
 		path: "./src/mains/single-feed"
-	}	
+	},
+	"co-study": {
+		title: "Co Study",
+		path: "./src/mains/co-study"
+	}
 };
