@@ -70,8 +70,13 @@ var srcs = [
 	'https://travelmindset.s3.amazonaws.com/uploads/image/asset/680/full_Ukd_bwpWTv2e3UyqxMFPvFYwG4XH5VF6h0xEKliLRfE_VL_WZBhccDLMEspD9bw9A_PzfaUdHonk3n89CPW48gk.jpg'
 ];
 var LoadingCenter = require('./loading-center');
-
-var list = srcs.map((src)=>_.extend({}, sample1, {src: src, star: Math.round(3 + Math.random() * 2)}));
+var i = 0;
+var list = srcs.map((src)=>_.extend({}, sample1, {
+	key: i,
+	src: src, 
+	star: Math.round(3 + Math.random() * 2),
+	maxUser: (i++) + 1
+}));
 var TimeoutTransitionGroup = require('../../common/timeout-transition-group');
 var TRANSITION_DURATION = 800;
 var Loading = React.createClass({
@@ -133,29 +138,33 @@ var UserIcon = React.createClass({
 	}
 });
 var moment = require('moment');
-// var Page5Review = React.createClass({
-// 	render: function() {
-// 		return (
-// 			<div style={{}}>
-// 				<h2>Tell us more about Papa Cafe</h2>
-// 				<p>How productive did you feel?</p>
-// 				<p>How good was the service?</p>
-// 				<p>How was your overall satisfaction?</p>
-// 				<div>
-// 					Share the wonderful experience
-// 					<FacebookIcon/>
-// 					<TwitterIcon/>
-// 				</div>
-// 			</div>
-// 		);
-// 	}
-// })
-var Page3Review = React.createClass({
-	getInitialState: function() {
-		return {
-			showReview: false
-		};
+var PageX = React.createClass({
+	getDefaultProps: function() {
+		return {actionLabel: 'OK', onComplete: ()=>{}}
 	},
+	render: function() {
+		var detail = this.props.detail;
+		var {title, description, src, startingPrice, star, nearby, reviews, facilities, options, startTime, endTime} = detail;
+		return (
+			<div style={{textAlign: 'center'}}>
+				<div style={{position: 'absolute', minHeight: 568, left: -8, right: -8, top: -8, bottom: -8, background: `url(${src})`, backgroundSize: 'cover', WebkitFilter: 'blur(8px)'}}/>
+				<Touchable handleAction={this.props.onBack}>
+					<Icon name="angle-left" style={{zIndex: 55, color: 'white', fontSize: 32, padding: 10, position: 'absolute', left: 0, top: 0}}/>
+				</Touchable>
+				<div style={{position: 'relative'}}>					
+					<div style={{margin: '60px 30px 20px', border: '1px solid black', padding: 15, background: 'white'}}>
+						{this.props.children}
+					</div>
+					<Touchable component={React.createFactory("div")} handleAction={this.props.onComplete} style={{margin: 'auto', width: 100, fontWeight: 800, padding: 5, border: '1px solid rgba(255,255,255,0.8)', color: 'rgba(255,255,255,0.8)'}}>
+						<div>{this.props.actionLabel}</div>
+					</Touchable>
+				</div>
+				<p style={{position: 'absolute', top: 0, left: 0, right: 0, margin: '20px auto', color: 'white'}}>Thank you for choosing us.</p>
+			</div>
+		);
+	}
+});
+var Page5Review = React.createClass({	
 	renderIcons: function(icon) {
 		return (
 			<div style={{margin: '0 40px'}}>
@@ -165,11 +174,11 @@ var Page3Review = React.createClass({
 			</div>
 		);
 	},
-	renderReviewContent: function() {
+	render: function() {
 		var detail = this.props.detail;
 		var {title, description, src, startingPrice, star, nearby, reviews, facilities, options, startTime, endTime} = detail;
 		return (
-			<div style={{}} key="review">
+			<PageX {...this.props} key="review" actionLabel="Back to Home" onComplete={this.props.onComplete.bind(this, this.props.detail)}>
 				<h2>{title}</h2>
 				<div style={{margin: '15px auto', width: 32}}>
 					<UserIcon style={{padding: 10}}/>
@@ -199,15 +208,18 @@ var Page3Review = React.createClass({
 				<div style={{marginTop: 15}}>
 					<img width="100" src="/images/co-study-logo.png" style={{margin: 'auto'}}/>
 				</div>
-			</div>
+			</PageX>
 		);
 	},
-	renderBillContent: function() {
+})
+
+var Page3Bill = React.createClass({
+	render: function() {
 		var detail = this.props.detail;
 		var {title, description, src, startingPrice, star, nearby, reviews, facilities, options, startTime, endTime} = detail;
 		var price = 229.5;
 		return (
-			<div key="bill">
+			<PageX {...this.props} onComplete={this.props.onComplete.bind(this, this.props.detail)}>
 				<h2>{title}</h2>
 				<div style={{margin: '15px auto', width: 32}}>
 					<UserIcon style={{padding: 10}}/>
@@ -273,32 +285,11 @@ var Page3Review = React.createClass({
 					<h4 style={{textAlign: 'center', margin: '20px 0 10px'}}>Brought you by</h4>
 					<img width="100" src="/images/co-study-logo.png" style={{margin: 'auto'}}/>
 				</div>
-			</div>
-		);
-	},
-	render: function() {
-		var detail = this.props.detail;
-		var {title, description, src, startingPrice, star, nearby, reviews, facilities, options, startTime, endTime} = detail;
-		return (
-			<div style={{textAlign: 'center'}}>
-				<div style={{position: 'absolute', minHeight: 568, left: -8, right: -8, top: -8, bottom: -8, background: `url(${src})`, backgroundSize: 'cover', WebkitFilter: 'blur(8px)'}}/>
-				<Touchable handleAction={this.props.onBack}>
-					<Icon name="angle-left" style={{zIndex: 55, color: 'white', fontSize: 32, padding: 10, position: 'absolute', left: 0, top: 0}}/>
-				</Touchable>
-				<div style={{position: 'relative'}}>					
-					<div style={{margin: '60px 30px 20px', border: '1px solid black', padding: 15, background: 'white'}}>
-						{this.state.showReview? this.renderReviewContent(): this.renderBillContent()}
-					</div>
-					<Touchable component={React.createFactory("div")} handleAction={this.state.showReview? this.props.onBack: ()=>this.setState({showReview: true})} style={{margin: 'auto', width: 100, fontWeight: 800, padding: 5, border: '1px solid rgba(255,255,255,0.8)', color: 'rgba(255,255,255,0.8)'}}>
-						<div>{this.state.showReview? 'Back to Home': 'OK'}</div>
-					</Touchable>
-				</div>
-				<p style={{position: 'absolute', top: 0, left: 0, right: 0, margin: '20px auto', color: 'white'}}>Thank you for choosing us.</p>
-			</div>
+			</PageX>
 		);
 	}
 });
-
+var mapURL2 = '/images/map-1.jpg';
 var Page4Navigation = React.createClass({
 	getInitialState: function() {
 		return {
@@ -324,74 +315,68 @@ var Page4Navigation = React.createClass({
 			</Touchable>
 		);
 	},
+	componentDidMount: function() {
+		loadImage(mapURL2);
+		setTimeout(()=>{
+			this.setState({shopState: true});
+		}, 3000);
+	},
 	render: function() {
 		var detail = this.props.detail;
 		var {title, description, src, startingPrice, star, nearby, reviews, facilities, options, startTime, endTime} = detail;
 		var states = [{
-			bt: 'Check in',
-			des: 'Please check in when you arrive'
+			// bt: 'Check in',
+			des: 'See you at ' + startTime
 		}, {
-			bt: 'Waiting',
-			des: 'Let Papa Cafe knows that you have arrived'
-		}, {
-			bt: 'Check out',
-			des: 'Let Papa Cafe knows that you have arrived'
+			// bt: 'Waiting',
+			des: 'Enjoy your Co-Studying'
 		}];
 		var n = 0;
-		if (this.state.userState) {
-			if (this.state.shopState) {
-				n = 2;
-			} else {
-				n = 1;
-			}			
-		}		
+		if (this.state.shopState) {
+			n = 1;
+		}	
 		return (
 			<div style={{textAlign:'center'}}>
-				<div style={{position: 'relative', width: '100%', height: 200, overflow: 'hidden'}}>
+				<div style={{position: 'relative', width: '100%', lineHeight: '50px', height: 50, overflow: 'hidden'}}>
 					<div style={{position: 'absolute', left: -8, right: -8, top: -8, bottom: -8, background: `url(${src})`, backgroundSize: 'cover', WebkitFilter: 'blur(8px)'}}/>
 					<div ref="bg-to-hide" style={{position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, background: `url(${src})`, backgroundSize: 'cover'}}/>
 					<div style={{position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, background: 'rgba(0,0,0,0.2)'}}/>
+					<div style={{position: 'relative', color: 'rgba(255,255,255,0.9)', textAlign: 'center'}}>
+						<h3>You are going to...</h3>
+						<p>{startTime} - {endTime}</p>
+					</div>
 					<Touchable handleAction={this.props.onBack}>
 						<Icon name="angle-left" style={{color: 'white', fontSize: 32, padding: 10, position: 'absolute', left: 0, top: 0}}/>
 					</Touchable>
-					<div style={{position: 'relative', color: 'rgba(255,255,255,0.9)', textAlign: 'center', margin: '40px auto'}}>
-						<div>You are going to...</div>
-						<h3 style={{marginTop: 20}}>{title}</h3>
-						<p><Icon name="map-marker"/> {nearby}m</p>
-						<p style={{marginTop: 20}}>{startTime} - {endTime}</p>
-					</div>
 				</div>
 				<div>
 					<div style={{width: 200, margin: '20px auto'}}>
-						{this.renderUser('You', 'left', this.state.userState, ()=>{
-							console.log('onclick user', this.state.userState);
-							// this.setState({userState: !this.state.userState});
-						})}
-						{this.renderUser(title, 'right', this.state.shopState, ()=>{
-							// this.setState({shopState: !this.state.shopState});
-						})}
+						<h2 style={{margin: 10}}>{title}</h2>
+						<p><Icon name="map-marker"/> {nearby}m</p>
+						<p style={{marginTop: 0}}><Icon name="clock-o"/> {startTime} - {endTime}</p>						
 						<div style={{clear: 'both'}}/>
 					</div>
-					<Touchable handleAction={()=>{
-						switch (n) {
-							case 0: 
-								this.setState({userState: true});
-								setTimeout(()=>this.setState({shopState: true}), 3000);
-								break;
-							case 2:
-								this.goNextStep();
-								break;
-						}
-					}} style={{border: n === 1?'none':'1px solid rgba(0,0,0,0.8)', background: 'transparent', display: 'block', width: 60 + 30*2, padding: '10px 30px', margin: 'auto'}}>{states[n].bt}</Touchable>
-					<p style={{marginTop: 5}}>{states[n].des}</p>
+					<div style={{width: window.innerWidth, height: 200, background: `url(${mapURL2})`, backgroundSize: 'cover', backgroundPosition: 'center center'}}/>					
+					<p style={{fontSize: 28, fontWeight: 100, marginTop: 5}}>{states[n].des}</p>
 				</div>
-				<div style={{width: 40 + 40 + 15 + 20, margin: '40px auto 0'}}>
+				<div style={{width: 40 + 40 + 15 + 20, margin: '15px auto 0'}}>
 					<div style={{marginBottom: 10}}>Let your friends know</div>					
 					<div style={{margin: '0 10px'}}>
 						<FacebookIcon/>
 						<TwitterIcon/>
+						<div style={{clear: 'both'}}/>
 					</div>
 				</div>
+				<Touchable handleAction={()=>{
+					switch (n) {
+						case 0: 
+							this.props.onBack();
+							break;
+						case 1:
+							this.goNextStep();
+							break;
+					}
+				}} style={{opacity: n===0?1:0, border: '1px solid rgba(0,0,0,0.8)', background: 'transparent', display: 'block', width: 60 + 30*2, padding: '5px 30px', margin: '20px auto'}}>Cancel</Touchable>
 				{this.state.showLoading && <Loading/>}
 			</div>
 		);
@@ -587,7 +572,7 @@ var Page2Detail = React.createClass({
 
 var Card = React.createClass({
   render: function() {
-  	var {title, description, src, startingPrice, star, nearby} = this.props;
+  	var {title, description, src, startingPrice, star, nearby, maxUser} = this.props;
   	var stars = _.range(star).map(()=><Icon name="heart" style={{margin: '0 2px', color: 'red'}}/>);
   	while (stars.length < 5) {
   		stars.push(<i style={{margin: '0 2px'}} className="fa fa-heart-o"/>);
@@ -617,7 +602,7 @@ var Card = React.createClass({
     );
   }
 });
-var mapURL = 'http://www.freelargeimages.com/wp-content/uploads/2014/11/Google_map-6.png';
+var mapURL = '/images/map-2.jpg';
 var loadImage = function(src) {
 	var img = new Image(src);
 	img.src = src;
@@ -625,6 +610,11 @@ var loadImage = function(src) {
 	img.onerror = ()=>console.log('load error', src);
 }
 var Page1Discovery = React.createClass({
+	getInitialState: function() {
+		return {
+			userAmount: 1
+		};
+	},
 	componentDidMount: function() {
 		loadImage(mapURL);
 	},
@@ -663,13 +653,30 @@ var Page1Discovery = React.createClass({
 		});
 	},
 	render: function() {
+		console.log('list', list.map((d)=>d.maxUser));
+		var src = list[0].src;
 		return (
 			<div>
-				{list.map((d)=><Card {...d} handleAction={this.props.onComplete.bind(null, d)}/>)}
-				<div style={{position: 'absolute', left: 10, top: 10, borderRadius: '50%', width: 35, height: 35, color: 'black', background: 'white'}}>
-					<Icon name="search" style={{position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}/>
+				<div style={{position: 'relative', overflow: 'hidden', background: '#eee'}}>
+					{/*<div style={{position: 'absolute', minHeight: 568, left: -12, right: -12, top: -12, bottom: -12, background: `url(${src})`, backgroundSize: 'cover', WebkitFilter: 'blur(12px)'}}/>*/}
+					<div style={{margin: '10px 50px', position: 'relative'}}>					
+						<h3 style={{textAlign: 'center'}}>How many people?</h3>
+	      		{_.range(5).map((n)=>{
+	      			return (
+	      				<Touchable handleAction={()=>this.setState({userAmount: n + 1})} style={{position: 'relative', textAlign: 'center', float: 'left', width: '20%', height: 30}}>
+	      					<div style={{border: '1px solid', borderColor: this.state.userAmount === (n+1)?'black': 'transparent', borderRadius: '50%', margin: 'auto', display: 'inline-block', padding: 15}}/>
+	      					<div style={{position: 'absolute', left: 0, top: 0, right: 0, bottom: 0, lineHeight: '30px'}}>{n + 1}</div>
+	      				</Touchable>
+	      			);
+	      		})}
+	      		<div style={{clear: 'both'}}/>
+	      	</div>
+	      </div>
+				{list.filter((d)=>d.maxUser >= this.state.userAmount).map((d)=><Card key={d.key} {...d} handleAction={this.props.onComplete.bind(null, d)}/>)}
+				<div style={{position: 'absolute', left: 10, top: 10, borderRadius: '50%', width: 35, height: 35, color: 'black', background: '#ddd'}}>
+					<Icon name="filter" style={{position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}/>
 				</div>
-				<Touchable handleAction={this.handleOpenMap} style={{position: 'absolute', right: 10, top: 10, borderRadius: '50%', width: 35, height: 35, color: 'black', background: 'white'}}>
+				<Touchable handleAction={this.handleOpenMap} style={{position: 'absolute', right: 10, top: 10, borderRadius: '50%', width: 35, height: 35, color: 'black', background: '#ddd'}}>
 					<Icon name="map-marker" style={{position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}/>
 				</Touchable>
 				{this.renderMap()}
@@ -677,7 +684,13 @@ var Page1Discovery = React.createClass({
 		);
 	}
 });
-
+var PageList = [
+	Page1Discovery,
+	Page2Detail,
+	Page3Bill,
+	Page4Navigation,
+	Page5Review
+];
 var App = React.createClass({
 	getInitialState: function() {
 		return {currentPage: 0};
@@ -690,20 +703,15 @@ var App = React.createClass({
 	},
 	goNextStep: function(props) {
 		this.setState({
-			currentPage: this.state.currentPage + 1,
+			currentPage: (this.state.currentPage + 1)%PageList.length,
 			selectedProps: props
 		});
 	},
 	render: function() {
-		var Page = [
-			Page1Discovery,
-			Page2Detail,
-			Page3Review,
-			Page4Navigation
-		][this.state.currentPage];
+		var Page = PageList[this.state.currentPage];
 		var props = {
 			detail: this.state.selectedProps,
-			onBack: ()=>this.setState({currentPage: 0}),
+			onBack: ()=>this.setState({currentPage: this.state.currentPage - 1}),
 			onComplete: this.goNextStep
 		};
 		// switch (this.state.currentPage) {
