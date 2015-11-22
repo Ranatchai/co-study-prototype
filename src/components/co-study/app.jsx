@@ -75,7 +75,7 @@ var dd = [
 	{
 		title: 'Papa Coffee Shop', 
 		src: 'http://touchedition.s3.amazonaws.com/asset/5651859ae3f10fd70a21a89f.jpg',
-		maxUser: 6,
+		maxUser: 3,
 		startingPrice: 30,
 		nearby: 300
 	},
@@ -89,14 +89,14 @@ var dd = [
 	{
 		title: 'Emquatier Office Space',
 		src: 'http://touchedition.s3.amazonaws.com/asset/56518569e3f10fd70a21a892.jpg',
-		maxUser: 8,
+		maxUser: 4,
 		startingPrice: 100,
 		nearby: 800
 	},
 	{
-		title: 'Swiss Style',
+		title: 'Swiss Style Coffee Shop',
 		src: 'http://blog.sqwiggle.com/content/images/2014/01/11-Unwritten-Rules-of-Coffee-Shop-Roberto_Ventre-e1391150672343.jpg',
-		maxUser: 3,
+		maxUser: 2,
 		startingPrice: 40,
 		nearby: '1,100'
 	},
@@ -108,11 +108,14 @@ var dd = [
 	},
 	{
 		src: 'http://assets.inhabitat.com/wp-content/blogs.dir/1/files/2010/08/thatchers3.jpg',
-		maxUser: 3,
+		maxUser: 1,
 		startingPrice: 100,
 		nearby: '2,000'
 	}
 ];
+dd.sort((a, b)=>{
+	return a.maxUser - b.maxUser;
+});
 var LoadingCenter = require('./loading-center');
 var i = 0;
 var list = dd.map((d)=>_.extend({}, sample1, {
@@ -208,11 +211,18 @@ var PageX = React.createClass({
 	}
 });
 var Page5Review = React.createClass({	
+	getInitialState: function() {
+		return {review: 0};
+	},
 	renderIcons: function(icon) {
 		return (
 			<div style={{margin: '0 40px'}}>
 				{_.range(5).map((index)=>{
-					return <Icon name={icon} style={{width: '20%'}}/>
+					var iconName = icon;
+					if (index >= this.state.review) {
+						iconName += '-o';
+					}
+					return (<Touchable handleAction={()=>this.setState({review: index + 1})}><Icon name={iconName} style={{width: '20%', color: '#e7244e'}}/></Touchable>)
 				})}
 			</div>
 		);
@@ -298,7 +308,7 @@ var Page3Bill = React.createClass({
 						Time Spent
 					</div>
 					<div style={{float: 'right'}}>
-						2:33
+						{detail.hourAmount} hr
 					</div>
 					<div style={{clear: 'both'}}/>
 				</div>
@@ -307,7 +317,7 @@ var Page3Bill = React.createClass({
 						Rate Per Hour
 					</div>
 					<div style={{float: 'right'}}>
-						30
+						30 ฿
 					</div>
 					<div style={{clear: 'both'}}/>
 				</div>
@@ -325,7 +335,7 @@ var Page3Bill = React.createClass({
 						<h3>Total</h3>
 					</div>
 					<div style={{float: 'right'}}>
-						<h3>{price.toFixed(2)}</h3>
+						<h3>{price.toFixed(0)}฿</h3>
 					</div>
 					<div style={{clear: 'both'}}/>
 				</div>
@@ -403,7 +413,7 @@ var Page4Navigation = React.createClass({
 						<p style={{marginTop: 0}}><Icon name="clock-o"/> {startTime} - {endTime}</p>						
 						<div style={{clear: 'both'}}/>
 					</div>
-					<div style={{width: window.innerWidth, height: 200, background: `url(${mapURL2})`, backgroundSize: 'cover', backgroundPosition: 'center center'}}/>					
+					<div style={{width: isTouchDevice?window.innerWidth: 320, height: 200, background: `url(${mapURL2})`, backgroundSize: 'cover', backgroundPosition: 'center center'}}/>					
 					<p style={{fontSize: 28, fontWeight: 100, marginTop: 5}}>{states[n].des}</p>
 				</div>
 				<div style={{width: 40 + 40 + 15 + 20, margin: '15px auto 0'}}>
@@ -547,7 +557,7 @@ var Page2Detail = React.createClass({
   	for (var i = 0; i < (5 - stars.length + 1); i++) {
   		stars.push(<i style={{margin: '0 2px'}} className="fa fa-heart-o"/>);
   	}
-  	var npWidth = (window.innerWidth - 40)/detail.maxUser;
+  	var npWidth = (isTouchDevice?window.innerWidth:320 - 40)/detail.maxUser;
   	var sectionStyle={marginBottom: 10};
 
 		return (
@@ -604,7 +614,7 @@ var Page2Detail = React.createClass({
 		      		<div style={{margin: '10px 0'}}>
 			      		{_.range(detail.maxUser).map((n)=>{
 			      			return (
-			      				<Touchable handleAction={()=>this.setState({userAmount: n + 1})} style={{position: 'relative', textAlign: 'center', float: 'left', width: `${npWidth}px`}}>
+			      				<Touchable handleAction={()=>this.setState({userAmount: n + 1})} style={{position: 'relative', textAlign: 'center', float: 'left', width: `${100/detail.maxUser}%`}}>
 			      					<div style={{border: '1px solid', borderColor: this.state.userAmount === (n+1)?'black': 'transparent', borderRadius: '50%', margin: 'auto', display: 'inline-block', padding: 15}}/>
 			      					<div style={{position: 'absolute', left: 0, top: 0, right: 0, bottom: 0, lineHeight: '30px'}}>{n + 1}</div>
 			      				</Touchable>
@@ -677,7 +687,7 @@ var Page2Detail = React.createClass({
       		}}>
       			<div style={{
       				margin: 10/*'50px 20px 20px'*/,
-      				marginTop: window.innerHeight > 480 && (window.innerHeight - 480)/2 + 10,
+      				marginTop: isTouchDevice && window.innerHeight > 480 && (window.innerHeight - 480)/2 + 10,
       				background: 'white',
       				padding: '5px 0 0',
       				border: '1px solid rgba(0,0,0,0.7)',
