@@ -75,35 +75,41 @@ var dd = [
 		title: 'Papa Coffee Shop', 
 		src: '/images/co-study/Coffeeshop3.jpg',
 		maxUser: 6,
-		startingPrice: 30
+		startingPrice: 30,
+		nearby: 300
 	},
 	{
 		title: 'Amarin Apartment', 
 		src: '/images/co-study/apartment-1.jpeg',
 		maxUser: 12,
-		startingPrice: 50
+		startingPrice: 50,
+		nearby: 500
 	},
 	{
 		title: 'Emquatier Office Space',
 		src: '/images/co-study/conf-room.jpeg',
 		maxUser: 12,
-		startingPrice: 100
+		startingPrice: 100,
+		nearby: 800
 	},
 	{
 		title: 'Swiss Style',
 		src: 'http://blog.sqwiggle.com/content/images/2014/01/11-Unwritten-Rules-of-Coffee-Shop-Roberto_Ventre-e1391150672343.jpg',
 		maxUser: 3,
-		startingPrice: 40
+		startingPrice: 40,
+		nearby: '1,100'
 	},
 	{
 		title: 'BBC Restaurant',
 		src: '/images/co-study/Restaurant.jpg',
-		startingPrice: 20
+		startingPrice: 20,
+		nearby: '1,500'
 	},
 	{
 		src: 'http://assets.inhabitat.com/wp-content/blogs.dir/1/files/2010/08/thatchers3.jpg',
 		maxUser: 3,
-		startingPrice: 100
+		startingPrice: 100,
+		nearby: '2,000'
 	}
 ];
 var LoadingCenter = require('./loading-center');
@@ -392,7 +398,7 @@ var Page4Navigation = React.createClass({
 				<div>
 					<div style={{width: 200, margin: '20px auto'}}>
 						<h2 style={{margin: 10}}>{title}</h2>
-						<p><Icon name="map-marker"/> {nearby}m</p>
+						<p style={{letterSpacing: 1}}><Icon name="map-marker"/> {nearby}m</p>
 						<p style={{marginTop: 0}}><Icon name="clock-o"/> {startTime} - {endTime}</p>						
 						<div style={{clear: 'both'}}/>
 					</div>
@@ -562,7 +568,7 @@ var Page2Detail = React.createClass({
 						<div style={sectionStyle}>
 		      		<h2 style={{marginBottom: 10, lineHeight: '20px'}}>
 		      			<span>{title}</span>
-		      			<span style={{float: 'right', fontSize: '12px', fontWeight: 100}}>{nearby}m</span>
+		      			<span style={{float: 'right', fontSize: '12px', fontWeight: 100, letterSpacing: 1}}>{nearby}m</span>
 		      		</h2>
 		      		<p>
 		      			<div style={{float: 'right'}}>
@@ -740,7 +746,7 @@ var Card = React.createClass({
       	<div style={{padding: '15px 10px 20px'}}>
       		<h3 style={{marginBottom: 5, lineHeight: '20px'}}>
       			<span>{title}</span>
-      			<span style={{float: 'right', fontSize: '12px', fontWeight: 100}}>{nearby}m</span>
+      			<span style={{float: 'right', fontSize: '12px', fontWeight: 100, letterSpacing: 1}}>{nearby}m</span>
       		</h3>
       		<p>
       			<div style={{float: 'right'}}>
