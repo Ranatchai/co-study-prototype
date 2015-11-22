@@ -570,7 +570,11 @@ var Page2Detail = React.createClass({
 										<Icon name="angle-left" style={{position: 'absolute', left: 0, top: 0, color: 'white', fontSize: 32, padding: 10}}/>
 									</Touchable>
 								</div>*/}
-				<div style={{height: 200, background: `url(${src})`, backgroundSize: 'cover'}}/>
+				<div style={{height: 200, background: `url(${src})`, backgroundSize: 'cover'}}>
+					<Touchable handleAction={this.props.onBack}>
+						<Icon name="angle-left" style={{position: 'absolute', left: 0, top: 0, color: 'white', fontSize: 32, padding: 10}}/>
+					</Touchable>
+				</div>
 				<div style={{position: 'relative', background: 'white', zIndex: 1}}>
 					<div style={{padding: '20px'}}>
 						<div style={sectionStyle}>
