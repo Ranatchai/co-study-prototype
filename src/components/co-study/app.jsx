@@ -78,7 +78,7 @@ var FacebookIcon = React.createClass({
 	render: function() {
 		return (
 			<div style={_.extend({float: 'left', background: 'blue', color: 'white', borderRadius: '50%', position: 'relative', width: 40, height: 40}, this.props.style)}>
-				<Icon name="facebook" style={{position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}/>;
+				<Icon name="facebook" style={{position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}/>
 			</div>
 		);
 	}
@@ -87,7 +87,7 @@ var TwitterIcon = React.createClass({
 	render: function() {
 		return (
 			<div style={_.extend({float: 'left', marginLeft: 15, background: 'green', color: 'white', borderRadius: '50%', position: 'relative', width: 40, height: 40}, this.props.style)}>
-				<Icon name="twitter" style={{position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}/>;
+				<Icon name="twitter" style={{position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}/>
 			</div>
 		);
 	}
@@ -353,7 +353,7 @@ var Page2Detail = React.createClass({
 		var {title, description, src, startingPrice, star, nearby, reviews, facilities, options, startTime, endTime} = detail;
   	var stars = _.range(star).map(()=><Icon name="heart" style={{margin: '0 2px', color: 'red'}}/>);
   	for (var i = 0; i < (5 - stars.length + 1); i++) {
-  		stars.unshift(<i style={{margin: '0 2px'}} className="fa fa-heart-o"/>);
+  		stars.push(<i style={{margin: '0 2px'}} className="fa fa-heart-o"/>);
   	}
   	var npWidth = (window.innerWidth - 40)/detail.maxUser;
   	var sectionStyle={marginBottom: 10};
@@ -452,21 +452,21 @@ var Page2Detail = React.createClass({
 		      	</div>
 		      </div>
 	      	<div style={{height: 40}}/>      	
-	      	<Touchable style={{
-	      		position: 'fixed',
-	      		left: 0,
-	      		right: 0,
-	      		bottom: 0,
-	      		height: 40,
-	      		lineHeight: '40px',
-	      		textAlign: 'center',
-	      		background: 'green',
-	      		color: 'white',
-	      		fontSize: 20
-	      	}} handleAction={this.handleClickBook}>
-	      		Book the {options[this.state.selectedPackage].unit}
-	      	</Touchable>
 				</div>
+      	<Touchable style={{
+      		position: 'fixed',
+      		left: 0,
+      		right: 0,
+      		bottom: 0,
+      		height: 40,
+      		lineHeight: '40px',
+      		textAlign: 'center',
+      		background: 'green',
+      		color: 'white',
+      		fontSize: 20
+      	}} handleAction={this.handleClickBook}>
+      		Book the {options[this.state.selectedPackage].unit}
+      	</Touchable>
       	{this.state.showLoading && <Loading/>}
 			</div>
 		);
@@ -495,7 +495,7 @@ var Card = React.createClass({
   	var {title, description, src, startingPrice, star, nearby} = this.props;
   	var stars = _.range(star).map(()=><Icon name="heart" style={{margin: '0 2px', color: 'red'}}/>);
   	while (stars.length < 5) {
-  		stars.unshift(<i style={{margin: '0 2px'}} className="fa fa-heart-o"/>);
+  		stars.push(<i style={{margin: '0 2px'}} className="fa fa-heart-o"/>);
   	}
   	console.log('stars', stars.length);
     return (
@@ -586,12 +586,13 @@ var App = React.createClass({
 
 		var transitionName;
     var currentPageIndex = this.state.currentPage;
-    var isNextPage = true;
+    // var isNextPage = true;
     if (currentPageIndex > this._prevIndex) {
       transitionName = 'moveFromRightScaleDown';
+      // transitionName = 'moveFromLeftScaleDown';
     } else {
       transitionName = 'moveFromLeftScaleDown';
-      isNextPage = false;
+      // isNextPage = false;
     }
     console.log('transitionName', transitionName, currentPageIndex, currentPageIndex > this._prevIndex);
     this._prevIndex = currentPageIndex;    
@@ -600,12 +601,19 @@ var App = React.createClass({
 				position: 'absolute',
 				left: 0,
 				top: 0,
-				width: '100%',
-				height: '100%',
+				width: window.innerWidth,
+				height: window.innerHeight,
 				fontFamily: 'ThaiSansNeue',
 				background: 'black'
 			}} transitionName={transitionName} enterTimeout={TRANSITION_DURATION} leaveTimeout={TRANSITION_DURATION}>
-				<div key={key + '-container'} style={{position:'absolute', left: 0, right: 0, top: 0, bottom: 0, zIndex: currentPageIndex, background: 'white'}}>
+				<div key={key + '-container'} ref="pcontainer" style={{
+					position:'absolute',
+					left: 0,
+					top: 0,
+					width: window.innerWidth,
+					height: window.innerHeight,
+					zIndex: currentPageIndex,
+					background: 'white'}}>
 					<Page {...props} key={key}/>
 				</div>
 			</TimeoutTransitionGroup>

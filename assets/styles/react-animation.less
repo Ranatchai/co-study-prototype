@@ -329,7 +329,8 @@
   .animation(scaleDown .6s ease both);
 }
 .moveFromRightScaleDown-enter {
-  .animation(moveFromRight .6s ease both);
+  .animation(scaleUp .6s ease both);
+  // .animation(moveFromRight .6s ease both);
 }  
 .moveFromLeftScaleDown-leave {  
   .animation(scaleDown .6s ease both);
@@ -415,19 +416,23 @@
 }
 
 @-webkit-keyframes moveFromLeft {
-  from { -webkit-transform: translateX(-100%); }
+  from { -webkit-transform: translateX(-100%); transform: translateX(-100%); }
+  to { -webkit-transform: translateX(0%); transform: translateX(0%);}
 }
 @keyframes moveFromLeft {
   from { -webkit-transform: translateX(-100%); transform: translateX(-100%); }
+  to { -webkit-transform: translateX(0%); transform: translateX(0%);}
 }
 @-webkit-keyframes moveFromRight {
-  from { -webkit-transform: translateX(100%); }
+  from { -webkit-transform: translateX(100%); transform: translateX(100%); }
+  to { -webkit-transform: translateX(0%); transform: translateX(0%);}
 }
 @keyframes moveFromRight {
   from { -webkit-transform: translateX(100%); transform: translateX(100%); }
+  to { -webkit-transform: translateX(0%); transform: translateX(0%);}
 }
 @-webkit-keyframes moveFromBottom {
-  from { -webkit-transform: translateY(100%); }
+  from { -webkit-transform: translateY(100%); transform: translateY(100%); }
 }
 @keyframes moveFromBottom {
   from { -webkit-transform: translateY(100%); transform: translateY(100%); }
@@ -466,7 +471,7 @@
 
 @-webkit-keyframes scaleDown {
   from { }
-  to { opacity: 0; -webkit-transform: scale(.8); }
+  to { opacity: 0; -webkit-transform: scale(.8); transform: scale(.8); }
 }
 @keyframes scaleDown {
   from { }
@@ -474,7 +479,7 @@
 }
 
 @-webkit-keyframes scaleUp {
-  from { opacity: 0; -webkit-transform: scale(.8); }
+  from { opacity: 0; -webkit-transform: scale(.8); transform: scale(.8); }
 }
 @keyframes scaleUp {
   from { opacity: 0; -webkit-transform: scale(.8); transform: scale(.8); }
