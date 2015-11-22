@@ -662,13 +662,12 @@ var Page2Detail = React.createClass({
 		      		))}
 		      	</div>
 		      </div>
-	      	<div style={{height: 40}}/>      	
 				</div>
-      	<Touchable style={{
-      		position: 'fixed',
-      		left: 0,
-      		right: 0,
-      		bottom: 0,
+      	<Touchable component={React.createFactory("div")} style={{
+      		// position: 'fixed',
+      		// left: 0,
+      		// right: 0,
+      		// bottom: 0,
       		height: 40,
       		lineHeight: '40px',
       		textAlign: 'center',
