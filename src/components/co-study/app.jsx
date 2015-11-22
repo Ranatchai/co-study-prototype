@@ -81,14 +81,14 @@ var dd = [
 	{
 		title: 'Amarin Apartment', 
 		src: '/images/co-study/apartment-1.jpeg',
-		maxUser: 12,
+		maxUser: 8,
 		startingPrice: 50,
 		nearby: 500
 	},
 	{
 		title: 'Emquatier Office Space',
 		src: '/images/co-study/conf-room.jpeg',
-		maxUser: 12,
+		maxUser: 8,
 		startingPrice: 100,
 		nearby: 800
 	},
