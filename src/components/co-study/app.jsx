@@ -265,7 +265,7 @@ var Page3Bill = React.createClass({
 	render: function() {
 		var detail = this.props.detail;
 		var {title, description, src, startingPrice, star, nearby, reviews, facilities, options, startTime, endTime} = detail;
-		var price = options[detail.selectedPackage].price * detail.userAmount * detail.selectedTimes.length;
+		var price = options[detail.selectedPackage].price * detail.userAmount * detail.hourAmount;
 		return (
 			<PageX {...this.props} onComplete={this.props.onComplete.bind(this, this.props.detail)}>
 				<h2>{title}</h2>
@@ -718,7 +718,8 @@ var Page2Detail = React.createClass({
 						userAmount: this.state.userAmount,
 						selectedPackage: this.state.selectedPackage,
 						startTime: this.state.selectedTimes[0] + ':00',
-						endTime: this.state.selectedTimes[this.state.selectedTimes.length - 1] + ':00'
+						endTime: this.state.selectedTimes[this.state.selectedTimes.length - 1] + ':00',
+						hourAmount: this.state.selectedTimes.length
 					}));
 				}
 			}, 200);
