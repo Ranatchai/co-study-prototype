@@ -466,9 +466,6 @@ var Page2Detail = React.createClass({
 	componentWillUnmount: function() {
 		window.removeEventListener('scroll', this.handleScroll);
 	},
-	handleChooseTime: function() {
-
-	},
 	handleScroll: function() {
 		var y = (window.scrollY)/200;
 		TweenMax.set(this.refs['bg-to-overide'].getDOMNode(), {
@@ -500,7 +497,7 @@ var Page2Detail = React.createClass({
 				this.setState({
 					selectedTimes: selectedTimes
 				});
-			}} style={{height: 40, marginBottom: 10}}>
+			}} style={{height: 40, marginBottom: 5}}>
 				<div style={{
 					float: 'left',
 					width: 30,
@@ -678,15 +675,16 @@ var Page2Detail = React.createClass({
 	      		zIndex: 10
       		}}>
       			<div style={{
-      				margin: 20/*'50px 20px 20px'*/,
+      				margin: 10/*'50px 20px 20px'*/,
+      				marginTop: window.innerHeight > 480 && (window.innerHeight - 480)/2 + 10,
       				background: 'white',
-      				padding: '15px 0 0',
+      				padding: '5px 0 0',
       				border: '1px solid rgba(0,0,0,0.7)',
       				textAlign: 'center'
       			}}>
       				<h2>Today</h2>
       				<div style={{
-      					margin: '15px 0',
+      					margin: '5px 0',
       					borderBottom: '1px solid rgba(0,0,0,0.8)'
       				}}/>
       				<div style={{padding: '0 20px'}}>
