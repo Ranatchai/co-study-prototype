@@ -8,6 +8,7 @@ var insertRule = require('react-kit/insertRule');
 insertRule('a:hover{text-decoration:none; color:inherit; }');
 insertRule('* {user-select: none; -webkit-user-select: none;}')
 
+var $ = require('jquery');
 var ExitButton = React.createClass({
 	render: function() {
 		return (
@@ -27,10 +28,10 @@ var ExitButton = React.createClass({
 		);
 	}
 });
-
+var badgeURL = "/images/500px-sonic-adventure-badge.png";
 var sample1 = {
   title: 'Papa Coffee Shop',
-  description: 'Private room (max 6)',
+  description: 'Public & Private room (max. 6)',
   startingPrice: 30,
   star: 3,
   nearby: 300,
@@ -71,19 +72,38 @@ var sample1 = {
 };
 var dd = [
 	{
-		title: 'Halo Coffee Shop', 
-		src: '/images/co-study/Coffeeshop3.jpg'},
+		title: 'Papa Coffee Shop', 
+		src: '/images/co-study/Coffeeshop3.jpg',
+		maxUser: 6,
+		startingPrice: 30
+	},
 	{
-		title: 'BBC Restaurant', 
-		src: '/images/co-study/Restaurant.jpg'},
+		title: 'Amarin Apartment', 
+		src: '/images/co-study/apartment-1.jpeg',
+		maxUser: 12,
+		startingPrice: 50
+	},
 	{
-		src: 'http://assets.inhabitat.com/wp-content/blogs.dir/1/files/2010/08/thatchers3.jpg'},
+		title: 'Emquatier Office Space',
+		src: '/images/co-study/conf-room.jpeg',
+		maxUser: 12,
+		startingPrice: 100
+	},
 	{
-		src: 'http://blog.sqwiggle.com/content/images/2014/01/11-Unwritten-Rules-of-Coffee-Shop-Roberto_Ventre-e1391150672343.jpg'},
+		title: 'Swiss Style',
+		src: 'http://blog.sqwiggle.com/content/images/2014/01/11-Unwritten-Rules-of-Coffee-Shop-Roberto_Ventre-e1391150672343.jpg',
+		maxUser: 3,
+		startingPrice: 40
+	},
 	{
-		src: 'http://cdni.condenast.co.uk/639x426/k_n/London-Coffee-11-Easy-Living-22apr13_pr_b.jpg'},
+		title: 'BBC Restaurant',
+		src: '/images/co-study/Restaurant.jpg',
+		startingPrice: 20
+	},
 	{
-		src: 'https://travelmindset.s3.amazonaws.com/uploads/image/asset/680/full_Ukd_bwpWTv2e3UyqxMFPvFYwG4XH5VF6h0xEKliLRfE_VL_WZBhccDLMEspD9bw9A_PzfaUdHonk3n89CPW48gk.jpg'
+		src: 'http://assets.inhabitat.com/wp-content/blogs.dir/1/files/2010/08/thatchers3.jpg',
+		maxUser: 3,
+		startingPrice: 100
 	}
 ];
 var LoadingCenter = require('./loading-center');
@@ -91,7 +111,7 @@ var i = 0;
 var list = dd.map((d)=>_.extend({}, sample1, {
 	key: i,
 	star: Math.round(3 + Math.random() * 2),
-	maxUser: (i++) + 3
+	maxUser: (i++) + 1
 }, d));
 var TimeoutTransitionGroup = require('../../common/timeout-transition-group');
 var TRANSITION_DURATION = 800;
@@ -197,7 +217,7 @@ var Page5Review = React.createClass({
 			<PageX {...this.props} key="review" actionLabel="Back to Home" onComplete={this.props.onComplete.bind(this, this.props.detail)}>
 				<h2>Congratuation!</h2>
 				<p style={{marginBottom: 10}}>You got the Adventure Badge.</p>
-				<img src="/images/500px-sonic-adventure-badge.png" width="100"/>
+				<img src={badgeURL} width="100"/>
 				{/*<div style={{margin: '15px auto', width: 32}}>
 									<UserIcon style={{padding: 10}}/>
 									<div style={{clear: 'both'}}/>
@@ -337,7 +357,6 @@ var Page4Navigation = React.createClass({
 		);
 	},
 	componentDidMount: function() {
-		loadImage(mapURL2);
 		setTimeout(()=>{
 			this.setState({shopState: true});
 		}, 3000);
@@ -459,6 +478,9 @@ var Page2Detail = React.createClass({
 		var index = selectedTimes.indexOf(t);
 		return (
 			<Touchable component={React.createFactory("div")} handleAction={()=>{
+				if (!av) {
+					return;
+				}
 				var selectedTimes = this.state.selectedTimes.slice();
 				var index = selectedTimes.indexOf(t);
 				if (index >= 0) {
@@ -724,7 +746,7 @@ var Card = React.createClass({
       			<div style={{float: 'right'}}>
       				{stars}      				
       			</div>
-      			{description}
+      			Public & Private room (max. {maxUser})
       		</p>
       	</div>
       </Touchable>
@@ -743,9 +765,6 @@ var Page1Discovery = React.createClass({
 		return {
 			userAmount: 1
 		};
-	},
-	componentDidMount: function() {
-		loadImage(mapURL);
 	},
 	renderMap: function() {
 		return (
@@ -824,6 +843,11 @@ var App = React.createClass({
 	getInitialState: function() {
 		return {currentPage: 0};
 	},
+	componentDidMount: function() {
+		loadImage(mapURL);
+		loadImage(mapURL2);
+		loadImage(badgeURL);
+	},
 	componentWillUpdate: function(nextProps, nextStates) {
 		// console.log(nextStates.currentPage, this.state.currentPage, nextStates.currentPage !== this.state.currentPage);
 		if (nextStates.currentPage !== this.state.currentPage) {
@@ -880,8 +904,8 @@ var App = React.createClass({
 				position: 'absolute',
 				left: 0,
 				top: 0,
-				width: window.innerWidth,
-				height: window.innerHeight,
+				right: 0,
+				bottom: 0,
 				fontFamily: 'ThaiSansNeue',
 				background: 'black'
 			}} transitionName={transitionName} enterTimeout={TRANSITION_DURATION} leaveTimeout={TRANSITION_DURATION}>
@@ -889,8 +913,8 @@ var App = React.createClass({
 					position:'absolute',
 					left: 0,
 					top: 0,
-					width: window.innerWidth,
-					height: window.innerHeight,
+					right: 0,
+					bottom: 0,
 					zIndex: currentPageIndex,
 					background: 'white'}}>
 					<Page {...props} key={key}/>
@@ -911,10 +935,23 @@ if (!isTouchDevice) {
 			document.body.addEventListener('touchstart', log, false);
 			document.body.addEventListener('touchmove', log, false);
 			document.body.addEventListener('touchend', log, false);
+			document.body.style.background = 'black';
 	  },
 	  _renderFrameContents: function() {
-	  	var doc = this.getDOMNode().contentDocument;
+	  	var doc = this.refs.iframe.getDOMNode().contentDocument;
 	  	if (doc.readyState === 'complete') {
+	  		var customHeader = [
+	  			"/styles/@reset.css",
+					"/styles/codrop-input-set1.css",
+					"/styles/icon-moon.css",
+					"/styles/importer.css",
+					"/fonts/font-awesome/font-awesome.min.css",
+					"/fonts/thaisans_neue/stylesheet.css",
+					"/fonts/lato/Lato.css"
+	  		].reduce((sum, src)=> {
+          return `${sum}<link rel='stylesheet' href='${src}'/>`;
+        }, '');
+        $('head', doc).append(customHeader||"");
 	  		React.render(<App/>, doc.body);
 	  	} else {
 	      setTimeout(this._renderFrameContents, 0);
@@ -922,9 +959,11 @@ if (!isTouchDevice) {
 	  },
 		render: function() {
 			return (
-				<iframe style={{width: 320, height: 568}}>
-					<App/>
-				</iframe>
+				<div style={{position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, background: 'rgba(0,0,0,0.5)'}}>
+					<iframe ref="iframe" style={{width: 320, height: 568}}>
+						<App/>
+					</iframe>
+				</div>
 			);
 		}
 	});	
