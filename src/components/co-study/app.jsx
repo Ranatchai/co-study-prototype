@@ -4,6 +4,29 @@ window._ = _;
 document.title = 'Co-Study';
 var Touchable = require('../touchable');
 var isTouchDevice = require('../../common/touch-util').isTouchDevice;
+var insertRule = require('react-kit/insertRule');
+
+var ExitButton = React.createClass({
+	render: function() {
+		return (
+			/* jshint ignore: start*/
+			<div {...this.props} className="exit-player-button">
+				<span></span>
+				<svg className="exit-player-button-x" width="20" height="20" xmlns="http://www.w3.org/2000/svg">
+				 <g>
+				  <title>Layer 1</title>
+				  <line strokeLinecap="undefined" strokeLinejoin="undefined" id="svg_7" y2="324.5" x2="472.5" y1="51.5" x1="89.5" strokeWidth="1.5" stroke="#000" fill="none"></line>
+				  <line stroke="#000" strokeLinecap="undefined" strokeLinejoin="undefined" id="svg_10" y2="0.5" x2="0.499999" y1="19.5" x1="19.5" fillOpacity="null" strokeOpacity="null" strokeWidth="1.5" fill="none"></line>
+				  <line transform="rotate(87.9546 10 10)" stroke="#000" strokeLinecap="undefined" strokeLinejoin="undefined" id="svg_11" y2="0.5" x2="0.499999" y1="19.5" x1="19.5" fillOpacity="null" strokeOpacity="null" strokeWidth="1.5" fill="none"></line>
+				 </g>
+				</svg>
+			</div>
+			/* jshint ignore: end*/
+		);
+	}
+});
+
+insertRule('a:hover{text-decoration:none; color:inherit; }');
 var sample1 = {
   title: 'Papa Coffee Shop',
   description: 'Private room (max 6)',
@@ -59,7 +82,8 @@ var Loading = React.createClass({
     		right: 0,
     		top: 0,
     		bottom: 0,
-    		background: 'rgba(0,0,0,0.6)'
+    		background: 'rgba(0,0,0,0.6)',
+    		zIndex: 155
 			}}>
 				<LoadingCenter/>
 			</div>
@@ -360,7 +384,7 @@ var Page2Detail = React.createClass({
 
 		return (
 			<div>
-				<div style={{position: 'fixed', top: 0, left: 0, width: '100%', height: 200, overflow: 'hidden'}}>
+				<div style={{position: 'fixed', top: 0, left: 0, width: '100%', height: 200, overflow: 'hidden', zIndex: 0}}>
 					<div style={{position: 'absolute', left: -8, right: -8, top: -8, bottom: -8, background: `url(${src})`, backgroundSize: 'cover', WebkitFilter: 'blur(8px)'}}/>
 					<div ref="bg-to-show" style={{opacity: 0, position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, background: `url(${src})`, backgroundSize: 'cover'}}/>
 					<div ref="bg-to-overide" style={{opacity: 0, position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, background: 'rgba(0,0,0,0.4)'}}/>
@@ -369,7 +393,7 @@ var Page2Detail = React.createClass({
 					</Touchable>
 				</div>
 				<div style={{height: 200}}/>
-				<div style={{position: 'relative', background: 'white'}}>
+				<div style={{position: 'relative', background: 'white', zIndex: 1}}>
 					<div style={{padding: '20px'}}>
 						<div style={sectionStyle}>
 		      		<h2 style={{marginBottom: 10, lineHeight: '20px'}}>
@@ -463,7 +487,8 @@ var Page2Detail = React.createClass({
       		textAlign: 'center',
       		background: 'green',
       		color: 'white',
-      		fontSize: 20
+      		fontSize: 20,
+      		zIndex: 10
       	}} handleAction={this.handleClickBook}>
       		Book the {options[this.state.selectedPackage].unit}
       	</Touchable>
@@ -522,15 +547,62 @@ var Card = React.createClass({
     );
   }
 });
-
+var mapURL = 'http://www.freelargeimages.com/wp-content/uploads/2014/11/Google_map-6.png';
+var loadImage = function(src) {
+	var img = new Image(src);
+	img.src = src;
+	img.onload = ()=>console.log('load complete', src);
+	img.onerror = ()=>console.log('load error', src);
+}
 var Page1Discovery = React.createClass({
+	componentDidMount: function() {
+		loadImage(mapURL);
+	},
+	renderMap: function() {
+		return (
+			<div style={{position: 'fixed', left: 0, right: 0, top: 0, bottom: 0, display: 'none'}} ref="map">
+				<div style={{lineHeight: '40px', height: 40, textAlign: 'center', background: 'white'}}>
+					<h3>Nearby</h3>
+					<Touchable handleAction={this.handleCloseMap}>
+						<ExitButton style={{position: 'absolute', right: 0, top: 0, padding: 6}}/>
+					</Touchable>
+				</div>
+				<div style={{position: 'absolute', left: 0, right: 0, top: 40, bottom: 0, background: `url(${mapURL})`, backgroundSize: 'cover'}}/>				
+			</div>
+		);
+	},
+	handleCloseMap: function() {
+		TweenMax.fromTo(this.refs.map.getDOMNode(), 0.3, {
+			display: 'block',
+			opacity: 1,
+			y: '0%'
+		}, {
+			// opacity: 0.4,
+			y: '100%',
+			display: 'none'
+		});
+	},
+	handleOpenMap: function() {
+		TweenMax.fromTo(this.refs.map.getDOMNode(), 0.3, {
+			display: 'block',
+			// opacity: 0.4,
+			y: '100%'
+		}, {
+			opacity: 1,
+			y: '0%'
+		});
+	},
 	render: function() {
 		return (
 			<div>
 				{list.map((d)=><Card {...d} handleAction={this.props.onComplete.bind(null, d)}/>)}
-				<div style={{position: 'absolute', left: 10, top: 10, borderRadius: '50%', padding: 10, color: 'black', background: 'white'}}>
-					<Icon name="search"/>
+				<div style={{position: 'absolute', left: 10, top: 10, borderRadius: '50%', width: 35, height: 35, color: 'black', background: 'white'}}>
+					<Icon name="search" style={{position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}/>
 				</div>
+				<Touchable handleAction={this.handleOpenMap} style={{position: 'absolute', right: 10, top: 10, borderRadius: '50%', width: 35, height: 35, color: 'black', background: 'white'}}>
+					<Icon name="map-marker" style={{position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}/>
+				</Touchable>
+				{this.renderMap()}
 			</div>
 		);
 	}
