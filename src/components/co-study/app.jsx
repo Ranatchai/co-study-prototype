@@ -28,6 +28,7 @@ var ExitButton = React.createClass({
 		);
 	}
 });
+//http://touchedition.s3.amazonaws.com/asset/56518569e3f10fd70a21a892.jpg
 var badgeURL = "/images/500px-sonic-adventure-badge.png";
 var sample1 = {
   title: 'Papa Coffee Shop',
@@ -73,21 +74,21 @@ var sample1 = {
 var dd = [
 	{
 		title: 'Papa Coffee Shop', 
-		src: '/images/co-study/Coffeeshop3.jpg',
+		src: 'http://touchedition.s3.amazonaws.com/asset/5651859ae3f10fd70a21a89f.jpg',
 		maxUser: 6,
 		startingPrice: 30,
 		nearby: 300
 	},
 	{
 		title: 'Amarin Apartment', 
-		src: '/images/co-study/apartment-1.jpeg',
+		src: 'http://touchedition.s3.amazonaws.com/asset/56518591e3f10fd70a21a899.jpg',
 		maxUser: 8,
 		startingPrice: 50,
 		nearby: 500
 	},
 	{
 		title: 'Emquatier Office Space',
-		src: '/images/co-study/conf-room.jpeg',
+		src: 'http://touchedition.s3.amazonaws.com/asset/56518569e3f10fd70a21a892.jpg',
 		maxUser: 8,
 		startingPrice: 100,
 		nearby: 800
@@ -101,7 +102,7 @@ var dd = [
 	},
 	{
 		title: 'BBC Restaurant',
-		src: '/images/co-study/Restaurant.jpg',
+		src: 'http://touchedition.s3.amazonaws.com/asset/565185b9e3f10fd70a21a8a6.jpg',
 		startingPrice: 20,
 		nearby: '1,500'
 	},
