@@ -60,23 +60,33 @@ var sample1 = {
  		}
  	],
  	maxUser: 5,
- 	startTime: '16:00',
- 	endTime: '19:00'
+ 	// startTime: '16:00',
+ 	// endTime: '19:00'
 };
-var srcs = [
-	'http://assets.inhabitat.com/wp-content/blogs.dir/1/files/2010/08/thatchers3.jpg',
-	'http://blog.sqwiggle.com/content/images/2014/01/11-Unwritten-Rules-of-Coffee-Shop-Roberto_Ventre-e1391150672343.jpg',
-	'http://cdni.condenast.co.uk/639x426/k_n/London-Coffee-11-Easy-Living-22apr13_pr_b.jpg',
-	'https://travelmindset.s3.amazonaws.com/uploads/image/asset/680/full_Ukd_bwpWTv2e3UyqxMFPvFYwG4XH5VF6h0xEKliLRfE_VL_WZBhccDLMEspD9bw9A_PzfaUdHonk3n89CPW48gk.jpg'
+var dd = [
+	{
+		title: 'Halo Coffee Shop', 
+		src: '/images/co-study/Coffeeshop3.jpg'},
+	{
+		title: 'BBC Restaurant', 
+		src: '/images/co-study/Restaurant.jpg'},
+	{
+		src: 'http://assets.inhabitat.com/wp-content/blogs.dir/1/files/2010/08/thatchers3.jpg'},
+	{
+		src: 'http://blog.sqwiggle.com/content/images/2014/01/11-Unwritten-Rules-of-Coffee-Shop-Roberto_Ventre-e1391150672343.jpg'},
+	{
+		src: 'http://cdni.condenast.co.uk/639x426/k_n/London-Coffee-11-Easy-Living-22apr13_pr_b.jpg'},
+	{
+		src: 'https://travelmindset.s3.amazonaws.com/uploads/image/asset/680/full_Ukd_bwpWTv2e3UyqxMFPvFYwG4XH5VF6h0xEKliLRfE_VL_WZBhccDLMEspD9bw9A_PzfaUdHonk3n89CPW48gk.jpg'
+	}
 ];
 var LoadingCenter = require('./loading-center');
 var i = 0;
-var list = srcs.map((src)=>_.extend({}, sample1, {
+var list = dd.map((d)=>_.extend({}, sample1, {
 	key: i,
-	src: src, 
 	star: Math.round(3 + Math.random() * 2),
-	maxUser: (i++) + 1
-}));
+	maxUser: (i++) + 3
+}, d));
 var TimeoutTransitionGroup = require('../../common/timeout-transition-group');
 var TRANSITION_DURATION = 800;
 var Loading = React.createClass({
@@ -400,8 +410,10 @@ var Page4Navigation = React.createClass({
 var Page2Detail = React.createClass({
 	getInitialState: function() {
 		return {
-			userAmount: 1,
-			selectedPackage: 0
+			userAmount: this.props.detail.userAmount || 1,
+			selectedPackage: 0,
+			showTimeDialog: false,
+			selectedTimes: []
 		};
 	},
 	componentDidMount: function() {
@@ -418,6 +430,9 @@ var Page2Detail = React.createClass({
 	componentWillUnmount: function() {
 		window.removeEventListener('scroll', this.handleScroll);
 	},
+	handleChooseTime: function() {
+
+	},
 	handleScroll: function() {
 		var y = (window.scrollY)/200;
 		TweenMax.set(this.refs['bg-to-overide'].getDOMNode(), {
@@ -426,6 +441,64 @@ var Page2Detail = React.createClass({
 		TweenMax.set(this.refs['bg-to-show'].getDOMNode(), {
 			opacity: 1 - y
 		});
+	},
+	renderSlot: function(t, a) {
+		var av = a >= this.state.userAmount;
+		var selectedTimes = this.state.selectedTimes;
+		var index = selectedTimes.indexOf(t);
+		return (
+			<Touchable component={React.createFactory("div")} handleAction={()=>{
+				var selectedTimes = this.state.selectedTimes.slice();
+				var index = selectedTimes.indexOf(t);
+				if (index >= 0) {
+					selectedTimes.splice(index, i);
+				} else {
+					selectedTimes.push(t);
+				}
+				this.setState({
+					selectedTimes: selectedTimes
+				});
+			}} style={{height: 40, marginBottom: 10}}>
+				<div style={{
+					float: 'left',
+					width: 30,
+					lineHeight: '40px'
+				}}>
+					{t}:00
+				</div>
+				<div style={{
+					marginLeft: 40,
+					borderBottom: '1px solid #ccc',
+					padding: '5px 0',
+					height: 40
+				}}>
+					<div style={{background: !av && '#ddd', lineHeight: '30px', position: 'relative'}}>
+						{a} seats left 
+						{(!av || index >= 0) && <span style={{position: 'absolute', right: 5, fontWeight: 100}}>{!av && 'Unavailable'}{ index>=0 && <Icon name="check" style={{color: 'green'}}/>}</span>}
+					</div>
+				</div>
+			</Touchable>
+		);
+	},
+	renderTimeChooser: function() {
+		var start = 17;
+		var end = 20;
+		var timeSheet = {
+			15: 1,
+			16: 0,
+			17: 8,
+			18: 4,
+			19: 5,
+			20: 0,
+			21: 9
+		};
+		return (
+			<div>
+				{_.range(15, 22).map((n)=>{
+					return this.renderSlot(n, timeSheet[n]);
+				})}
+			</div>
+		);
 	},
 	render: function() {
 		var detail = this.props.detail;
@@ -502,11 +575,15 @@ var Page2Detail = React.createClass({
 			      </div>
 			      <div style={sectionStyle}>
 		      		<h3 style={{padding: '10px 0'}}>Period <span style={{fontSize: 14, fontWeight: 100}}>We close at midnight</span></h3>
-		      		<div style={{margin: '10px auto', width: 150, fontWeight: '100'}}>
-		      			<div style={{float: 'left'}}>Start <span style={{fontSize: '1.5em', fontWeight: 'bold'}}>{startTime}</span></div>
-		      			<div style={{float: 'right'}}>End <span style={{fontSize: '1.5em', fontWeight: 'bold'}}>{endTime}</span></div>
-		      			<div style={{clear: 'both'}}/>
-		      		</div>
+		      		<Touchable handleAction={()=>this.setState({showTimeDialog: true})} style={{margin: '10px auto', width: 200, fontWeight: '800', display: 'block', padding: 10, border: '1px solid #222'}}>
+		      			{this.state.selectedTimes.length? [
+			      			<div style={{float: 'left'}}>Start <span style={{fontSize: '1.5em', fontWeight: 'bold'}}>{this.state.selectedTimes[0]}:00</span></div>,
+			      			<div style={{float: 'right'}}>End <span style={{fontSize: '1.5em', fontWeight: 'bold'}}>{this.state.selectedTimes[this.state.selectedTimes.length - 1]}:00</span></div>,
+			      			<div style={{clear: 'both'}}/>
+		      			]: (
+		      				<div style={{textAlign: 'center'}}>Select Time</div>
+		      			)}
+		      		</Touchable>
 		      	</div>
 		      	<div style={sectionStyle}>
 		      		<h3 style={{padding: '10px 0 20px'}}>Room Options</h3>
@@ -540,18 +617,53 @@ var Page2Detail = React.createClass({
       		height: 40,
       		lineHeight: '40px',
       		textAlign: 'center',
-      		background: 'green',
+      		background: this.state.selectedTimes.length? 'green': '#ccc',
       		color: 'white',
       		fontSize: 20,
       		zIndex: 10
       	}} handleAction={this.handleClickBook}>
       		Book the {options[this.state.selectedPackage].unit}
       	</Touchable>
+      	{this.state.showTimeDialog && (
+      		<div style={{
+      			position: 'fixed',
+	      		left: 0,
+	      		right: 0,
+	      		bottom: 0,
+	      		top: 0,
+	      		background: 'rgba(0,0,0,0.6)',
+	      		zIndex: 10
+      		}}>
+      			<div style={{
+      				margin: 20/*'50px 20px 20px'*/,
+      				background: 'white',
+      				padding: '15px 0 0',
+      				border: '1px solid rgba(0,0,0,0.7)',
+      				textAlign: 'center'
+      			}}>
+      				<h2>Today</h2>
+      				<div style={{
+      					margin: '15px 0',
+      					borderBottom: '1px solid rgba(0,0,0,0.8)'
+      				}}/>
+      				<div style={{padding: '0 20px'}}>
+      					{this.renderTimeChooser()}
+      				</div>
+      				<p style={{fontWeight: 100, marginTop: 20, marginBottom: 5}}>You have {this.state.userAmount} people</p>
+      			</div>
+      			<Touchable component={React.createFactory("div")} handleAction={()=>this.setState({showTimeDialog: false})} style={{margin: 'auto', width: 100, textAlign: 'center', fontWeight: 800, padding: 5, border: '1px solid rgba(255,255,255,0.8)', color: 'rgba(255,255,255,0.8)'}}>
+							<div>OK</div>
+						</Touchable>
+      		</div>
+      	)}
       	{this.state.showLoading && <Loading/>}
 			</div>
 		);
 	},
 	handleClickBook: function() {
+		if (!this.state.selectedTimes.length) {
+			return;
+		}
 		this.setState({
 			showLoading: true
 		}, ()=>{
@@ -560,10 +672,12 @@ var Page2Detail = React.createClass({
 					showLoading: false
 				});
 				if (this.props.onComplete) {
-					this.props.onComplete(_.extend({
+					this.props.onComplete(_.extend({}, this.props.detail, {
 						userAmount: this.state.userAmount,
-						selectedPackage: this.state.selectedPackage
-					}, this.props.detail));
+						selectedPackage: this.state.selectedPackage,
+						startTime: this.state.selectedTimes[0] + ':00',
+						endTime: this.state.selectedTimes[this.state.selectedTimes.length - 1] + ':00'
+					}));
 				}
 			}, 200);
 		});
@@ -577,13 +691,13 @@ var Card = React.createClass({
   	while (stars.length < 5) {
   		stars.push(<i style={{margin: '0 2px'}} className="fa fa-heart-o"/>);
   	}
-  	console.log('stars', stars.length);
+  	// console.log('stars', stars.length);
     return (
       <Touchable handleAction={this.props.handleAction} preventDefault={false}>
       	<div style={{position: 'relative', width: '100%', height: 200, background: `url(${src})`, backgroundSize: 'cover'}}>
-      		<div style={{textAlign: 'center',background: '#222', position: 'absolute', right: 4, bottom: 4, padding: 5, color: 'white'}}>
-      			<div style={{fontSize: '0.8em'}}>Starting Price </div>
-      			{startingPrice} Baht
+      		<div style={{fontSize: 24, textAlign: 'center',background: '#222', position: 'absolute', right: 4, bottom: 4, padding: 5, color: 'white'}}>
+      			<div style={{fontSize: 12}}>Starting Price </div>
+      			{startingPrice}฿
       		</div>
       	</div>
       	<div style={{padding: '15px 10px 20px'}}>
@@ -653,7 +767,7 @@ var Page1Discovery = React.createClass({
 		});
 	},
 	render: function() {
-		console.log('list', list.map((d)=>d.maxUser));
+		// console.log('list', list.map((d)=>d.maxUser));
 		var src = list[0].src;
 		return (
 			<div>
@@ -672,7 +786,7 @@ var Page1Discovery = React.createClass({
 	      		<div style={{clear: 'both'}}/>
 	      	</div>
 	      </div>
-				{list.filter((d)=>d.maxUser >= this.state.userAmount).map((d)=><Card key={d.key} {...d} handleAction={this.props.onComplete.bind(null, d)}/>)}
+				{list.filter((d)=>d.maxUser >= this.state.userAmount).map((d)=><Card key={d.key} {...d} handleAction={this.props.onComplete.bind(null, _.extend({userAmount: this.state.userAmount},d))}/>)}
 				<div style={{position: 'absolute', left: 10, top: 10, borderRadius: '50%', width: 35, height: 35, color: 'black', background: '#ddd'}}>
 					<Icon name="filter" style={{position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}/>
 				</div>
@@ -696,7 +810,7 @@ var App = React.createClass({
 		return {currentPage: 0};
 	},
 	componentWillUpdate: function(nextProps, nextStates) {
-		console.log(nextStates.currentPage, this.state.currentPage, nextStates.currentPage !== this.state.currentPage);
+		// console.log(nextStates.currentPage, this.state.currentPage, nextStates.currentPage !== this.state.currentPage);
 		if (nextStates.currentPage !== this.state.currentPage) {
 			window.scrollTo(0, 0);
 		}
@@ -731,7 +845,7 @@ var App = React.createClass({
 		// 		break;
 		// 	case 3:
 		// }
-		console.log('props', props);
+		// console.log('props', props);
 		var key = this.state.currentPage;
 
 		var transitionName;
@@ -744,7 +858,7 @@ var App = React.createClass({
       transitionName = 'moveFromLeftScaleDown';
       // isNextPage = false;
     }
-    console.log('transitionName', transitionName, currentPageIndex, currentPageIndex > this._prevIndex);
+    // console.log('transitionName', transitionName, currentPageIndex, currentPageIndex > this._prevIndex);
     this._prevIndex = currentPageIndex;    
 		return (
 			<TimeoutTransitionGroup style={{

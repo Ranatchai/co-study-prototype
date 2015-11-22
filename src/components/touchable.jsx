@@ -4,7 +4,7 @@ var isTouchDevice = require('../common/touch-util').isTouchDevice;
 var Touchable = React.createClass({
 	getDefaultProps: function() {
 		return {
-			threshold: 15,
+			threshold: 5,
 			component: React.createFactory('a'),
 			preventDefault: true
 		};
