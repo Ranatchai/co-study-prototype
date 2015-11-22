@@ -31,7 +31,7 @@ var ExitButton = React.createClass({
 var sample1 = {
   title: 'Papa Coffee Shop',
   description: 'Private room (max 6)',
-  startingPrice: 120,
+  startingPrice: 30,
   star: 3,
   nearby: 300,
   facilities: [
@@ -41,21 +41,27 @@ var sample1 = {
  	],
  	reviews: [
  		{
- 			text: 'ตรงกันข้ามกับความเชื่อที่นิยมกัน Lorem Ipsum ไม่ได้เป็นเพียงแค่ชุดตัวอักษรที่สุ่มขึ้นมามั่วๆ แต่หากมีที่มาจากวรรณกรรมละตินคลาสสิกชิ้นหนึ่งในยุค 45 ปีก่อนคริสตศักราช ทำให้มันมีอายุถึงกว่า 2000 ปีเลยทีเดียว',
+ 			text: 'Love the Environment here. The service was the best. Internet is fast. Will come here…',
  			user: 'John Universityguy'
+ 		},
+ 		{
+ 			text: 'Love the Environment here. The service was the best. Internet is fast.',
+ 			user: 'Steve bob'
  		}
  	],
  	options: [
  		{
- 			title: 'Basic Package',
- 			description: '4 Hours. Water provided.',
- 			price: 600,
+ 			title: 'Co-Study Package',
+ 			description: 'Individual seat, share table.',
+ 			price: 30,
+ 			priceT: 'per Hour per Person',
  			unit: 'Seat'
  		},
  		{
- 			title: 'Premium Package',
- 			description: '4 Hours. Water provided.',
- 			price: 1000,
+ 			title: 'Private Package',
+ 			description: 'Private room for 6 people.',
+ 			price: 120,
+ 			priceT: 'per Hour per Room',
  			unit: 'Room'
  		}
  	],
@@ -189,24 +195,29 @@ var Page5Review = React.createClass({
 		var {title, description, src, startingPrice, star, nearby, reviews, facilities, options, startTime, endTime} = detail;
 		return (
 			<PageX {...this.props} key="review" actionLabel="Back to Home" onComplete={this.props.onComplete.bind(this, this.props.detail)}>
-				<h2>{title}</h2>
-				<div style={{margin: '15px auto', width: 32}}>
-					<UserIcon style={{padding: 10}}/>
-					<div style={{clear: 'both'}}/>
-				</div>
-				<h3>Tell us more about Papa Cafe</h3>
-				<div style={{marginTop: 15}}>
-					<p style={{marginBottom: 5}}>How productive did you feel?</p>
-					{this.renderIcons('check-circle')}
-				</div>
-				<div style={{marginTop: 15}}>
-					<p style={{marginBottom: 5}}>How good was the service?</p>
-					{this.renderIcons('star')}
-				</div>
+				<h2>Congratuation!</h2>
+				<p style={{marginBottom: 10}}>You got the Adventure Badge.</p>
+				<img src="/images/500px-sonic-adventure-badge.png" width="100"/>
+				{/*<div style={{margin: '15px auto', width: 32}}>
+									<UserIcon style={{padding: 10}}/>
+									<div style={{clear: 'both'}}/>
+								</div>*/}
+				{/*<h3>Tell us more about Papa Cafe</h3>
+								<div style={{marginTop: 15}}>
+									<p style={{marginBottom: 5}}>How productive did you feel?</p>
+									{this.renderIcons('check-circle')}
+								</div>
+								<div style={{marginTop: 15}}>
+									<p style={{marginBottom: 5}}>How good was the service?</p>
+									{this.renderIcons('star')}
+								</div>*/}
 				<div style={{marginTop: 15}}>
 					<p style={{marginBottom: 5}}>How was your overall satisfaction?</p>
 					{this.renderIcons('heart')}
 				</div>
+				<Touchable component={React.createFactory("div")} style={{width: 100, fontWeight: 800, margin: '20px auto', padding: 5, border: '1px solid rgba(0,0,0,0.7)', color: 'rgba(0,0,0,0.7)'}}>
+					<div>Write Review</div> 
+				</Touchable>
 				<div style={{marginTop: 15}}>
 					<p style={{marginBottom: 5}}>Share the wonderful experience</p>
 					<div style={{width: 95, margin: 'auto'}}>
@@ -455,6 +466,9 @@ var Page2Detail = React.createClass({
 				} else {
 					selectedTimes.push(t);
 				}
+				selectedTimes.sort((a, b)=>{
+					return a - b;
+				});
 				this.setState({
 					selectedTimes: selectedTimes
 				});
@@ -503,7 +517,7 @@ var Page2Detail = React.createClass({
 	render: function() {
 		var detail = this.props.detail;
 		var {title, description, src, startingPrice, star, nearby, reviews, facilities, options, startTime, endTime} = detail;
-  	var stars = _.range(star).map(()=><Icon name="heart" style={{margin: '0 2px', color: 'red'}}/>);
+  	var stars = _.range(star).map(()=><Icon name="heart" style={{margin: '0 2px', color: '#e7244e'}}/>);
   	for (var i = 0; i < (5 - stars.length + 1); i++) {
   		stars.push(<i style={{margin: '0 2px'}} className="fa fa-heart-o"/>);
   	}
@@ -553,7 +567,7 @@ var Page2Detail = React.createClass({
 		      					<div style={{float: 'left', background: '#ddd', padding: 15, marginLeft: 0 , borderRadius: '50%'}}>
 		      						<Icon name="user" style={{textAlign: 'center'}}/>
 		      					</div>
-		      					<p style={{marginLeft: 65}}>{l.text}</p>
+		      					<p style={{marginLeft: 65, lineHeight: '16px'}}>{l.text}</p>
 		      					<p style={{textAlign: 'right', fontSize: '12px'}}>{l.user}</p>
 		      				</div>
 		      			);
@@ -588,7 +602,7 @@ var Page2Detail = React.createClass({
 		      	<div style={sectionStyle}>
 		      		<h3 style={{padding: '10px 0 20px'}}>Room Options</h3>
 		      		{options.map((d, index)=>(
-		      			<Touchable style={{marginBottom: 10}} handleAction={()=>this.setState({selectedPackage: index})}>
+		      			<Touchable style={{}} handleAction={()=>this.setState({selectedPackage: index})}>
 			      			<div style={{lineHeight: '20px'}}>
 			      				<i className={this.state.selectedPackage === index? "fa fa-dot-circle-o": "fa fa-circle-o"} style={{float: 'left', lineHeight: '20px'}}/>
 			      				<h3 style={{marginLeft: 10, float: 'left'}}>{d.title}</h3>
@@ -597,12 +611,13 @@ var Page2Detail = React.createClass({
 			      				</div>
 			      				<div style={{clear: 'both'}}/>
 			      			</div>
-			      			<div style={{lineHeight: '20px', marginLeft: 25}}>
+			      			<div style={{lineHeight: '20px', marginLeft: 25, marginBottom: 15}}>
 			      				{d.description}
-			      				<div style={{float: 'right'}}>
-			      					<span style={{}}>{Math.round(d.price/this.state.userAmount)}</span> Baht / Person
+			      				<div style={{float: 'right', fontWeight: 100, fontSize: 14}}>
+			      					<span style={{}}>{d.priceT}</span>
 			      				</div>
 			      			</div>
+			      			<div style={{clear: 'both'}}/>
 			      		</Touchable>
 		      		))}
 		      	</div>
@@ -687,7 +702,7 @@ var Page2Detail = React.createClass({
 var Card = React.createClass({
   render: function() {
   	var {title, description, src, startingPrice, star, nearby, maxUser} = this.props;
-  	var stars = _.range(star).map(()=><Icon name="heart" style={{margin: '0 2px', color: 'red'}}/>);
+  	var stars = _.range(star).map(()=><Icon name="heart" style={{margin: '0 2px', color: '#e7244e'}}/>);
   	while (stars.length < 5) {
   		stars.push(<i style={{margin: '0 2px'}} className="fa fa-heart-o"/>);
   	}
