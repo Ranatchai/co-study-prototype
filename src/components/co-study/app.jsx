@@ -5,6 +5,8 @@ document.title = 'Co-Study';
 var Touchable = require('../touchable');
 var isTouchDevice = require('../../common/touch-util').isTouchDevice;
 var insertRule = require('react-kit/insertRule');
+insertRule('a:hover{text-decoration:none; color:inherit; }');
+insertRule('* {user-select: none; -webkit-user-select: none;}')
 
 var ExitButton = React.createClass({
 	render: function() {
@@ -26,7 +28,6 @@ var ExitButton = React.createClass({
 	}
 });
 
-insertRule('a:hover{text-decoration:none; color:inherit; }');
 var sample1 = {
   title: 'Papa Coffee Shop',
   description: 'Private room (max 6)',
@@ -101,7 +102,7 @@ var Icon = React.createClass({
 var FacebookIcon = React.createClass({
 	render: function() {
 		return (
-			<div style={_.extend({float: 'left', background: 'blue', color: 'white', borderRadius: '50%', position: 'relative', width: 40, height: 40}, this.props.style)}>
+			<div style={_.extend({float: 'left', background: '#3a589b', color: 'white', borderRadius: '50%', position: 'relative', width: 40, height: 40}, this.props.style)}>
 				<Icon name="facebook" style={{position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}/>
 			</div>
 		);
@@ -110,7 +111,7 @@ var FacebookIcon = React.createClass({
 var TwitterIcon = React.createClass({
 	render: function() {
 		return (
-			<div style={_.extend({float: 'left', marginLeft: 15, background: 'green', color: 'white', borderRadius: '50%', position: 'relative', width: 40, height: 40}, this.props.style)}>
+			<div style={_.extend({float: 'left', marginLeft: 15, background: '#55acee', color: 'white', borderRadius: '50%', position: 'relative', width: 40, height: 40}, this.props.style)}>
 				<Icon name="twitter" style={{position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}/>
 			</div>
 		);
@@ -132,104 +133,173 @@ var UserIcon = React.createClass({
 	}
 });
 var moment = require('moment');
-var Page4Review = React.createClass({
-	render: function() {
+// var Page5Review = React.createClass({
+// 	render: function() {
+// 		return (
+// 			<div style={{}}>
+// 				<h2>Tell us more about Papa Cafe</h2>
+// 				<p>How productive did you feel?</p>
+// 				<p>How good was the service?</p>
+// 				<p>How was your overall satisfaction?</p>
+// 				<div>
+// 					Share the wonderful experience
+// 					<FacebookIcon/>
+// 					<TwitterIcon/>
+// 				</div>
+// 			</div>
+// 		);
+// 	}
+// })
+var Page3Review = React.createClass({
+	getInitialState: function() {
+		return {
+			showReview: false
+		};
+	},
+	renderIcons: function(icon) {
+		return (
+			<div style={{margin: '0 40px'}}>
+				{_.range(5).map((index)=>{
+					return <Icon name={icon} style={{width: '20%'}}/>
+				})}
+			</div>
+		);
+	},
+	renderReviewContent: function() {
+		var detail = this.props.detail;
+		var {title, description, src, startingPrice, star, nearby, reviews, facilities, options, startTime, endTime} = detail;
+		return (
+			<div style={{}} key="review">
+				<h2>{title}</h2>
+				<div style={{margin: '15px auto', width: 32}}>
+					<UserIcon style={{padding: 10}}/>
+					<div style={{clear: 'both'}}/>
+				</div>
+				<h3>Tell us more about Papa Cafe</h3>
+				<div style={{marginTop: 15}}>
+					<p style={{marginBottom: 5}}>How productive did you feel?</p>
+					{this.renderIcons('check-circle')}
+				</div>
+				<div style={{marginTop: 15}}>
+					<p style={{marginBottom: 5}}>How good was the service?</p>
+					{this.renderIcons('star')}
+				</div>
+				<div style={{marginTop: 15}}>
+					<p style={{marginBottom: 5}}>How was your overall satisfaction?</p>
+					{this.renderIcons('heart')}
+				</div>
+				<div style={{marginTop: 15}}>
+					<p style={{marginBottom: 5}}>Share the wonderful experience</p>
+					<div style={{width: 95, margin: 'auto'}}>
+						<FacebookIcon/>
+						<TwitterIcon/>
+						<div style={{clear: 'both'}}/>
+					</div>
+				</div>
+				<div style={{marginTop: 15}}>
+					<img width="100" src="/images/co-study-logo.png" style={{margin: 'auto'}}/>
+				</div>
+			</div>
+		);
+	},
+	renderBillContent: function() {
 		var detail = this.props.detail;
 		var {title, description, src, startingPrice, star, nearby, reviews, facilities, options, startTime, endTime} = detail;
 		var price = 229.5;
+		return (
+			<div key="bill">
+				<h2>{title}</h2>
+				<div style={{margin: '15px auto', width: 32}}>
+					<UserIcon style={{padding: 10}}/>
+				</div>
+				<p style={{lineHeight: '16px', marginBottom: 20}}>SS 9091, fl.4, Siam Square One, Rama 1 Road, Pathumwan, Pathumwan, Bangkok, 21330</p>
+				<div style={{borderBottom: '1px solid #444', margin: 20}}/>
+				<div>
+					<div style={{float: 'left'}}>
+						<Icon name="clock-o"/> {startTime} - {endTime}
+					</div>
+					<div style={{float: 'right'}}>
+						{price.toFixed(2)} Baht
+					</div>
+					<div style={{clear: 'both'}}/>
+				</div>
+				<div>
+					<div style={{float: 'left'}}>
+						<Icon name="calendar"/> {moment().format('MMM DD, YYYY')}
+					</div>
+					<div style={{float: 'right'}}>
+						{detail.userAmount > 1 && (price/detail.userAmount).toFixed(2)} Baht/User
+					</div>
+					<div style={{clear: 'both'}}/>
+				</div>
+				<div style={{borderBottom: '1px solid #444', margin: 20}}/>
+				<div>
+					<div style={{float: 'left'}}>
+						Time Spent
+					</div>
+					<div style={{float: 'right'}}>
+						2:33
+					</div>
+					<div style={{clear: 'both'}}/>
+				</div>
+				<div>
+					<div style={{float: 'left'}}>
+						Rate Per Hour
+					</div>
+					<div style={{float: 'right'}}>
+						30
+					</div>
+					<div style={{clear: 'both'}}/>
+				</div>
+				<div>
+					<div style={{float: 'left'}}>
+						Number of People
+					</div>
+					<div style={{float: 'right'}}>
+						{detail.userAmount}
+					</div>
+					<div style={{clear: 'both'}}/>
+				</div>
+				<div>
+					<div style={{float: 'left'}}>
+						<h3>Total</h3>
+					</div>
+					<div style={{float: 'right'}}>
+						<h3>{price.toFixed(2)}</h3>
+					</div>
+					<div style={{clear: 'both'}}/>
+				</div>
+				<div>
+					<h4 style={{textAlign: 'center', margin: '20px 0 10px'}}>Brought you by</h4>
+					<img width="100" src="/images/co-study-logo.png" style={{margin: 'auto'}}/>
+				</div>
+			</div>
+		);
+	},
+	render: function() {
+		var detail = this.props.detail;
+		var {title, description, src, startingPrice, star, nearby, reviews, facilities, options, startTime, endTime} = detail;
 		return (
 			<div style={{textAlign: 'center'}}>
 				<div style={{position: 'absolute', minHeight: 568, left: -8, right: -8, top: -8, bottom: -8, background: `url(${src})`, backgroundSize: 'cover', WebkitFilter: 'blur(8px)'}}/>
 				<Touchable handleAction={this.props.onBack}>
 					<Icon name="angle-left" style={{zIndex: 55, color: 'white', fontSize: 32, padding: 10, position: 'absolute', left: 0, top: 0}}/>
 				</Touchable>
-				<div style={{position: 'relative'}}>
-					<p style={{margin: '20px auto', color: 'white'}}>Thank you for choosing us.</p>
-					<div style={{margin: 30, border: '1px solid black', padding: 15, background: 'white'}}>
-						<h2>{title}</h2>
-						<div style={{margin: '15px auto', width: 32}}>
-							<UserIcon style={{padding: 10}}/>
-						</div>
-						<p style={{lineHeight: '16px', marginBottom: 20}}>SS 9091, fl.4, Siam Square One, Rama 1 Road, Pathumwan, Pathumwan, Bangkok, 21330</p>
-						<div style={{borderBottom: '1px solid #444', margin: 20}}/>
-						<div>
-							<div style={{float: 'left'}}>
-								<Icon name="clock-o"/> {startTime} - {endTime}
-							</div>
-							<div style={{float: 'right'}}>
-								{price.toFixed(2)} Baht
-							</div>
-							<div style={{clear: 'both'}}/>
-						</div>
-						<div>
-							<div style={{float: 'left'}}>
-								<Icon name="calendar"/> {moment().format('MMM DD, YYYY')}
-							</div>
-							<div style={{float: 'right'}}>
-								{detail.userAmount > 1 && (price/detail.userAmount).toFixed(2)} Baht/User
-							</div>
-							<div style={{clear: 'both'}}/>
-						</div>
-						<div style={{borderBottom: '1px solid #444', margin: 20}}/>
-						<div>
-							<div style={{float: 'left'}}>
-								Time Spent
-							</div>
-							<div style={{float: 'right'}}>
-								2:33
-							</div>
-							<div style={{clear: 'both'}}/>
-						</div>
-						<div>
-							<div style={{float: 'left'}}>
-								Rate Per Hour
-							</div>
-							<div style={{float: 'right'}}>
-								30
-							</div>
-							<div style={{clear: 'both'}}/>
-						</div>
-						<div>
-							<div style={{float: 'left'}}>
-								Number of People
-							</div>
-							<div style={{float: 'right'}}>
-								{detail.userAmount}
-							</div>
-							<div style={{clear: 'both'}}/>
-						</div>
-						<div>
-							<div style={{float: 'left'}}>
-								<h3>Total</h3>
-							</div>
-							<div style={{float: 'right'}}>
-								<h3>{price.toFixed(2)}</h3>
-							</div>
-							<div style={{clear: 'both'}}/>
-						</div>
-						<div>
-							<h4 style={{textAlign: 'center', margin: '20px 0 10px'}}>Brought you by</h4>
-							<img width="100" src="/images/co-study-logo.png" style={{margin: 'auto'}}/>
-						</div>
+				<div style={{position: 'relative'}}>					
+					<div style={{margin: '60px 30px 20px', border: '1px solid black', padding: 15, background: 'white'}}>
+						{this.state.showReview? this.renderReviewContent(): this.renderBillContent()}
 					</div>
-					<div style={{display: 'none'}}>
-						<h2>Tell us more about Papa Cafe</h2>
-						<p>How productive did you feel?</p>
-						<p>How good was the service?</p>
-						<p>How was your overall satisfaction?</p>
-						<div>
-							Share the wonderful experience
-							<FacebookIcon/>
-							<TwitterIcon/>
-						</div>
-					</div>
+					<Touchable component={React.createFactory("div")} handleAction={this.state.showReview? this.props.onBack: ()=>this.setState({showReview: true})} style={{margin: 'auto', width: 100, fontWeight: 800, padding: 5, border: '1px solid rgba(255,255,255,0.8)', color: 'rgba(255,255,255,0.8)'}}>
+						<div>{this.state.showReview? 'Back to Home': 'OK'}</div>
+					</Touchable>
 				</div>
+				<p style={{position: 'absolute', top: 0, left: 0, right: 0, margin: '20px auto', color: 'white'}}>Thank you for choosing us.</p>
 			</div>
 		);
 	}
 });
 
-var Page3BookingDone = React.createClass({
+var Page4Navigation = React.createClass({
 	getInitialState: function() {
 		return {
 			userState: false,
@@ -237,7 +307,6 @@ var Page3BookingDone = React.createClass({
 		};
 	},
 	componentDidMount: function() {
-		console.log('run animation');
 		setTimeout(()=>{
 			TweenMax.fromTo(this.refs['bg-to-hide'].getDOMNode(), 0.5, {
 				opacity: 1
@@ -247,7 +316,6 @@ var Page3BookingDone = React.createClass({
 		}, 500);
 	},
 	renderUser: function(name, align, active, handleClick) {
-		console.log('active', active, active?'#000':'#bbb');
 		var color = active?'#000':'#bbb';
 		return (
 			<Touchable key={name + (active? '-active': '')} style={{float: align, textAlign: 'center', margin: 20, color: color}} handleAction={handleClick}>
@@ -317,10 +385,12 @@ var Page3BookingDone = React.createClass({
 					}} style={{border: n === 1?'none':'1px solid rgba(0,0,0,0.8)', background: 'transparent', display: 'block', width: 60 + 30*2, padding: '10px 30px', margin: 'auto'}}>{states[n].bt}</Touchable>
 					<p style={{marginTop: 5}}>{states[n].des}</p>
 				</div>
-				<div style={{width: 40 + 40 + 15, margin: '40px auto 0'}}>
+				<div style={{width: 40 + 40 + 15 + 20, margin: '40px auto 0'}}>
 					<div style={{marginBottom: 10}}>Let your friends know</div>					
-					<FacebookIcon/>
-					<TwitterIcon/>
+					<div style={{margin: '0 10px'}}>
+						<FacebookIcon/>
+						<TwitterIcon/>
+					</div>
 				</div>
 				{this.state.showLoading && <Loading/>}
 			</div>
@@ -628,8 +698,8 @@ var App = React.createClass({
 		var Page = [
 			Page1Discovery,
 			Page2Detail,
-			Page3BookingDone,
-			Page4Review
+			Page3Review,
+			Page4Navigation
 		][this.state.currentPage];
 		var props = {
 			detail: this.state.selectedProps,
