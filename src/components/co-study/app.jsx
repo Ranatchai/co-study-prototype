@@ -464,27 +464,27 @@ var Page2Detail = React.createClass({
 		};
 	},
 	componentDidMount: function() {
-		console.log('run animation');
-		setTimeout(()=>{
-			TweenMax.fromTo(this.refs['bg-to-show'].getDOMNode(), 0.5, {
-				opacity: 0
-			}, {
-				opacity: 1
-			});
-		}, 500);
+		// console.log('run animation');
+		// setTimeout(()=>{
+		// 	TweenMax.fromTo(this.refs['bg-to-show'].getDOMNode(), 0.5, {
+		// 		opacity: 0
+		// 	}, {
+		// 		opacity: 1
+		// 	});
+		// }, 500);
 		window.addEventListener('scroll', this.handleScroll);
 	},
 	componentWillUnmount: function() {
 		window.removeEventListener('scroll', this.handleScroll);
 	},
 	handleScroll: function() {
-		var y = (window.scrollY)/200;
-		TweenMax.set(this.refs['bg-to-overide'].getDOMNode(), {
-			opacity: y
-		});
-		TweenMax.set(this.refs['bg-to-show'].getDOMNode(), {
-			opacity: 1 - y
-		});
+		// var y = (window.scrollY)/200;
+		// TweenMax.set(this.refs['bg-to-overide'].getDOMNode(), {
+		// 	opacity: y
+		// });
+		// TweenMax.set(this.refs['bg-to-show'].getDOMNode(), {
+		// 	opacity: 1 - y
+		// });
 	},
 	renderSlot: function(t, a) {
 		var av = a >= this.state.userAmount;
@@ -562,15 +562,15 @@ var Page2Detail = React.createClass({
 
 		return (
 			<div>
-				<div style={{position: 'fixed', top: 0, left: 0, width: '100%', height: 200, overflow: 'hidden', zIndex: 0}}>
-					<div style={{position: 'absolute', left: -8, right: -8, top: -8, bottom: -8, background: `url(${src})`, backgroundSize: 'cover', WebkitFilter: 'blur(8px)'}}/>
-					<div ref="bg-to-show" style={{opacity: 0, position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, background: `url(${src})`, backgroundSize: 'cover'}}/>
-					<div ref="bg-to-overide" style={{opacity: 0, position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, background: 'rgba(0,0,0,0.4)'}}/>
-					<Touchable handleAction={this.props.onBack}>
-						<Icon name="angle-left" style={{position: 'absolute', left: 0, top: 0, color: 'white', fontSize: 32, padding: 10}}/>
-					</Touchable>
-				</div>
-				<div style={{height: 200}}/>
+				{/*<div style={{position: 'fixed', top: 0, left: 0, width: '100%', height: 200, overflow: 'hidden', zIndex: 0}}>
+									<div style={{position: 'absolute', left: -8, right: -8, top: -8, bottom: -8, background: `url(${src})`, backgroundSize: 'cover', WebkitFilter: 'blur(8px)'}}/>
+									<div ref="bg-to-show" style={{opacity: 0, position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, background: `url(${src})`, backgroundSize: 'cover'}}/>
+									<div ref="bg-to-overide" style={{opacity: 0, position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, background: 'rgba(0,0,0,0.4)'}}/>
+									<Touchable handleAction={this.props.onBack}>
+										<Icon name="angle-left" style={{position: 'absolute', left: 0, top: 0, color: 'white', fontSize: 32, padding: 10}}/>
+									</Touchable>
+								</div>*/}
+				<div style={{height: 200, background: `url(${src})`, backgroundSize: 'cover'}}/>
 				<div style={{position: 'relative', background: 'white', zIndex: 1}}>
 					<div style={{padding: '20px'}}>
 						<div style={sectionStyle}>
