@@ -29,7 +29,7 @@ var ExitButton = React.createClass({
 	}
 });
 //http://touchedition.s3.amazonaws.com/asset/56518569e3f10fd70a21a892.jpg
-var badgeURL = "/images/500px-sonic-adventure-badge.png";
+var badgeURL = "./images/500px-sonic-adventure-badge.png";
 var sample1 = {
   title: 'Papa Coffee Shop',
   description: 'Public & Private room (max. 6)',
@@ -264,7 +264,7 @@ var Page5Review = React.createClass({
 					</div>
 				</div>
 				<div style={{marginTop: 15}}>
-					<img width="100" src="/images/co-study-logo.png" style={{margin: 'auto'}}/>
+					<img width="100" src="./images/co-study-logo.png" style={{margin: 'auto'}}/>
 				</div>
 			</PageX>
 		);
@@ -341,13 +341,13 @@ var Page3Bill = React.createClass({
 				</div>
 				<div>
 					<h4 style={{textAlign: 'center', margin: '20px 0 10px'}}>Brought you by</h4>
-					<img width="100" src="/images/co-study-logo.png" style={{margin: 'auto'}}/>
+					<img width="100" src="./images/co-study-logo.png" style={{margin: 'auto'}}/>
 				</div>
 			</PageX>
 		);
 	}
 });
-var mapURL2 = '/images/map-1.jpg';
+var mapURL2 = './images/map-1.jpg';
 var Page4Navigation = React.createClass({
 	getInitialState: function() {
 		return {
@@ -374,9 +374,13 @@ var Page4Navigation = React.createClass({
 		);
 	},
 	componentDidMount: function() {
-		setTimeout(()=>{
+		this._tl = setTimeout(()=>{
 			this.setState({shopState: true});
+			this._tl = setTimeout(this.goNextStep, 3000);
 		}, 3000);
+	},
+	componentWillUnmount: function() {
+		clearTimeout(this._tl);
 	},
 	render: function() {
 		var detail = this.props.detail;
@@ -425,14 +429,14 @@ var Page4Navigation = React.createClass({
 					</div>
 				</div>
 				<Touchable handleAction={()=>{
-					switch (n) {
-						case 0: 
-							this.props.onBack();
-							break;
-						case 1:
-							this.goNextStep();
-							break;
-					}
+					// switch (n) {
+					// 	case 0: 
+					this.props.onBack();					
+					// 		break;
+					// 	case 1:
+					// 		this.goNextStep();
+					// 		break;
+					// }
 				}} style={{opacity: n===0?1:0, border: '1px solid rgba(0,0,0,0.8)', background: 'transparent', display: 'block', width: 60 + 30*2, padding: '5px 30px', margin: '20px auto'}}>Cancel</Touchable>
 				{this.state.showLoading && <Loading/>}
 			</div>
@@ -464,27 +468,27 @@ var Page2Detail = React.createClass({
 		};
 	},
 	componentDidMount: function() {
-		// console.log('run animation');
-		// setTimeout(()=>{
-		// 	TweenMax.fromTo(this.refs['bg-to-show'].getDOMNode(), 0.5, {
-		// 		opacity: 0
-		// 	}, {
-		// 		opacity: 1
-		// 	});
-		// }, 500);
+		console.log('run animation');
+		setTimeout(()=>{
+			TweenMax.fromTo(this.refs['bg-to-show'].getDOMNode(), 0.5, {
+				opacity: 0
+			}, {
+				opacity: 1
+			});
+		}, 500);
 		window.addEventListener('scroll', this.handleScroll);
 	},
 	componentWillUnmount: function() {
 		window.removeEventListener('scroll', this.handleScroll);
 	},
 	handleScroll: function() {
-		// var y = (window.scrollY)/200;
-		// TweenMax.set(this.refs['bg-to-overide'].getDOMNode(), {
-		// 	opacity: y
-		// });
-		// TweenMax.set(this.refs['bg-to-show'].getDOMNode(), {
-		// 	opacity: 1 - y
-		// });
+		var y = (window.scrollY)/200;
+		TweenMax.set(this.refs['bg-to-overide'].getDOMNode(), {
+			opacity: y
+		});
+		TweenMax.set(this.refs['bg-to-show'].getDOMNode(), {
+			opacity: 1 - y
+		});
 	},
 	renderSlot: function(t, a) {
 		var av = a >= this.state.userAmount;
@@ -562,19 +566,15 @@ var Page2Detail = React.createClass({
 
 		return (
 			<div>
-				{/*<div style={{position: 'fixed', top: 0, left: 0, width: '100%', height: 200, overflow: 'hidden', zIndex: 0}}>
-									<div style={{position: 'absolute', left: -8, right: -8, top: -8, bottom: -8, background: `url(${src})`, backgroundSize: 'cover', WebkitFilter: 'blur(8px)'}}/>
-									<div ref="bg-to-show" style={{opacity: 0, position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, background: `url(${src})`, backgroundSize: 'cover'}}/>
-									<div ref="bg-to-overide" style={{opacity: 0, position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, background: 'rgba(0,0,0,0.4)'}}/>
-									<Touchable handleAction={this.props.onBack}>
-										<Icon name="angle-left" style={{position: 'absolute', left: 0, top: 0, color: 'white', fontSize: 32, padding: 10}}/>
-									</Touchable>
-								</div>*/}
-				<div style={{height: 200, background: `url(${src})`, backgroundSize: 'cover'}}>
+				<div style={{position: 'fixed', top: 0, left: 0, width: '100%', height: 200, overflow: 'hidden', zIndex: 0}}>
+					<div style={{position: 'absolute', left: -8, right: -8, top: -8, bottom: -8, background: `url(${src})`, backgroundSize: 'cover', WebkitFilter: 'blur(8px)'}}/>
+					<div ref="bg-to-show" style={{opacity: 0, position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, background: `url(${src})`, backgroundSize: 'cover'}}/>
+					<div ref="bg-to-overide" style={{opacity: 0, position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, background: 'rgba(0,0,0,0.4)'}}/>
 					<Touchable handleAction={this.props.onBack}>
 						<Icon name="angle-left" style={{position: 'absolute', left: 0, top: 0, color: 'white', fontSize: 32, padding: 10}}/>
 					</Touchable>
 				</div>
+				<div style={{height: 200}}/>
 				<div style={{position: 'relative', background: 'white', zIndex: 1}}>
 					<div style={{padding: '20px'}}>
 						<div style={sectionStyle}>
@@ -772,7 +772,7 @@ var Card = React.createClass({
     );
   }
 });
-var mapURL = '/images/map-2.jpg';
+var mapURL = './images/map-2.jpg';
 var loadImage = function(src) {
 	var img = new Image(src);
 	img.src = src;
@@ -960,13 +960,13 @@ if (!isTouchDevice) {
 	  	var doc = this.refs.iframe.getDOMNode().contentDocument;
 	  	if (doc.readyState === 'complete') {
 	  		var customHeader = [
-	  			"/styles/@reset.css",
-					"/styles/codrop-input-set1.css",
-					"/styles/icon-moon.css",
-					"/styles/importer.css",
-					"/fonts/font-awesome/font-awesome.min.css",
-					"/fonts/thaisans_neue/stylesheet.css",
-					"/fonts/lato/Lato.css"
+	  			"./styles/@reset.css",
+					"./styles/codrop-input-set1.css",
+					"./styles/icon-moon.css",
+					"./styles/importer.css",
+					"./fonts/font-awesome/font-awesome.min.css",
+					"./fonts/thaisans_neue/stylesheet.css",
+					"./fonts/lato/Lato.css"
 	  		].reduce((sum, src)=> {
           return `${sum}<link rel='stylesheet' href='${src}'/>`;
         }, '');
