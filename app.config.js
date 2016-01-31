@@ -1,4 +1,8 @@
 module.exports = {
+	"avatar-editor": {
+		title: 'Avatar Editor',
+		path: "./src/mains/avatar-editor"
+	},
 	"content-feed": {
 		title: 'Mix Content Feed',
 		path: "./src/mains/content-feed-mock"

@@ -1,5 +1,5 @@
 {
-  "firebase": "littlebuilders",
+  "firebase": "te-debugger",
   "public": "www",
   "ignore": [
     "firebase.json",
