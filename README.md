@@ -4,8 +4,17 @@
 - https://costudy.firebaseapp.com 
 
 ## How to Run
-1. git clone https://github.com/Ranatchai/co-study-prototype //clone project
-2. cd co-study-prototype
-3. ./bin/www
+1. Clone
+```sh
+$ git clone https://github.com/Ranatchai/co-study-prototype
+```
+2. Install Dependencies
+```sh
+cd co-study-prototype && npm install
+```
+3. Run
+```sh
+./bin/www
+```
 
 to edit http://dillinger.io/
