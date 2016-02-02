@@ -10,11 +10,11 @@ $ git clone https://github.com/Ranatchai/co-study-prototype
 ```
 2. Install Dependencies
 ```sh
-cd co-study-prototype && npm install
+$ cd co-study-prototype && npm install
 ```
 3. Run
 ```sh
-./bin/www
+$ ./bin/www
 ```
 
 to edit http://dillinger.io/
