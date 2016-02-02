@@ -11,7 +11,7 @@ var webpack = require('webpack');
  * For more information, see: http://webpack.github.io/docs/configuration.html
  */
 var config = require('./app.config');
-var target = process.env.target || 'little-builder';
+var target = process.env.target || 'co-study';
 for (var i = 0; i < process.argv.length; i++) {
   var value = process.argv[i];
   if (value.indexOf('--target:') >= 0) {
