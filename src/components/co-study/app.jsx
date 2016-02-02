@@ -71,7 +71,7 @@ var sample1 = {
  	// startTime: '16:00',
  	// endTime: '19:00'
 };
-var dd = [
+var mockupData = [
 	{
 		title: 'Papa Coffee Shop', 
 		src: 'http://touchedition.s3.amazonaws.com/asset/5651859ae3f10fd70a21a89f.jpg',
@@ -113,12 +113,12 @@ var dd = [
 		nearby: '2,000'
 	}
 ];
-dd.sort((a, b)=>{
+mockupData.sort((a, b)=>{
 	return a.maxUser - b.maxUser;
 });
 var LoadingCenter = require('./loading-center');
 var i = 0;
-var list = dd.map((d)=>_.extend({}, sample1, {
+var list = mockupData.map((d)=>_.extend({}, sample1, {
 	key: i,
 	star: Math.round(3 + Math.random() * 2),
 	maxUser: (i++) + 1
