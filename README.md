@@ -1,5 +1,7 @@
 # Co Study Prototype
-The prototype that I made in 3 days Startup Weekend Eductation Edition.
+The prototype that I made with in 14 hours at Startup Weekend Eductation Edition
+
+## Blog
 
 ## Stack
 - Node.js
