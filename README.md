@@ -8,6 +8,11 @@ The prototype that I made in 3 days Startup Weekend Eductation Edition.
 
 ## Demo
 - https://costudy.firebaseapp.com 
+- https://youtu.be/x41GyDzxytA
+
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=x41GyDzxytA
+" target="_blank"><img src="http://img.youtube.com/vi/x41GyDzxytA/0.jpg" 
+alt="IMAGE ALT TEXT HERE" width="480" height="360" border="10" /></a>
 
 ## How to Run
 Clone
