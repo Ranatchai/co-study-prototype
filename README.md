@@ -1,4 +1,10 @@
 # Co Study Prototype
+The prototype that I made in 3 days Startup Weekend Eductation Edition.
+
+## Stack
+- Node.js
+- React.js
+- Webpack with hot reload
 
 ## Demo
 - https://costudy.firebaseapp.com 
@@ -17,4 +23,4 @@ Run
 $ ./bin/www
 ```
 
-to edit http://dillinger.io/
+Then, visit http://localhost:9001 to view a result.
