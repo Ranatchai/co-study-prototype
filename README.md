@@ -2,6 +2,8 @@
 The prototype that I made with in 14 hours at Startup Weekend Eductation Edition
 
 ## Blog
+My blog that talk about this (Available for thai language only)
+https://medium.com/@ranatchaii/แนวคิดการทำ-prototype-ด้วย-react-95bdd41bed0a#.5o24e266v
 
 ## Stack
 - Node.js
