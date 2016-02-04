@@ -1,5 +1,5 @@
 # Co Study Prototype
-The prototype that I made with in 14 hours at Startup Weekend Eductation Edition
+The prototype that I made with in 14 hours at Startup Weekend Bangkok 2015 Eductation Edition
 
 ## Blog
 My blog that talk about this (Available for thai language only)
